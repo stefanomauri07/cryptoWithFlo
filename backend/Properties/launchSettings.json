@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:5000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DATABASE_HOST": "localhost",
+        "DATABASE_PORT": "3307",
+        "DATABASE_NAME": "crypto_tracker",
+        "DATABASE_USER": "app_user",
+        "DATABASE_PASSWORD": "admin"
+      }
+    }
+  }
+}
