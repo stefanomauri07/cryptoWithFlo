@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using CryptoApp.Data;
 using CryptoApp.Models;
 using Microsoft.EntityFrameworkCore;
@@ -8,19 +9,43 @@ public static class AlertEndpoints
 {
     public static RouteGroupBuilder MapAlertEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/alerts");
+        var group = app.MapGroup("/api/alerts").RequireAuthorization();
 
-        group.MapGet("/", async (AppDbContext db) =>
+        group.MapGet("/", async (AppDbContext db, HttpContext http) =>
         {
-            var alerts = await db.Alerts
+            var userId = int.Parse(http.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var role = http.User.FindFirst(ClaimTypes.Role)?.Value;
+
+            var query = db.Alerts.AsQueryable();
+
+            if (role != "admin")
+            {
+                query = query.Where(a => a.UserId == userId);
+            }
+
+            var alerts = await query
                 .OrderByDescending(a => a.CreatedAt)
+                .Select(a => new
+                {
+                    a.Id,
+                    a.CryptoId,
+                    a.Condition,
+                    a.ThresholdUsd,
+                    a.IsTriggered,
+                    a.CreatedAt,
+                    a.TriggeredAt,
+                    a.UserId,
+                    UserEmail = a.User.Email
+                })
                 .ToListAsync();
 
             return Results.Ok(alerts);
         });
 
-        group.MapPost("/", async (CreateAlertRequest request, AppDbContext db) =>
+        group.MapPost("/", async (CreateAlertRequest request, AppDbContext db, HttpContext http) =>
         {
+            var userId = int.Parse(http.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
             if (request.Condition != "above" && request.Condition != "below")
             {
                 return Results.BadRequest(new { error = "Condition must be 'above' or 'below'" });
@@ -37,7 +62,7 @@ public static class AlertEndpoints
                 CryptoId = request.CryptoId,
                 Condition = request.Condition,
                 ThresholdUsd = request.ThresholdUsd,
-                WebhookUrl = request.WebhookUrl,
+                UserId = userId,
                 IsTriggered = false,
                 CreatedAt = DateTime.UtcNow
             };
@@ -45,15 +70,33 @@ public static class AlertEndpoints
             db.Alerts.Add(alert);
             await db.SaveChangesAsync();
 
-            return Results.Created($"/api/alerts/{alert.Id}", alert);
+            return Results.Created($"/api/alerts/{alert.Id}", new
+            {
+                alert.Id,
+                alert.CryptoId,
+                alert.Condition,
+                alert.ThresholdUsd,
+                alert.IsTriggered,
+                alert.CreatedAt,
+                alert.TriggeredAt,
+                alert.UserId
+            });
         });
 
-        group.MapDelete("/{id:int}", async (int id, AppDbContext db) =>
+        group.MapDelete("/{id:int}", async (int id, AppDbContext db, HttpContext http) =>
         {
+            var userId = int.Parse(http.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var role = http.User.FindFirst(ClaimTypes.Role)?.Value;
+
             var alert = await db.Alerts.FindAsync(id);
             if (alert is null)
             {
                 return Results.NotFound();
+            }
+
+            if (role != "admin" && alert.UserId != userId)
+            {
+                return Results.Forbid();
             }
 
             db.Alerts.Remove(alert);
@@ -66,4 +109,4 @@ public static class AlertEndpoints
     }
 }
 
-public record CreateAlertRequest(string CryptoId, string Condition, decimal ThresholdUsd, string WebhookUrl);
+public record CreateAlertRequest(string CryptoId, string Condition, decimal ThresholdUsd);

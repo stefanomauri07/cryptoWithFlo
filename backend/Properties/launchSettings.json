@@ -12,7 +12,11 @@
         "DATABASE_PORT": "3307",
         "DATABASE_NAME": "crypto_tracker",
         "DATABASE_USER": "app_user",
-        "DATABASE_PASSWORD": "admin"
+        "DATABASE_PASSWORD": "admin",
+        "JWT_SECRET": "my-super-secret-key-change-in-production-use-random-string",
+        "JWT_EXPIRY_HOURS": "24",
+        "BREVO_API_KEY": "your-brevo-api-key-here",
+        "BREVO_SENDER": "your-email@example.com"
       }
     }
   }

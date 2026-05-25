@@ -1,12 +1,12 @@
-using System.Threading.Channels;
+using System.Text;
 using CryptoApp.Data;
 using CryptoApp.Endpoints;
 using CryptoApp.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddSingleton(Channel.CreateBounded<bool>(1));
 
 builder.Services.AddMemoryCache();
 
@@ -33,6 +33,31 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddHostedService<PriceFetcherService>();
 builder.Services.AddHostedService<AlertCheckerService>();
+
+var jwtSecret = builder.Configuration["JWT_SECRET"] ?? throw new InvalidOperationException("JWT_SECRET not set");
+var jwtKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "CryptoTracker",
+            ValidAudience = "CryptoTracker",
+            IssuerSigningKey = jwtKey
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
+});
+
+builder.Services.AddSingleton<BrevoEmailService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -63,6 +88,8 @@ app.UseExceptionHandler(errorApp =>
 });
 
 app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 
 if (app.Environment.IsDevelopment())
 {
@@ -75,6 +102,7 @@ app.MapOpenApi();
 app.MapCryptoEndpoints();
 app.MapAlertEndpoints();
 app.MapHealthEndpoints();
+app.MapAuthEndpoints();
 
 using (var scope = app.Services.CreateScope())
 {

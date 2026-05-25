@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Register | CryptoTracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "surface-container-lowest":"#090d1d","surface-container":"#1a1f2f","primary-container":"#00ff88","on-background":"#dee1f7","on-surface-variant":"#b9cbb9","inverse-primary":"#006d37","surface-container-low":"#161b2b","surface-dim":"#0e1322","surface":"#0e1322","surface-container-highest":"#303445","on-error":"#690005","surface-bright":"#343949","primary":"#f1ffef","error-container":"#93000a","primary-fixed":"#60ff99","on-primary-container":"#007139","on-primary-fixed":"#00210c","surface-container-high":"#25293a","inverse-on-surface":"#2b3040","on-surface":"#dee1f7","outline-variant":"#3b4b3d","outline":"#849585","on-primary":"#003919","error":"#ffb4ab","surface-tint":"#00e479","primary-fixed-dim":"#00e479","surface-variant":"#303445","inverse-surface":"#dee1f7","background":"#0e1322"
+                },
+                "borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},
+                "spacing":{"gutter":"20px","sm":"8px","xl":"40px","lg":"24px","md":"16px","xs":"4px","margin-desktop":"32px","unit":"4px","margin-mobile":"16px"},
+                "fontFamily":{"display-lg":["Inter"],"headline-sm":["Inter"],"headline-lg":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"body-lg":["Inter"],"body-sm":["Inter"],"label-md":["Inter"]},
+                "fontSize":{"display-lg":["48px",{"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-md":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"body-sm":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"600"}]}
+            }
+        }
+    }
+</script>
+<style>.bg-gradient-main{background:radial-gradient(circle at 0% 0%,#161b2b 0%,#0e1322 100%);}</style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-hidden">
+<main class="min-h-screen flex flex-col md:flex-row bg-gradient-main">
+
+<section class="hidden md:flex md:w-1/2 relative flex-col justify-between p-xl overflow-hidden bg-surface-container-lowest">
+    <div class="absolute top-[-20%] left-[-20%] w-[80%] h-[80%] bg-primary-container/10 rounded-full blur-[120px]"></div>
+    <div class="relative z-10 mt-xl">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mb-md">Join CryptoTracker</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">Start monitoring cryptocurrencies in real-time with intelligent price alerts.</p>
+    </div>
+</section>
+
+<section class="w-full md:w-1/2 flex items-center justify-center p-gutter relative">
+    <div class="md:hidden absolute top-0 left-0 w-full h-full bg-surface-container-lowest z-0"></div>
+    <div class="w-full max-w-[440px] z-10">
+        <div class="md:hidden flex items-center gap-sm mb-xl justify-center">
+            <span class="material-symbols-outlined text-primary-fixed-dim text-[32px]" style="font-variation-settings:'FILL'1">currency_bitcoin</span>
+            <h1 class="font-headline-sm text-headline-sm font-bold text-primary-fixed">CryptoTracker</h1>
+        </div>
+
+        <!-- Step 1: Registration form -->
+        <div id="step-1">
+            <div class="mb-xl">
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Create Account</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant">Start tracking in seconds.</p>
+            </div>
+            <div id="reg-error" class="hidden bg-error-container/30 text-error font-body-sm text-body-sm px-lg py-md rounded-lg mb-md"></div>
+            <form class="space-y-lg" onsubmit="handleRegister(event)">
+                <div class="space-y-xs">
+                    <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider" for="name">Full Name</label>
+                    <input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-md px-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" id="name" placeholder="John Doe" required type="text"/>
+                </div>
+                <div class="space-y-xs">
+                    <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider" for="email">Email Address</label>
+                    <input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-md px-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" id="email" placeholder="name@company.com" required type="email"/>
+                </div>
+                <div class="space-y-xs">
+                    <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider" for="password">Password</label>
+                    <input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-md px-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" id="password" placeholder="Min 6 characters" required type="password" minlength="6"/>
+                </div>
+                <div class="space-y-xs">
+                    <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider" for="confirm-password">Confirm Password</label>
+                    <input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-md px-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" id="confirm-password" placeholder="Repeat password" required type="password" minlength="6"/>
+                </div>
+                <button class="w-full bg-primary-container text-on-primary font-headline-sm text-headline-sm py-md rounded-lg shadow-[0_0_20px_rgba(0,255,136,0.2)] hover:brightness-110 active:scale-[0.98] transition-all" type="submit" id="reg-btn">Create Account</button>
+            </form>
+        </div>
+
+        <!-- Step 2: OTP verification -->
+        <div id="step-2" class="hidden">
+            <div class="mb-xl">
+                <button class="flex items-center gap-sm text-on-surface-variant hover:text-on-surface transition-colors mb-lg font-label-md text-label-md" onclick="goBackToStep1()">
+                    <span class="material-symbols-outlined text-[20px]">arrow_back</span> Back
+                </button>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Verify Email</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant">We sent a 6-digit code to <strong id="otp-email" class="text-primary-fixed-dim"></strong></p>
+            </div>
+            <div id="otp-error" class="hidden bg-error-container/30 text-error font-body-sm text-body-sm px-lg py-md rounded-lg mb-md"></div>
+            <div id="otp-success" class="hidden bg-primary-container/10 text-primary-fixed-dim font-body-sm text-body-sm px-lg py-md rounded-lg mb-md"></div>
+            <form class="space-y-lg" onsubmit="handleVerifyOtp(event)">
+                <div class="space-y-xs">
+                    <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider" for="otp-code">Verification Code</label>
+                    <input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-md px-md text-on-surface text-center text-2xl tracking-[12px] font-mono focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" id="otp-code" maxlength="6" placeholder="000000" required type="text"/>
+                </div>
+                <button class="w-full bg-primary-container text-on-primary font-headline-sm text-headline-sm py-md rounded-lg shadow-[0_0_20px_rgba(0,255,136,0.2)] hover:brightness-110 active:scale-[0.98] transition-all" type="submit" id="otp-btn">Verify Email</button>
+                <p class="text-center font-body-sm text-body-sm text-on-surface-variant">
+                    Didn't receive code?
+                    <button class="text-primary-fixed-dim hover:underline font-bold" onclick="handleResendOtp(event)" type="button">Resend</button>
+                </p>
+            </form>
+        </div>
+
+        <p class="mt-xl text-center font-body-sm text-body-sm text-on-surface-variant" id="login-link">
+            Already have an account? <a class="text-primary-fixed-dim font-bold hover:underline" href="login.html">Sign in</a>
+        </p>
+    </div>
+</section>
+</main>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script>
+if (isAuthenticated()) window.location.href = 'index.html';
+
+let registerEmail = '';
+
+async function handleRegister(e) {
+    e.preventDefault();
+    const btn = document.getElementById('reg-btn');
+    const errorEl = document.getElementById('reg-error');
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const confirm = document.getElementById('confirm-password').value;
+
+    if (password !== confirm) {
+        errorEl.textContent = 'Passwords do not match';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span>';
+    errorEl.classList.add('hidden');
+
+    try {
+        await register(email, password, name);
+        registerEmail = email;
+        document.getElementById('step-1').classList.add('hidden');
+        document.getElementById('step-2').classList.remove('hidden');
+        document.getElementById('login-link').classList.add('hidden');
+        document.getElementById('otp-email').textContent = email;
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
+    }
+}
+
+async function handleVerifyOtp(e) {
+    e.preventDefault();
+    const btn = document.getElementById('otp-btn');
+    const errorEl = document.getElementById('otp-error');
+    const code = document.getElementById('otp-code').value;
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span>';
+    errorEl.classList.add('hidden');
+
+    try {
+        await verifyOtp(registerEmail, code);
+        window.location.href = 'index.html';
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Verify Email';
+    }
+}
+
+async function handleResendOtp(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const password = document.getElementById('password').value;
+    const successEl = document.getElementById('otp-success');
+    try {
+        await register(registerEmail, password, name);
+        successEl.textContent = 'New code sent!';
+        successEl.classList.remove('hidden');
+        setTimeout(() => successEl.classList.add('hidden'), 3000);
+    } catch (err) {
+        document.getElementById('otp-error').textContent = err.message;
+        document.getElementById('otp-error').classList.remove('hidden');
+    }
+}
+
+function goBackToStep1() {
+    document.getElementById('step-2').classList.add('hidden');
+    document.getElementById('step-1').classList.remove('hidden');
+    document.getElementById('login-link').classList.remove('hidden');
+}
+</script>
+</body>
+</html>

@@ -1,6 +1,3 @@
-using System.Text;
-using System.Text.Json;
-using System.Threading.Channels;
 using CryptoApp.Data;
 using CryptoApp.Models;
 using Microsoft.EntityFrameworkCore;
@@ -12,25 +9,22 @@ public class AlertCheckerService : BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly IMemoryCache _cache;
-    private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<AlertCheckerService> _logger;
     private readonly IConfiguration _configuration;
-    private readonly Channel<bool> _channel;
+    private readonly BrevoEmailService _brevoEmailService;
 
     public AlertCheckerService(
         IServiceScopeFactory scopeFactory,
         IMemoryCache cache,
-        IHttpClientFactory httpClientFactory,
         ILogger<AlertCheckerService> logger,
         IConfiguration configuration,
-        Channel<bool> channel)
+        BrevoEmailService brevoEmailService)
     {
         _scopeFactory = scopeFactory;
         _cache = cache;
-        _httpClientFactory = httpClientFactory;
         _logger = logger;
         _configuration = configuration;
-        _channel = channel;
+        _brevoEmailService = brevoEmailService;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -41,7 +35,7 @@ public class AlertCheckerService : BackgroundService
         {
             try
             {
-                await WaitAndCheckAlertsAsync(stoppingToken);
+                await CheckAlertsAsync(stoppingToken);
             }
             catch (Exception ex)
             {
@@ -52,22 +46,8 @@ public class AlertCheckerService : BackgroundService
         }
     }
 
-    private async Task WaitAndCheckAlertsAsync(CancellationToken ct)
+    private async Task CheckAlertsAsync(CancellationToken ct)
     {
-        try
-        {
-            await _channel.Reader.ReadAsync(ct);
-        }
-        catch (OperationCanceledException) when (ct.IsCancellationRequested)
-        {
-            return;
-        }
-        catch (ChannelClosedException)
-        {
-            _logger.LogWarning("Channel closed, skipping alert check");
-            return;
-        }
-
         if (!_cache.TryGetValue("prices", out PriceCacheEntry? cacheEntry) || cacheEntry is null)
         {
             _logger.LogDebug("No cached prices available for alert check");
@@ -81,11 +61,11 @@ public class AlertCheckerService : BackgroundService
 
         var alerts = await db.Alerts
             .Where(a => !a.IsTriggered)
+            .Include(a => a.User)
             .ToListAsync(ct);
 
         if (alerts.Count == 0) return;
 
-        var httpClient = _httpClientFactory.CreateClient();
         var triggeredCount = 0;
 
         foreach (var alert in alerts)
@@ -101,40 +81,37 @@ public class AlertCheckerService : BackgroundService
 
             if (!shouldTrigger) continue;
 
-            var payload = new
-            {
-                crypto_id = alert.CryptoId,
-                price_usd = currentPrice,
-                threshold_usd = alert.ThresholdUsd,
-                condition = alert.Condition,
-                triggered_at = DateTime.UtcNow.ToString("o")
-            };
+            _logger.LogWarning(
+                "Alert triggered: {CryptoId} {Condition} {Threshold} (price: {Price})",
+                alert.CryptoId, alert.Condition, alert.ThresholdUsd, currentPrice);
 
             try
             {
-                var content = new StringContent(
-                    JsonSerializer.Serialize(payload),
-                    Encoding.UTF8,
-                    "application/json");
-
-                var webhookResponse = await httpClient.PostAsync(alert.WebhookUrl, content, ct);
-
-                if (webhookResponse.IsSuccessStatusCode)
+                var symbol = alert.CryptoId switch
                 {
-                    _logger.LogWarning(
-                        "Alert triggered: {CryptoId} {Condition} {Threshold} (price: {Price})",
-                        alert.CryptoId, alert.Condition, alert.ThresholdUsd, currentPrice);
-                }
-                else
+                    "bitcoin" => "BTC",
+                    "ethereum" => "ETH",
+                    "cardano" => "ADA",
+                    "dogecoin" => "DOGE",
+                    "solana" => "SOL",
+                    "ripple" => "XRP",
+                    _ => alert.CryptoId.ToUpper()
+                };
+
+                if (alert.User != null)
                 {
-                    _logger.LogWarning(
-                        "Webhook call failed for alert {AlertId}: HTTP {StatusCode}",
-                        alert.Id, (int)webhookResponse.StatusCode);
+                    await _brevoEmailService.SendAlertEmailAsync(
+                        alert.User.Email,
+                        alert.CryptoId,
+                        symbol,
+                        currentPrice,
+                        alert.ThresholdUsd,
+                        alert.Condition);
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Webhook call failed for alert {AlertId}", alert.Id);
+                _logger.LogWarning(ex, "Failed to send alert email for alert {AlertId}", alert.Id);
             }
 
             alert.IsTriggered = true;

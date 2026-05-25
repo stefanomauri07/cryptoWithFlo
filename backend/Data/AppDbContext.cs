@@ -10,6 +10,8 @@ public class AppDbContext : DbContext
     public DbSet<TrackedCrypto> TrackedCryptos => Set<TrackedCrypto>();
     public DbSet<PriceHistory> PriceHistories => Set<PriceHistory>();
     public DbSet<Alert> Alerts => Set<Alert>();
+    public DbSet<User> Users => Set<User>();
+    public DbSet<Otp> Otps => Set<Otp>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,17 +39,39 @@ public class AppDbContext : DbContext
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => e.Email).IsUnique();
+            entity.Property(e => e.Email).HasMaxLength(255).IsRequired();
+            entity.Property(e => e.PasswordHash).IsRequired();
+            entity.Property(e => e.Role).HasMaxLength(20).IsRequired();
+            entity.Property(e => e.Name).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<Otp>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => new { e.Email, e.Purpose, e.IsUsed });
+            entity.Property(e => e.Code).HasMaxLength(6).IsRequired();
+            entity.Property(e => e.Purpose).HasMaxLength(20).IsRequired();
+        });
+
         modelBuilder.Entity<Alert>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.CryptoId).HasMaxLength(50).IsRequired();
             entity.Property(e => e.Condition).HasMaxLength(10).IsRequired();
             entity.Property(e => e.ThresholdUsd).HasPrecision(18, 8);
-            entity.Property(e => e.WebhookUrl).HasMaxLength(500).IsRequired();
 
             entity.HasOne(e => e.Crypto)
                   .WithMany(c => c.Alerts)
                   .HasForeignKey(e => e.CryptoId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.User)
+                  .WithMany(u => u.Alerts)
+                  .HasForeignKey(e => e.UserId)
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -59,5 +83,16 @@ public class AppDbContext : DbContext
             new TrackedCrypto { Id = "solana",   Name = "Solana",   Symbol = "SOL",  IsActive = true },
             new TrackedCrypto { Id = "ripple",   Name = "Ripple",   Symbol = "XRP",  IsActive = true }
         );
+
+        modelBuilder.Entity<User>().HasData(new User
+        {
+            Id = 1,
+            Email = "admin@cryptotracker.com",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
+            Role = "admin",
+            Name = "Admin",
+            IsVerified = true,
+            CreatedAt = new DateTime(2026, 5, 25, 0, 0, 0, DateTimeKind.Utc)
+        });
     }
 }

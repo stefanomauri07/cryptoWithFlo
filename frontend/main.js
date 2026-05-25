@@ -109,7 +109,7 @@ function showAlertsEmpty() {
 
 async function fetchPrices() {
     try {
-        const res = await fetch(API_BASE + '/api/crypto/list');
+        const res = await api('/api/crypto/list');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
 
@@ -157,7 +157,7 @@ async function fetchPrices() {
 
 async function fetchChartData(cryptoId, days) {
     try {
-        const res = await fetch(API_BASE + '/api/crypto/' + cryptoId + '/chart?days=' + days);
+        const res = await api('/api/crypto/' + cryptoId + '/chart?days=' + days);
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const data = await res.json();
         return data;
@@ -283,7 +283,7 @@ async function updateChart() {
 
 async function fetchAlerts() {
     try {
-        const res = await fetch(API_BASE + '/api/alerts');
+        const res = await api('/api/alerts');
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const alerts = await res.json();
 
@@ -344,7 +344,6 @@ async function onCreateAlert() {
     const cryptoId = document.getElementById('alert-crypto').value;
     const condition = document.getElementById('alert-condition').value;
     const thresholdVal = document.getElementById('alert-threshold').value;
-    const webhookUrl = document.getElementById('alert-webhook').value;
     const errorEl = document.getElementById('alert-form-error');
 
     errorEl.classList.add('hidden');
@@ -355,19 +354,12 @@ async function onCreateAlert() {
         return;
     }
 
-    if (!webhookUrl) {
-        errorEl.textContent = 'Please enter a webhook URL';
-        errorEl.classList.remove('hidden');
-        return;
-    }
-
     const thresholdUsd = parseFloat(thresholdVal);
 
     try {
-        const res = await fetch(API_BASE + '/api/alerts', {
+        const res = await api('/api/alerts', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ cryptoId, condition, thresholdUsd, webhookUrl })
+            body: { cryptoId, condition, thresholdUsd }
         });
 
         if (!res.ok) {
@@ -378,7 +370,6 @@ async function onCreateAlert() {
         }
 
         document.getElementById('alert-threshold').value = '';
-        document.getElementById('alert-webhook').value = '';
         showToast('Alert created successfully', false);
         fetchAlerts();
     } catch (err) {
@@ -390,7 +381,7 @@ async function onCreateAlert() {
 
 async function onDeleteAlert(id) {
     try {
-        const res = await fetch(API_BASE + '/api/alerts/' + id, { method: 'DELETE' });
+        const res = await api('/api/alerts/' + id, { method: 'DELETE' });
         if (res.ok) {
             showToast('Alert deleted', false);
             fetchAlerts();
@@ -402,10 +393,10 @@ async function onDeleteAlert(id) {
 }
 
 async function onClearAllAlerts() {
-    const res = await fetch(API_BASE + '/api/alerts');
+    const res = await api('/api/alerts');
     const alerts = await res.json();
     for (const alert of alerts) {
-        await fetch(API_BASE + '/api/alerts/' + alert.id, { method: 'DELETE' });
+        await api('/api/alerts/' + alert.id, { method: 'DELETE' });
     }
     fetchAlerts();
 }
@@ -485,6 +476,7 @@ function init() {
     fetchHealth();
     updateChart();
     fetchAlerts();
+    updateUserMenu();
 
     setInterval(() => {
         fetchPrices();
@@ -492,6 +484,13 @@ function init() {
     }, 30000);
 
     setInterval(fetchAlerts, 60000);
+}
+
+function updateUserMenu() {
+    const user = getCurrentUser();
+    if (!user) return;
+    document.getElementById('user-name').textContent = user.name || user.email;
+    document.getElementById('user-role').textContent = user.role.toUpperCase();
 }
 
 document.addEventListener('DOMContentLoaded', init);

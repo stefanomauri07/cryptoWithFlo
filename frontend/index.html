@@ -125,6 +125,12 @@
         </div>
         <span class="text-on-surface-variant/40 hidden md:inline">|</span>
         <span id="cache-age" class="text-body-sm font-body-sm text-on-surface-variant hidden md:inline">---</span>
+        <span class="text-on-surface-variant/40">|</span>
+        <div id="user-menu" class="flex items-center gap-md">
+            <span id="user-name" class="text-body-sm font-body-sm text-on-surface"></span>
+            <span id="user-role" class="text-label-md font-label-md px-2 py-0.5 rounded" style="background:rgba(0,255,136,0.15);color:#00ff88"></span>
+            <button onclick="logout()" class="text-on-surface-variant hover:text-error transition-colors font-label-md text-label-md">Logout</button>
+        </div>
     </div>
 </nav>
 
@@ -260,8 +266,8 @@
                 </div>
             </div>
             <div class="space-y-sm">
-                <label class="block text-body-sm font-body-sm text-on-surface-variant" for="alert-webhook">Webhook URL</label>
-                <input id="alert-webhook" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-body-md font-body-md focus:ring-1 focus:ring-primary-fixed-dim outline-none" placeholder="https://hooks.slack.com/..." type="text"/>
+                <label class="block text-body-sm font-body-sm text-on-surface-variant" for="alert-threshold">Price (USD)</label>
+                <input id="alert-threshold" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-body-md font-body-md focus:ring-1 focus:ring-primary-fixed-dim outline-none" placeholder="50000" type="number" step="0.01"/>
             </div>
             <p id="alert-form-error" class="text-error text-body-sm font-body-sm hidden"></p>
             <button
@@ -298,6 +304,10 @@
 <div id="toast-container"></div>
 
 <script src="config.js"></script>
+<script src="auth.js"></script>
 <script src="main.js"></script>
+<script>
+if (!isAuthenticated()) window.location.href = 'login.html';
+</script>
 </body>
 </html>

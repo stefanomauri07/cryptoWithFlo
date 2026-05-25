@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | CryptoTracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "surface-container-lowest": "#090d1d",
+                    "surface-container": "#1a1f2f",
+                    "primary-container": "#00ff88",
+                    "on-background": "#dee1f7",
+                    "on-surface-variant": "#b9cbb9",
+                    "inverse-primary": "#006d37",
+                    "surface-container-low": "#161b2b",
+                    "surface-dim": "#0e1322",
+                    "surface": "#0e1322",
+                    "surface-container-highest": "#303445",
+                    "on-error": "#690005",
+                    "surface-bright": "#343949",
+                    "primary": "#f1ffef",
+                    "error-container": "#93000a",
+                    "primary-fixed": "#60ff99",
+                    "on-primary-container": "#007139",
+                    "on-primary-fixed": "#00210c",
+                    "surface-container-high": "#25293a",
+                    "inverse-on-surface": "#2b3040",
+                    "on-surface": "#dee1f7",
+                    "outline-variant": "#3b4b3d",
+                    "outline": "#849585",
+                    "on-primary": "#003919",
+                    "error": "#ffb4ab",
+                    "surface-tint": "#00e479",
+                    "primary-fixed-dim": "#00e479",
+                    "surface-variant": "#303445",
+                    "inverse-surface": "#dee1f7",
+                    "background": "#0e1322"
+                },
+                "borderRadius": { "DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px" },
+                "spacing": { "gutter":"20px","sm":"8px","xl":"40px","lg":"24px","md":"16px","xs":"4px","margin-desktop":"32px","unit":"4px","margin-mobile":"16px" },
+                "fontFamily": { "display-lg":["Inter"],"headline-sm":["Inter"],"headline-lg":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"body-lg":["Inter"],"body-sm":["Inter"],"label-md":["Inter"] },
+                "fontSize": {
+                    "display-lg":["48px",{"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"700"}],
+                    "headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],
+                    "headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],
+                    "body-md":["16px",{"lineHeight":"24px","fontWeight":"400"}],
+                    "headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],
+                    "body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],
+                    "body-sm":["14px",{"lineHeight":"20px","fontWeight":"400"}],
+                    "label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"600"}]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    .bg-gradient-main { background: radial-gradient(circle at 0% 0%, #161b2b 0%, #0e1322 100%); }
+</style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-hidden">
+<main class="min-h-screen flex flex-col md:flex-row bg-gradient-main">
+
+<!-- Left Side -->
+<section class="hidden md:flex md:w-1/2 relative flex-col justify-between p-xl overflow-hidden bg-surface-container-lowest">
+    <div class="absolute top-[-20%] left-[-20%] w-[80%] h-[80%] bg-primary-container/10 rounded-full blur-[120px]"></div>
+    <div class="relative z-10">
+        <div class="flex items-center gap-sm">
+            <span class="material-symbols-outlined text-primary-fixed-dim text-[40px]" style="font-variation-settings:'FILL'1">currency_bitcoin</span>
+            <h1 class="font-headline-md text-headline-md font-bold text-primary-fixed tracking-tight">CryptoTracker</h1>
+        </div>
+    </div>
+    <div class="relative z-10 flex flex-col items-center justify-center flex-grow">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mb-md text-center">Secure Your Digital Future</h2>
+        <p class="font-body-lg text-body-lg text-on-surface-variant text-center max-w-md">Real-time cryptocurrency tracking with price alerts delivered to your inbox.</p>
+    </div>
+    <div class="relative z-10 flex gap-md opacity-50">
+        <div class="flex items-center gap-xs">
+            <span class="material-symbols-outlined text-[16px]">verified_user</span>
+            <span class="font-label-md text-label-md">Secure OTP Login</span>
+        </div>
+        <div class="flex items-center gap-xs">
+            <span class="material-symbols-outlined text-[16px]">bolt</span>
+            <span class="font-label-md text-label-md">Real-time Sync</span>
+        </div>
+    </div>
+</section>
+
+<!-- Right Side: Login Form -->
+<section class="w-full md:w-1/2 flex items-center justify-center p-gutter relative">
+    <div class="md:hidden absolute top-0 left-0 w-full h-full bg-surface-container-lowest z-0"></div>
+    <div class="w-full max-w-[440px] z-10">
+        <div class="md:hidden flex items-center gap-sm mb-xl justify-center">
+            <span class="material-symbols-outlined text-primary-fixed-dim text-[32px]" style="font-variation-settings:'FILL'1">currency_bitcoin</span>
+            <h1 class="font-headline-sm text-headline-sm font-bold text-primary-fixed tracking-tight">CryptoTracker</h1>
+        </div>
+        <div class="mb-xl">
+            <h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Sign In</h2>
+            <p class="font-body-md text-body-md text-on-surface-variant">Access your trading dashboard.</p>
+        </div>
+
+        <div id="login-error" class="hidden bg-error-container/30 text-error font-body-sm text-body-sm px-lg py-md rounded-lg mb-md"></div>
+
+        <form class="space-y-lg" onsubmit="handleLogin(event)">
+            <div class="space-y-xs">
+                <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider" for="email">Email Address</label>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline text-[20px]">mail</span>
+                    <input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-md pl-[48px] pr-md text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all duration-200" id="email" name="email" placeholder="name@company.com" required type="email"/>
+                </div>
+            </div>
+            <div class="space-y-xs">
+                <div class="flex justify-between items-center">
+                    <label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider" for="password">Password</label>
+                    <a class="font-label-md text-label-md text-primary-fixed-dim hover:underline transition-all" href="reset-password.html">Forgot password?</a>
+                </div>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline text-[20px]">lock</span>
+                    <input class="w-full bg-surface-container-low border border-outline-variant/30 rounded-lg py-md pl-[48px] pr-[48px] text-on-surface placeholder:text-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all duration-200" id="password" name="password" placeholder="••••••••" required type="password"/>
+                    <button class="absolute right-md top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors" onclick="togglePassword()" type="button">
+                        <span class="material-symbols-outlined text-[20px]" id="passwordIcon">visibility</span>
+                    </button>
+                </div>
+            </div>
+            <button class="w-full bg-primary-container text-on-primary font-headline-sm text-headline-sm py-md rounded-lg shadow-[0_0_20px_rgba(0,255,136,0.2)] hover:shadow-[0_0_30px_rgba(0,255,136,0.4)] hover:brightness-110 active:scale-[0.98] transition-all duration-150" type="submit" id="login-btn">
+                Sign In
+            </button>
+        </form>
+
+        <p class="mt-xl text-center font-body-sm text-body-sm text-on-surface-variant">
+            Don't have an account?
+            <a class="text-primary-fixed-dim font-bold hover:underline" href="register.html">Create account</a>
+        </p>
+    </div>
+</section>
+</main>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script>
+if (isAuthenticated()) window.location.href = 'index.html';
+
+function togglePassword() {
+    const pwd = document.getElementById('password');
+    const icon = document.getElementById('passwordIcon');
+    if (pwd.type === 'password') { pwd.type = 'text'; icon.textContent = 'visibility_off'; }
+    else { pwd.type = 'password'; icon.textContent = 'visibility'; }
+}
+
+async function handleLogin(e) {
+    e.preventDefault();
+    const btn = document.getElementById('login-btn');
+    const errorEl = document.getElementById('login-error');
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span>';
+    errorEl.classList.add('hidden');
+
+    try {
+        await login(email, password);
+        window.location.href = 'index.html';
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Sign In';
+    }
+}
+</script>
+</body>
+</html>

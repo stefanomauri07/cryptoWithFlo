@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Text.Json;
-using System.Threading.Channels;
 using CryptoApp.Data;
 using CryptoApp.Models;
 using Microsoft.EntityFrameworkCore;
@@ -15,22 +14,19 @@ public class PriceFetcherService : BackgroundService
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<PriceFetcherService> _logger;
     private readonly IConfiguration _configuration;
-    private readonly Channel<bool> _channel;
 
     public PriceFetcherService(
         IServiceScopeFactory scopeFactory,
         IMemoryCache cache,
         IHttpClientFactory httpClientFactory,
         ILogger<PriceFetcherService> logger,
-        IConfiguration configuration,
-        Channel<bool> channel)
+        IConfiguration configuration)
     {
         _scopeFactory = scopeFactory;
         _cache = cache;
         _httpClientFactory = httpClientFactory;
         _logger = logger;
         _configuration = configuration;
-        _channel = channel;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -130,8 +126,6 @@ public class PriceFetcherService : BackgroundService
 
         db.PriceHistories.AddRange(historyEntries);
         await db.SaveChangesAsync(ct);
-
-        _channel.Writer.TryWrite(true);
 
         _logger.LogInformation("Fetched prices for {Count} cryptos in {Elapsed}ms",
             priceDtos.Count, sw.ElapsedMilliseconds);

@@ -9,7 +9,7 @@ public static class CryptoEndpoints
 {
     public static RouteGroupBuilder MapCryptoEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/crypto");
+        var group = app.MapGroup("/api/crypto").RequireAuthorization();
 
         group.MapGet("/list", (IMemoryCache cache) =>
         {
