@@ -84,3 +84,44 @@
 - Alerts CRUD functional (create, list, delete)
 - Swashbuckle downgraded from 10.1.7 to 7.2.0 (compatibility with .NET 9)
 - Named HttpClient `CoinGecko` configured with SSL bypass for proxy environments
+
+## v3.0 — 2026-05-25 (Monday)
+
+### Auth + Email Alerts
+
+**Backend:**
+- NuGet: `JwtBearer`, `BCrypt.Net-Next`
+- Models: `User` (Id, Email, PasswordHash, Role, Name, IsVerified), `Otp` (6-digit code, purpose, expiry)
+- `Alert.cs`: removed `WebhookUrl`, added `UserId` FK
+- `AppDbContext`: Users, Otps DbSets, seed admin `admin@cryptotracker.com`/`Admin123!`
+- `BrevoEmailService`: sends HTML emails via Brevo API (OTP template + alert template, dark theme)
+- `AuthEndpoints`: `/api/auth/register`, `/verify`, `/login`, `/forgot-password`, `/reset-password`, `/me`
+- `Program.cs`: JWT config, auth middleware, Brevo singleton, removed Channel
+- `AlertEndpoints`: RequireAuthorization, remove webhook, filter by user role (admin sees all)
+- `AlertCheckerService`: email via Brevo instead of webhook, independent timer
+- `CryptoEndpoints`: RequireAuthorization on all
+- EF Migration: `Auth` (Users, Otps, Alert.UserId)
+
+**Frontend:**
+- `auth.js`: JWT token management, api() helper, login/register/verify/logout functions
+- `login.html`: Stitch design, email+password form, error handling
+- `register.html`: 2-step flow (credentials → OTP verification), Stitch design
+- `reset-password.html`: 2-step flow (email → OTP + new password)
+- `index.html`: user menu (name + role badge + logout), removed webhook URL field, auth guard
+- `main.js`: all fetch → api(), removed webhookUrl, updateUserMenu()
+
+### Testing (v3.0)
+
+| Endpoint | Status |
+|----------|--------|
+| `POST /api/auth/login` (admin) | 200, JWT token |
+| `GET /api/crypto/list` (auth) | 200, 6 cryptos |
+| `GET /api/crypto/list` (no auth) | 401 Unauthorized |
+| `GET /api/alerts` (auth) | 200 |
+| `POST /api/alerts` (auth) | 201, alert created |
+| `POST /api/auth/register` | 201 |
+
+### Security note
+
+- Brevo API key removed from `launchSettings.json` (replaced with placeholder)
+- Real keys in `.env` (gitignored). For local dev, set `BREVO_API_KEY` env var or edit launchSettings.json manually.
