@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Alert History | CryptoTracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0e1322;
+            color: #dee1f7;
+        }
+        .glass-panel {
+            background: rgba(30, 33, 48, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(42, 45, 62, 0.5);
+        }
+        .glow-hover:hover {
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d1d;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #303445;
+            border-radius: 10px;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#ffdad6",
+                      "secondary-fixed-dim": "#ffb3b2",
+                      "on-background": "#dee1f7",
+                      "surface-container-low": "#161b2b",
+                      "primary-container": "#00ff88",
+                      "surface-container-highest": "#303445",
+                      "on-tertiary-fixed": "#261a00",
+                      "inverse-on-surface": "#2b3040",
+                      "secondary-fixed": "#ffdad9",
+                      "on-primary-container": "#007139",
+                      "on-error": "#690005",
+                      "outline-variant": "#3b4b3d",
+                      "inverse-surface": "#dee1f7",
+                      "surface": "#0e1322",
+                      "on-secondary-fixed-variant": "#920020",
+                      "on-secondary-fixed": "#410008",
+                      "on-tertiary-container": "#7d5d00",
+                      "surface-bright": "#343949",
+                      "primary-fixed-dim": "#00e479",
+                      "surface-tint": "#00e479",
+                      "surface-container-high": "#25293a",
+                      "on-primary": "#003919",
+                      "primary-fixed": "#60ff99",
+                      "tertiary-container": "#ffda8d",
+                      "surface-container": "#1a1f2f",
+                      "on-secondary-container": "#ffc2c1",
+                      "tertiary-fixed-dim": "#fabd00",
+                      "on-surface-variant": "#b9cbb9",
+                      "on-tertiary": "#3f2e00",
+                      "on-tertiary-fixed-variant": "#5b4300",
+                      "primary": "#f1ffef",
+                      "on-primary-fixed": "#00210c",
+                      "surface-container-lowest": "#090d1d",
+                      "secondary-container": "#b5032a",
+                      "surface-dim": "#0e1322",
+                      "surface-variant": "#303445",
+                      "error": "#ffb4ab",
+                      "tertiary-fixed": "#ffdf9e",
+                      "error-container": "#93000a",
+                      "on-primary-fixed-variant": "#005228",
+                      "on-secondary": "#680013",
+                      "secondary": "#ffb3b2",
+                      "tertiary": "#fffaf8",
+                      "outline": "#849585",
+                      "on-surface": "#dee1f7",
+                      "inverse-primary": "#006d37",
+                      "background": "#0e1322"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "unit": "4px",
+                      "sm": "8px",
+                      "xl": "40px",
+                      "margin-mobile": "16px",
+                      "md": "16px",
+                      "gutter": "20px",
+                      "lg": "24px",
+                      "margin-desktop": "32px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Inter"],
+                      "headline-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "display-lg": ["Inter"],
+                      "mono-data": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "mono-data": ["14px", {"lineHeight": "20px", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Top Navigation -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
+<div class="flex items-center gap-xl">
+<span class="font-headline-md text-headline-md font-bold text-primary-fixed tracking-tight">CryptoTracker</span>
+<div class="hidden md:flex gap-md items-center">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Dashboard</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Markets</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Portfolio</a>
+<a class="font-label-md text-label-md text-primary-fixed-dim border-b-2 border-primary-fixed-dim pb-1" href="#">Alerts</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">News</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex gap-sm">
+<button class="p-sm text-on-surface-variant hover:bg-surface-container-highest/50 rounded-full transition-all active:scale-95 duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-sm text-on-surface-variant hover:bg-surface-container-highest/50 rounded-full transition-all active:scale-95 duration-150">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+<button class="bg-primary-container text-on-primary-container px-lg py-sm rounded-lg font-label-md text-label-md font-bold active:scale-95 transition-transform">Connect Wallet</button>
+</div>
+</nav>
+<!-- Side Navigation -->
+<aside class="hidden lg:flex flex-col fixed left-0 top-16 bottom-0 w-64 py-lg bg-surface-container-lowest border-r border-outline-variant/20">
+<div class="px-md mb-xl">
+<div class="flex items-center gap-sm p-md rounded-xl bg-surface-container-high/40">
+<div class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></div>
+<div>
+<p class="font-label-md text-label-md font-black text-primary-fixed">Terminal v2.4</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-70">Live Sync Active</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-sm space-y-xs">
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high/40 hover:text-on-surface group transition-all duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Overview</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high/40 hover:text-on-surface group transition-all duration-200" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-md text-label-md">Assets</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg bg-primary-container/10 text-primary-fixed-dim border-r-4 border-primary-fixed-dim translate-x-1 group transition-all duration-200" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-md text-label-md">History</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high/40 hover:text-on-surface group transition-all duration-200" href="#">
+<span class="material-symbols-outlined">query_stats</span>
+<span class="font-label-md text-label-md">Signals</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm rounded-lg text-on-surface-variant hover:bg-surface-container-high/40 hover:text-on-surface group transition-all duration-200" href="#">
+<span class="material-symbols-outlined">terminal</span>
+<span class="font-label-md text-label-md">API</span>
+</a>
+</nav>
+<div class="px-md mt-auto pt-lg border-t border-outline-variant/10">
+<button class="w-full bg-secondary-container text-on-secondary-container py-md rounded-xl font-label-md text-label-md font-bold mb-md hover:opacity-90 transition-opacity">Upgrade to Pro</button>
+<div class="space-y-xs">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Sign Out</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="lg:ml-64 pt-24 px-margin-mobile md:px-margin-desktop pb-12">
+<header class="mb-xl">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Alert History</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Review all price triggers and automation logs from your active terminal monitors.</p>
+</header>
+<!-- Stats Grid (Bento) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-xl">
+<div class="glass-panel p-lg rounded-xl flex flex-col justify-between border-l-4 border-primary-container">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Total Triggers</span>
+<div class="mt-md">
+<p class="font-display-lg text-display-lg text-primary-fixed leading-none">1,284</p>
+<p class="font-body-sm text-body-sm text-primary-container mt-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> +12% this week
+                    </p>
+</div>
+</div>
+<div class="glass-panel p-lg rounded-xl flex flex-col justify-between">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Success Rate</span>
+<div class="mt-md">
+<p class="font-display-lg text-display-lg text-on-surface leading-none">99.2%</p>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mt-lg">
+<div class="bg-primary-container h-1 rounded-full" style="width: 99.2%"></div>
+</div>
+</div>
+</div>
+<div class="glass-panel p-lg rounded-xl flex flex-col justify-between border-l-4 border-error">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Failed Webhooks</span>
+<div class="mt-md">
+<p class="font-display-lg text-display-lg text-error leading-none">12</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">Requires attention</p>
+</div>
+</div>
+<div class="glass-panel p-lg rounded-xl flex flex-col justify-between relative overflow-hidden">
+<div class="relative z-10">
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Most Active</span>
+<div class="mt-md flex items-center gap-md">
+<div class="p-sm bg-surface-container-highest rounded-lg">
+<span class="material-symbols-outlined text-primary-fixed">currency_bitcoin</span>
+</div>
+<div>
+<p class="font-headline-sm text-headline-sm text-on-surface">BTC/USD</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">42 alerts</p>
+</div>
+</div>
+</div>
+<!-- Abstract BG Shape -->
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-primary-container/5 rounded-full blur-3xl"></div>
+</div>
+</div>
+<!-- Main Alert Table Card -->
+<div class="glass-panel rounded-xl overflow-hidden">
+<!-- Filter Bar -->
+<div class="px-lg py-md border-b border-outline-variant/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-md">
+<div class="flex bg-surface-container-highest/30 p-1 rounded-lg">
+<button class="px-lg py-sm rounded-md font-label-md text-label-md bg-primary-container text-on-primary-container shadow-md">All</button>
+<button class="px-lg py-sm rounded-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Active</button>
+<button class="px-lg py-sm rounded-md font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors">Triggered</button>
+</div>
+<div class="flex items-center gap-sm w-full md:w-auto">
+<div class="relative flex-1 md:w-64">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full bg-surface-dim border border-outline-variant/30 rounded-lg pl-xl pr-md py-sm text-body-sm focus:outline-none focus:border-primary-container transition-colors" placeholder="Search alerts..." type="text"/>
+</div>
+<button class="p-sm bg-surface-container-high border border-outline-variant/30 rounded-lg text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/20">Crypto</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/20">Condition</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/20">Triggered Date</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/20">Webhook Status</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant uppercase tracking-widest border-b border-outline-variant/20 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-highest/20 transition-colors group">
+<td class="px-lg py-lg">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary-fixed border border-outline-variant/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">currency_bitcoin</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">Bitcoin</p>
+<p class="font-label-md text-label-md text-on-surface-variant">BTC/USDT</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container text-[18px]">north_east</span>
+<span class="font-mono-data text-mono-data">Above $68,500.00</span>
+</div>
+</td>
+<td class="px-lg py-lg">
+<p class="font-body-sm text-body-sm text-on-surface">Oct 24, 2024</p>
+<p class="font-label-md text-label-md text-on-surface-variant">14:22:15 UTC</p>
+</td>
+<td class="px-lg py-lg">
+<span class="inline-flex items-center gap-xs px-sm py-xs bg-primary-container/10 text-primary-container text-[10px] font-bold rounded uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+                                    200 OK
+                                </span>
+</td>
+<td class="px-lg py-lg text-right">
+<button class="p-sm hover:bg-surface-container-highest rounded-lg text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">open_in_new</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-highest/20 transition-colors group">
+<td class="px-lg py-lg">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-blue-400 border border-outline-variant/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">currency_bitcoin</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">Ethereum</p>
+<p class="font-label-md text-label-md text-on-surface-variant">ETH/USDT</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-error text-[18px]">south_east</span>
+<span class="font-mono-data text-mono-data">Below $2,400.00</span>
+</div>
+</td>
+<td class="px-lg py-lg">
+<p class="font-body-sm text-body-sm text-on-surface">Oct 23, 2024</p>
+<p class="font-label-md text-label-md text-on-surface-variant">09:10:44 UTC</p>
+</td>
+<td class="px-lg py-lg">
+<span class="inline-flex items-center gap-xs px-sm py-xs bg-error/10 text-error text-[10px] font-bold rounded uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                    500 Error
+                                </span>
+</td>
+<td class="px-lg py-lg text-right">
+<button class="p-sm hover:bg-surface-container-highest rounded-lg text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">refresh</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-highest/20 transition-colors group">
+<td class="px-lg py-lg">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-orange-400 border border-outline-variant/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">toll</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">Solana</p>
+<p class="font-label-md text-label-md text-on-surface-variant">SOL/USDT</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container text-[18px]">north_east</span>
+<span class="font-mono-data text-mono-data">Above $165.00</span>
+</div>
+</td>
+<td class="px-lg py-lg">
+<p class="font-body-sm text-body-sm text-on-surface">Oct 22, 2024</p>
+<p class="font-label-md text-label-md text-on-surface-variant">21:05:12 UTC</p>
+</td>
+<td class="px-lg py-lg">
+<span class="inline-flex items-center gap-xs px-sm py-xs bg-primary-container/10 text-primary-container text-[10px] font-bold rounded uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+                                    200 OK
+                                </span>
+</td>
+<td class="px-lg py-lg text-right">
+<button class="p-sm hover:bg-surface-container-highest rounded-lg text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">open_in_new</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-highest/20 transition-colors group">
+<td class="px-lg py-lg">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-purple-400 border border-outline-variant/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">token</span>
+</div>
+<div>
+<p class="font-body-md text-body-md font-bold text-on-surface">Chainlink</p>
+<p class="font-label-md text-label-md text-on-surface-variant">LINK/USDT</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-lg">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary-container text-[18px]">north_east</span>
+<span class="font-mono-data text-mono-data">Above $12.50</span>
+</div>
+</td>
+<td class="px-lg py-lg">
+<p class="font-body-sm text-body-sm text-on-surface">Oct 22, 2024</p>
+<p class="font-label-md text-label-md text-on-surface-variant">18:44:01 UTC</p>
+</td>
+<td class="px-lg py-lg">
+<span class="inline-flex items-center gap-xs px-sm py-xs bg-primary-container/10 text-primary-container text-[10px] font-bold rounded uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+                                    200 OK
+                                </span>
+</td>
+<td class="px-lg py-lg text-right">
+<button class="p-sm hover:bg-surface-container-highest rounded-lg text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined">open_in_new</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-lg py-md border-t border-outline-variant/20 flex items-center justify-between">
+<p class="font-label-md text-label-md text-on-surface-variant">Showing <span class="text-on-surface">1-4</span> of 1,284 alerts</p>
+<div class="flex items-center gap-sm">
+<button class="p-sm rounded-lg bg-surface-container-high text-on-surface-variant disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex gap-xs">
+<button class="w-8 h-8 rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md">1</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-highest/30 text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md">2</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-highest/30 text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md">3</button>
+<span class="text-on-surface-variant">...</span>
+<button class="w-8 h-8 rounded-lg bg-surface-container-highest/30 text-on-surface-variant hover:bg-surface-container-highest font-label-md text-label-md">321</button>
+</div>
+<button class="p-sm rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- System Logs / Debugger (Secondary Card) -->
+<div class="mt-xl grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<div class="lg:col-span-2 glass-panel p-lg rounded-xl">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Real-time Debug Console</h3>
+<div class="flex items-center gap-sm">
+<div class="flex items-center gap-xs text-[10px] font-bold text-primary-container uppercase">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-ping"></span>
+                            Live Monitoring
+                        </div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-md rounded-lg font-mono-data text-sm space-y-sm border border-outline-variant/10 max-h-48 overflow-y-auto">
+<p class="text-on-surface-variant"><span class="text-primary-container">[14:22:15]</span> ALERT_TRIGGERED: BTC_PRICE_ABOVE_68500 (Value: 68502.44)</p>
+<p class="text-on-surface-variant"><span class="text-primary-container">[14:22:16]</span> WEBHOOK_DISPATCH: https://api.endpoint.io/v1/trigger -&gt; Payload Signed</p>
+<p class="text-on-surface-variant"><span class="text-primary-container">[14:22:17]</span> WEBHOOK_SUCCESS: Received 200 OK from endpoint</p>
+<p class="text-on-surface-variant"><span class="text-primary-container">[14:21:02]</span> SYSTEM_HEALTH: Polling CoinGecko API... Heartbeat 64ms</p>
+<p class="text-on-surface-variant opacity-60"><span class="text-on-surface-variant">[14:19:55]</span> SYNC_COMPLETE: All active 244 alerts synchronized with block height 865,221</p>
+</div>
+</div>
+<div class="glass-panel p-lg rounded-xl">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-lg">Quick Setup</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg">Start a new high-precision price monitor in seconds.</p>
+<div class="space-y-md">
+<button class="w-full flex items-center justify-between p-md bg-surface-container-high rounded-lg hover:border-primary-container border border-transparent transition-all group">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary-fixed">add_alert</span>
+<span class="font-label-md text-label-md">Price Threshold</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+<button class="w-full flex items-center justify-between p-md bg-surface-container-high rounded-lg hover:border-primary-container border border-transparent transition-all group">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary-fixed">show_chart</span>
+<span class="font-label-md text-label-md">Volatility Spike</span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:translate-x-1 transition-transform">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-md px-margin-desktop flex flex-col md:flex-row justify-between items-center bg-surface-dim border-t border-outline-variant/10 mt-12 gap-md">
+<div class="flex items-center gap-md">
+<span class="font-label-md text-label-md font-bold text-on-surface">CryptoTracker Terminal</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">© 2024 CryptoTracker Terminal. High-Precision Data.</span>
+</div>
+<div class="flex gap-lg">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">Terms of Service</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" href="#">API Docs</a>
+<a class="font-label-md text-label-md text-primary-fixed-dim underline transition-colors" href="#">Status</a>
+</div>
+</footer>
+<!-- Interactive Scripts -->
+<script>
+        // Simple filter interaction
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => {
+                    b.classList.remove('bg-primary-container', 'text-on-primary-container');
+                    b.classList.add('text-on-surface-variant');
+                });
+                btn.classList.add('bg-primary-container', 'text-on-primary-container');
+                btn.classList.remove('text-on-surface-variant');
+            });
+        });
+
+        // Hover row effects logic already handled by Tailwind
+    </script>
+</body></html>
