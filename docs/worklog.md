@@ -1,5 +1,26 @@
 # CryptoTracker Worklog
 
+## v3.2 (2026-05-25) — Binance API Integration + Admin Semplicato
+
+### Changed
+- Admin credentials: email `admin`, password `admin` (migration UpdateAdminSeed)
+- login.html: campo email cambiato da `type="email"` a `type="text"` per supportare login con "admin"
+
+### Added
+- **`BinanceService`**: fetch candele OHLCV da Binance (klines endpoint pubblico, no API key)
+- Symbol mapping: bitcoin→BTCUSDT, ethereum→ETHUSDT, cardano→ADAUSDT, ecc.
+- **Chart endpoint** ora usa Binance come fonte primaria: `GET /api/crypto/{id}/chart?days=N`
+  - Intervallo automatico in base ai giorni: ≤1→15m, ≤7→1h, ≤30→4h, >30→1d
+  - Cache 2 minuti per klines
+  - Fallback al DB PriceHistories se Binance non risponde
+- Registrato `HttpClient("Binance")` + `BinanceService` singleton in Program.cs
+
+### Vantaggi Binance
+- Dati grafico immediati (senza aspettare giorni di storico DB)
+- Alta granularita' (fino a 15 minuti)
+- Rate limit 1200 req/min, nessuna API key richiesta
+- L'endpoint chart restituisce lo stesso formato `[{timestamp, price_usd}]` — frontend invariato
+
 ## v3.1 (2026-05-25) — Multi-page SPA + Stitch Design Integration
 
 ### Fixed

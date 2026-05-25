@@ -31,6 +31,13 @@ var connStr = $"Server={builder.Configuration["DATABASE_HOST"]};"
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connStr, ServerVersion.AutoDetect(connStr)));
 
+builder.Services.AddHttpClient("Binance", client =>
+{
+    client.BaseAddress = new Uri("https://api.binance.com/");
+    client.DefaultRequestHeaders.Add("User-Agent", "CryptoApp/1.0");
+});
+
+builder.Services.AddSingleton<BinanceService>();
 builder.Services.AddHostedService<PriceFetcherService>();
 builder.Services.AddHostedService<AlertCheckerService>();
 

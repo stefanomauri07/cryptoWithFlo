@@ -1,5 +1,6 @@
 using CryptoApp.Data;
 using CryptoApp.Models;
+using CryptoApp.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -21,16 +22,23 @@ public static class CryptoEndpoints
             return Results.Ok(Array.Empty<CryptoPriceDto>());
         });
 
-        group.MapGet("/{id}/chart", async (string id, int? days, AppDbContext db) =>
+        group.MapGet("/{id}/chart", async (string id, int? days, BinanceService binance, AppDbContext db, CancellationToken ct) =>
         {
             var lookback = days ?? 7;
-            var since = DateTime.UtcNow.AddDays(-lookback);
 
+            var klines = await binance.GetKlinesAsync(id, lookback, ct);
+            if (klines.Count > 0)
+            {
+                var chartData = klines.Select(k => new { timestamp = k.Timestamp, price_usd = k.Close }).ToList();
+                return Results.Ok(chartData);
+            }
+
+            var since = DateTime.UtcNow.AddDays(-lookback);
             var data = await db.PriceHistories
                 .Where(p => p.CryptoId == id && p.RecordedAt >= since)
                 .OrderBy(p => p.RecordedAt)
                 .Select(p => new { timestamp = p.RecordedAt, price_usd = p.PriceUsd })
-                .ToListAsync();
+                .ToListAsync(ct);
 
             return Results.Ok(data);
         });

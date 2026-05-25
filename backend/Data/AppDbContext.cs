@@ -87,8 +87,8 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<User>().HasData(new User
         {
             Id = 1,
-            Email = "admin@cryptotracker.com",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
+            Email = "admin",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin"),
             Role = "admin",
             Name = "Admin",
             IsVerified = true,

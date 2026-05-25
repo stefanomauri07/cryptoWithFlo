@@ -9,11 +9,11 @@
 │  frontend (nginx:alpine, :3000)                          │
 │     │                                                    │
 │     ▼                                                    │
-│  backend (ASP.NET Core 8, :5000)                         │
-│     │           │              │                         │
-│     ▼           ▼              ▼                         │
-│  MariaDB     CoinGecko      Webhook URLs                 │
-│  (:3307)     (public API)   (user-configured)            │
+│  backend (ASP.NET Core 9, :5000)                         │
+│     │           │              │              │          │
+│     ▼           ▼              ▼              ▼          │
+│  MariaDB     CoinGecko      Binance         Brevo        │
+│  (:3307)     (public API)   (klines API)    (email)      │
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -147,7 +147,23 @@ Loop:
      a. POST to webhook_url with JSON payload:
         { crypto_id, price_usd, threshold_usd, condition, triggered_at }
      b. Set IsTriggered = true, TriggeredAt = DateTime.UtcNow
-  5. await Task.Delay(ALERT_CHECK_INTERVAL_SECONDS * 1000)
+   5. await Task.Delay(ALERT_CHECK_INTERVAL_SECONDS * 1000)
+```
+
+#### `BinanceService` (Singleton)
+```
+Symbol mapping: bitcoin→BTCUSDT, ethereum→ETHUSDT, cardano→ADAUSDT,
+                dogecoin→DOGEUSDT, solana→SOLUSDT, ripple→XRPUSDT
+
+GetKlinesAsync(cryptoId, days):
+  1. Select interval based on days: ≤1→15m, ≤7→1h, ≤30→4h, >30→1d
+  2. GET /api/v3/klines?symbol={SYMBOL}&interval={I}&limit={N}
+     → No API key required (public endpoint)
+  3. Parse candles: [timestamp, open, high, low, close, volume]
+  4. Cache result 2 min in IMemoryCache
+  5. Return List<BinanceKline>
+
+Chart endpoint uses Binance as primary source, DB PriceHistories as fallback.
 ```
 
 ### 2d. EF Core Models
