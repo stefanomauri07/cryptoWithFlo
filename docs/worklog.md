@@ -55,5 +55,32 @@
 **Known Issues:**
 - CoinGecko API returns 403 (FortiGuard blocks cryptocurrency on school network) — app works on unrestricted networks
 - `MapOpenApi()` returns 404 (Swashbuckle handles OpenAPI at `/swagger/v1/swagger.json`)
+
+## v2.2 — 2026-05-25 (Monday)
+
+### Frontend Implementation
+
+- Created 6 frontend files based on Stitch designs (dashboard_cryptotracker + cyberpulse DESIGN.md)
+- `config.js`: API_BASE = localhost:5000
+- `index.html`: Full dashboard SPA with Tailwind CDN, Material Symbols, Chart.js CDN
+  - Exact Tailwind config copied from Stitch (colors, spacing, typography, border-radius)
+  - Navbar: CryptoTracker logo + Dashboard/Alerts nav links + health status dot + cache age
+  - Health bar: DB status indicator + auto-refresh timer
+  - Section 1 — Price Table: 6 rows, skeleton loading, green ▲ / red ▼ for 24h change
+  - Section 2 — Chart: crypto dropdown, 7D/30D/90D pills, Chart.js canvas with gradient fill
+  - Section 3 — Alerts: form (crypto, condition, threshold, webhook URL) + list (Active/Triggered badges)
+- `style.css`: glass-panel, custom scrollbar, skeleton shimmer, status dots, animations, toast
+- `main.js`: All fetch logic, Chart.js management, DOM updates, polling (30s prices, 60s alerts)
+- `default.conf` + `Dockerfile` for nginx deployment in docker compose
+- Frontend served on port 3000 via `npx serve`
+
+### Testing (v2.2)
+
+- Frontend loads all 3 sections with skeleton loading state
+- Backend successfully fetches real CoinGecko prices (200 OK — network unblocked)
+- All API calls through CORS localhost:3000 → localhost:5000 work
+- 6 crypto rows updated every 30 seconds with real-time prices
+- Chart.js renders interactive line chart with gradient fill
+- Alerts CRUD functional (create, list, delete)
 - Swashbuckle downgraded from 10.1.7 to 7.2.0 (compatibility with .NET 9)
 - Named HttpClient `CoinGecko` configured with SSL bypass for proxy environments
