@@ -109,33 +109,7 @@
 </head>
 <body class="bg-background text-on-surface overflow-x-hidden">
 
-<!-- Navbar -->
-<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop h-16 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/30 shadow-sm">
-    <div class="flex items-center gap-xl">
-        <span class="font-headline-md text-headline-md font-bold text-primary-fixed tracking-tight">CryptoTracker</span>
-        <div class="hidden md:flex gap-lg">
-            <a class="text-primary-fixed-dim border-b-2 border-primary-fixed-dim pb-1 font-label-md text-label-md" href="#" onclick="scrollToSection('dashboard')">Dashboard</a>
-            <a class="text-on-surface-variant hover:text-on-surface transition-colors font-label-md text-label-md" href="#" onclick="scrollToSection('alerts')">Alerts</a>
-        </div>
-    </div>
-    <div class="flex items-center gap-md">
-        <div id="health-status" class="flex items-center gap-sm">
-            <span class="status-dot-connecting" id="status-dot"></span>
-            <span id="status-text" class="text-body-sm font-body-sm text-on-surface-variant">Connecting...</span>
-        </div>
-        <span class="text-on-surface-variant/40 hidden md:inline">|</span>
-        <span id="cache-age" class="text-body-sm font-body-sm text-on-surface-variant hidden md:inline">---</span>
-        <span class="text-on-surface-variant/40">|</span>
-        <div id="user-menu" class="flex items-center gap-md">
-            <span id="user-name" class="text-body-sm font-body-sm text-on-surface"></span>
-            <span id="user-role" class="text-label-md font-label-md px-2 py-0.5 rounded" style="background:rgba(0,255,136,0.15);color:#00ff88"></span>
-            <button onclick="logout()" class="text-on-surface-variant hover:text-error transition-colors font-label-md text-label-md">Logout</button>
-        </div>
-    </div>
-</nav>
-
-<!-- Main Content -->
-<main class="pt-16 min-h-screen">
+<main class="lg:pl-64 pt-16 min-h-screen">
 
 <!-- Health Bar -->
 <div id="health-bar" class="w-full bg-surface-container-high px-margin-desktop py-sm flex justify-between items-center border-b border-outline-variant/10">
@@ -148,6 +122,16 @@
                 <span id="db-status-text" class="text-body-sm font-body-sm text-on-surface-variant">Connecting...</span>
             </div>
         </div>
+        <div class="hidden md:flex gap-md border-l border-outline-variant/20 pl-lg">
+            <div class="flex items-center gap-xs text-body-sm font-body-sm">
+                <span class="text-on-surface-variant">BTC:</span>
+                <span id="ticker-btc" class="text-primary-fixed font-mono-data text-mono-data">---</span>
+            </div>
+            <div class="flex items-center gap-xs text-body-sm font-body-sm">
+                <span class="text-on-surface-variant">ETH:</span>
+                <span id="ticker-eth" class="text-primary-fixed font-mono-data text-mono-data">---</span>
+            </div>
+        </div>
     </div>
     <div class="flex items-center gap-sm text-body-sm font-body-sm text-on-surface-variant">
         <span class="material-symbols-outlined text-base">sync</span>
@@ -158,16 +142,15 @@
 <div class="p-margin-desktop space-y-lg">
 
 <!-- Hero Grid: Table + Chart -->
-<div class="grid grid-cols-1 xl:grid-cols-10 gap-lg" id="dashboard">
+<div class="grid grid-cols-1 xl:grid-cols-10 gap-lg">
 
 <!-- Section 1: Live Prices Table -->
 <div class="xl:col-span-6 bg-surface-container-low rounded-xl border border-outline-variant/20 overflow-hidden flex flex-col">
     <div class="px-lg py-md border-b border-outline-variant/10 flex justify-between items-center">
         <h2 class="font-headline-sm text-headline-sm">Live Markets</h2>
-        <span class="text-primary-fixed-dim font-label-md text-label-md flex items-center gap-xs">
-            <span class="material-symbols-outlined text-sm animate-spin" style="font-size:14px">sync</span>
-            Auto-refresh
-        </span>
+        <button class="text-primary-fixed-dim font-label-md text-label-md flex items-center gap-xs hover:underline" onclick="window.location.href='market-explorer.html'">
+            View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </button>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
@@ -179,9 +162,7 @@
                     <th class="px-lg py-sm font-label-md text-label-md text-right">24h Change</th>
                 </tr>
             </thead>
-            <tbody id="price-table-body" class="divide-y divide-outline-variant/10">
-                <!-- Populated by main.js -->
-            </tbody>
+            <tbody id="price-table-body" class="divide-y divide-outline-variant/10"></tbody>
         </table>
     </div>
 </div>
@@ -191,7 +172,7 @@
     <div class="flex flex-col gap-sm">
         <div class="flex justify-between items-start">
             <div>
-                <select id="chart-crypto-select" class="bg-surface-container border-none text-headline-sm font-headline-sm focus:ring-0 cursor-pointer p-0 pr-8 outline-none" onchange="onCryptoChange()">
+                <select id="chart-crypto-select" class="bg-transparent border-none text-headline-sm font-headline-sm focus:ring-0 cursor-pointer p-0 pr-8 outline-none" onchange="onCryptoChange()">
                     <option value="bitcoin">Bitcoin (BTC)</option>
                     <option value="ethereum">Ethereum (ETH)</option>
                     <option value="cardano">Cardano (ADA)</option>
@@ -224,15 +205,15 @@
             <p id="stat-high" class="text-body-md font-body-md font-bold">---</p>
         </div>
         <div class="p-md bg-surface-container-highest/40 rounded-lg">
-            <p class="text-label-md font-label-md text-on-surface-variant">Range</p>
+            <p class="text-label-md font-label-md text-on-surface-variant">Volume</p>
             <p id="stat-range" class="text-body-md font-body-md font-bold">---</p>
         </div>
     </div>
 </div>
 </div>
 
-<!-- Section 3: Alerts Panel (id="alerts") -->
-<section id="alerts-section" class="bg-surface-container-low rounded-xl border border-outline-variant/20 overflow-hidden" id="alerts">
+<!-- Section 3: Alerts Panel -->
+<section id="alerts-section" class="bg-surface-container-low rounded-xl border border-outline-variant/20 overflow-hidden">
     <div class="px-lg py-md border-b border-outline-variant/10">
         <h2 class="font-headline-sm text-headline-sm">Market Price Alerts</h2>
     </div>
@@ -243,14 +224,17 @@
             <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Create New Alert</h3>
             <div class="space-y-sm">
                 <label class="block text-body-sm font-body-sm text-on-surface-variant" for="alert-crypto">Asset</label>
-                <select id="alert-crypto" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-body-md font-body-md focus:ring-1 focus:ring-primary-fixed-dim outline-none">
-                    <option value="bitcoin">Bitcoin (BTC)</option>
-                    <option value="ethereum">Ethereum (ETH)</option>
-                    <option value="cardano">Cardano (ADA)</option>
-                    <option value="dogecoin">Dogecoin (DOGE)</option>
-                    <option value="solana">Solana (SOL)</option>
-                    <option value="ripple">Ripple (XRP)</option>
-                </select>
+                <div class="relative">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-md">search</span>
+                    <select id="alert-crypto" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg pl-10 pr-3 py-2 text-body-md font-body-md focus:ring-1 focus:ring-primary-fixed-dim outline-none">
+                        <option value="bitcoin">Bitcoin (BTC)</option>
+                        <option value="ethereum">Ethereum (ETH)</option>
+                        <option value="cardano">Cardano (ADA)</option>
+                        <option value="dogecoin">Dogecoin (DOGE)</option>
+                        <option value="solana">Solana (SOL)</option>
+                        <option value="ripple">Ripple (XRP)</option>
+                    </select>
+                </div>
             </div>
             <div class="grid grid-cols-2 gap-md">
                 <div class="space-y-sm">
@@ -264,10 +248,6 @@
                     <label class="block text-body-sm font-body-sm text-on-surface-variant" for="alert-threshold">Price (USD)</label>
                     <input id="alert-threshold" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-body-md font-body-md focus:ring-1 focus:ring-primary-fixed-dim outline-none" placeholder="50000" type="number" step="0.01"/>
                 </div>
-            </div>
-            <div class="space-y-sm">
-                <label class="block text-body-sm font-body-sm text-on-surface-variant" for="alert-threshold">Price (USD)</label>
-                <input id="alert-threshold" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-body-md font-body-md focus:ring-1 focus:ring-primary-fixed-dim outline-none" placeholder="50000" type="number" step="0.01"/>
             </div>
             <p id="alert-form-error" class="text-error text-body-sm font-body-sm hidden"></p>
             <button
@@ -284,9 +264,7 @@
                 <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider" id="alerts-count-title">Active Alerts</h3>
                 <button class="text-error font-label-md text-label-md hover:underline hidden" id="clear-all-btn" onclick="onClearAllAlerts()">Clear All</button>
             </div>
-            <div class="flex-1 overflow-y-auto max-h-[350px] space-y-sm pr-sm" id="alerts-list">
-                <!-- Populated by main.js -->
-            </div>
+            <div class="flex-1 overflow-y-auto max-h-[350px] space-y-sm pr-sm" id="alerts-list"></div>
         </div>
     </div>
 </section>
@@ -294,20 +272,16 @@
 </div>
 </main>
 
-<!-- Footer -->
-<footer class="w-full py-md px-margin-desktop flex items-center justify-between bg-surface-dim border-t border-outline-variant/10">
-    <span class="font-label-md text-label-md font-bold text-on-surface">CryptoTracker</span>
-    <span class="text-on-surface-variant text-body-sm font-body-sm">Real-time cryptocurrency monitoring</span>
-</footer>
-
 <!-- Toast container -->
 <div id="toast-container"></div>
 
 <script src="config.js"></script>
 <script src="auth.js"></script>
-<script src="main.js"></script>
+<script src="layout.js?v=2"></script>
+<script src="main.js?v=2"></script>
 <script>
 if (!isAuthenticated()) window.location.href = 'login.html';
+initLayout('dashboard');
 </script>
 </body>
 </html>

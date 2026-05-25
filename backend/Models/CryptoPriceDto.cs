@@ -6,5 +6,8 @@ public record CryptoPriceDto(
     string Symbol,
     decimal PriceUsd,
     decimal PriceEur,
-    decimal Change24hPercent
+    decimal Change24hPercent,
+    decimal? MarketCap = null,
+    decimal? Volume24h = null,
+    decimal? AllTimeHigh = null
 );

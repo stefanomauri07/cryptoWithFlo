@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Alert History | CryptoTracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<link href="style.css" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#ffb3b2",
+                    "on-background": "#dee1f7",
+                    "surface-container-low": "#161b2b",
+                    "primary-container": "#00ff88",
+                    "surface-container-highest": "#303445",
+                    "on-tertiary-fixed": "#261a00",
+                    "inverse-on-surface": "#2b3040",
+                    "secondary-fixed": "#ffdad9",
+                    "on-primary-container": "#007139",
+                    "on-error": "#690005",
+                    "outline-variant": "#3b4b3d",
+                    "inverse-surface": "#dee1f7",
+                    "surface": "#0e1322",
+                    "on-secondary-fixed-variant": "#920020",
+                    "on-secondary-fixed": "#410008",
+                    "on-tertiary-container": "#7d5d00",
+                    "surface-bright": "#343949",
+                    "primary-fixed-dim": "#00e479",
+                    "surface-tint": "#00e479",
+                    "surface-container-high": "#25293a",
+                    "on-primary": "#003919",
+                    "primary-fixed": "#60ff99",
+                    "tertiary-container": "#ffda8d",
+                    "surface-container": "#1a1f2f",
+                    "on-secondary-container": "#ffc2c1",
+                    "tertiary-fixed-dim": "#fabd00",
+                    "on-surface-variant": "#b9cbb9",
+                    "on-tertiary": "#3f2e00",
+                    "on-tertiary-fixed-variant": "#5b4300",
+                    "primary": "#f1ffef",
+                    "on-primary-fixed": "#00210c",
+                    "surface-container-lowest": "#090d1d",
+                    "secondary-container": "#b5032a",
+                    "surface-dim": "#0e1322",
+                    "surface-variant": "#303445",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#ffdf9e",
+                    "error-container": "#93000a",
+                    "on-primary-fixed-variant": "#005228",
+                    "on-secondary": "#680013",
+                    "secondary": "#ffb3b2",
+                    "tertiary": "#fffaf8",
+                    "outline": "#849585",
+                    "on-surface": "#dee1f7",
+                    "inverse-primary": "#006d37",
+                    "background": "#0e1322"
+                },
+                "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+                "spacing": {
+                    "unit": "4px",
+                    "sm": "8px",
+                    "xl": "40px",
+                    "margin-mobile": "16px",
+                    "md": "16px",
+                    "gutter": "20px",
+                    "lg": "24px",
+                    "margin-desktop": "32px",
+                    "xs": "4px"
+                },
+                "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "mono-data": ["Inter"]
+                },
+                "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],
+                    "headline-sm": ["20px", {"lineHeight":"28px","fontWeight":"600"}],
+                    "body-md": ["16px", {"lineHeight":"24px","fontWeight":"400"}],
+                    "headline-md": ["24px", {"lineHeight":"32px","fontWeight":"600"}],
+                    "body-lg": ["18px", {"lineHeight":"28px","fontWeight":"400"}],
+                    "label-md": ["12px", {"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"600"}],
+                    "body-sm": ["14px", {"lineHeight":"20px","fontWeight":"400"}],
+                    "display-lg": ["48px", {"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"700"}],
+                    "mono-data": ["14px", {"lineHeight":"20px","fontWeight":"500"}]
+                }
+            }
+        }
+    }
+</script>
+</head>
+<body class="bg-background text-on-surface overflow-x-hidden">
+
+<script src="layout.js"></script>
+
+<main class="lg:pl-64 pt-16 min-h-screen">
+<div class="p-margin-desktop space-y-lg">
+
+    <div>
+        <h1 class="font-headline-lg text-headline-lg">Alert History</h1>
+        <p class="text-on-surface-variant text-body-md mt-sm">Monitor all your triggered and active price alerts</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-lg">
+
+        <div class="bg-surface-container-low rounded-xl p-lg glass-card-hover">
+            <div class="flex items-center justify-between mb-md">
+                <span class="text-on-surface-variant text-label-md font-label-md uppercase tracking-wider">Total Triggers</span>
+                <span class="material-symbols-outlined text-primary-fixed-dim">notifications_active</span>
+            </div>
+            <div class="text-display-lg font-display-lg text-on-surface" id="stat-total">0</div>
+            <div class="text-primary-fixed-dim text-body-sm font-body-sm mt-xs">+12% from last week</div>
+        </div>
+
+        <div class="bg-surface-container-low rounded-xl p-lg glass-card-hover">
+            <div class="flex items-center justify-between mb-md">
+                <span class="text-on-surface-variant text-label-md font-label-md uppercase tracking-wider">Active Alerts</span>
+                <span class="material-symbols-outlined" style="color:#00ff88">fiber_manual_record</span>
+            </div>
+            <div class="text-display-lg font-display-lg text-on-surface" id="stat-active">0</div>
+            <div class="text-on-surface-variant text-body-sm font-body-sm mt-xs">Currently monitoring</div>
+        </div>
+
+        <div class="bg-surface-container-low rounded-xl p-lg glass-card-hover">
+            <div class="flex items-center justify-between mb-md">
+                <span class="text-on-surface-variant text-label-md font-label-md uppercase tracking-wider">Triggered</span>
+                <span class="material-symbols-outlined text-primary-fixed-dim">check_circle</span>
+            </div>
+            <div class="text-display-lg font-display-lg text-on-surface" id="stat-triggered">0</div>
+            <div class="text-on-surface-variant text-body-sm font-body-sm mt-xs">Alerts that fired</div>
+        </div>
+
+        <div class="bg-surface-container-low rounded-xl p-lg glass-card-hover">
+            <div class="flex items-center justify-between mb-md">
+                <span class="text-on-surface-variant text-label-md font-label-md uppercase tracking-wider">Most Active</span>
+                <span class="material-symbols-outlined" style="color:#ffc107">local_fire_department</span>
+            </div>
+            <div class="text-display-lg font-display-lg text-on-surface" id="stat-most-active">—</div>
+            <div class="text-on-surface-variant text-body-sm font-body-sm mt-xs">Asset with most alerts</div>
+        </div>
+
+    </div>
+
+    <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 overflow-hidden">
+
+        <div class="flex items-center justify-between px-lg py-md border-b border-outline-variant/20 gap-lg flex-wrap">
+            <div class="flex items-center gap-sm">
+                <button id="filter-all" class="tab-pill active">All</button>
+                <button id="filter-active" class="tab-pill">Active</button>
+                <button id="filter-triggered" class="tab-pill">Triggered</button>
+            </div>
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-size:18px">search</span>
+                <input id="search-input" type="text" placeholder="Search alerts..." class="pl-9 pr-md py-2 bg-surface-container-high border border-outline-variant/30 rounded-lg text-body-sm font-body-sm text-on-surface placeholder-on-surface-variant focus:outline-none focus:border-primary-fixed-dim/50 transition-colors w-64"/>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead>
+                    <tr class="border-b border-outline-variant/20 text-on-surface-variant text-label-md font-label-md uppercase tracking-wider">
+                        <th class="px-lg py-md text-left">Crypto</th>
+                        <th class="px-lg py-md text-left">Condition</th>
+                        <th class="px-lg py-md text-left">Threshold</th>
+                        <th class="px-lg py-md text-left">Created</th>
+                        <th class="px-lg py-md text-left">Triggered</th>
+                        <th class="px-lg py-md text-left">Status</th>
+                        <th class="px-lg py-md text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="alerts-table-body">
+                    <tr><td colspan="7" class="px-lg py-xl text-center text-on-surface-variant">No alerts found</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-lg">
+
+        <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 overflow-hidden">
+            <div class="px-lg py-md border-b border-outline-variant/20 flex items-center justify-between">
+                <span class="font-headline-sm text-headline-sm">Debug Console</span>
+                <span class="material-symbols-outlined text-on-surface-variant">terminal</span>
+            </div>
+            <div class="debug-console p-lg text-sm max-h-60 overflow-y-auto space-y-1" id="debug-console">
+                <div class="debug-line text-on-surface-variant/60">[15:42:01] Price check: BTC $64,231 &gt; threshold $62,000</div>
+                <div class="debug-line text-primary-fixed-dim">[15:42:01] Alert #42 triggered: BTC Above $62,000</div>
+                <div class="debug-line text-on-surface-variant/60">[15:42:01] Email notification sent to user@email.com</div>
+                <div class="debug-line text-error/80">[15:40:15] Price check: ETH $3,452 &lt; threshold $3,500</div>
+            </div>
+        </div>
+
+        <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 overflow-hidden">
+            <div class="px-lg py-md border-b border-outline-variant/20">
+                <span class="font-headline-sm text-headline-sm">Quick Actions</span>
+            </div>
+            <div class="p-lg space-y-md">
+                <a href="index.html#alerts-section" class="flex items-center gap-sm px-lg py-md bg-surface-container-high rounded-lg border border-outline-variant/20 hover:border-primary-fixed-dim/40 transition-colors text-on-surface text-body-md font-body-md">
+                    <span class="material-symbols-outlined text-primary-fixed-dim">add_alert</span>
+                    <span>Price Threshold</span>
+                </a>
+                <button onclick="clearAllTriggered()" class="w-full flex items-center gap-sm px-lg py-md bg-error-container/10 rounded-lg border border-error-container/20 hover:bg-error-container/20 transition-colors text-error text-body-md font-body-md">
+                    <span class="material-symbols-outlined">delete_sweep</span>
+                    <span>Clear All Triggered</span>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<footer class="w-full py-md px-margin-desktop lg:pl-64 flex items-center justify-between bg-surface-dim border-t border-outline-variant/10 mt-lg">
+    <span class="font-label-md text-label-md font-bold text-on-surface">CryptoTracker Terminal</span>
+    <div class="flex items-center gap-lg">
+        <span class="text-on-surface-variant text-body-sm font-body-sm">2026 CryptoTracker. All rights reserved.</span>
+        <a href="#" class="text-on-surface-variant text-body-sm font-body-sm hover:text-on-surface transition-colors">Privacy</a>
+        <a href="#" class="text-on-surface-variant text-body-sm font-body-sm hover:text-on-surface transition-colors">Terms</a>
+        <a href="#" class="text-on-surface-variant text-body-sm font-body-sm hover:text-on-surface transition-colors">API</a>
+        <a href="#" class="text-on-surface-variant text-body-sm font-body-sm hover:text-on-surface transition-colors">Status</a>
+    </div>
+</footer>
+
+</main>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script>
+if (!isAuthenticated()) window.location.href = 'login.html';
+
+const cryptoIcons = {bitcoin:'currency_bitcoin',ethereum:'eco',cardano:'token',dogecoin:'pets',solana:'circle',ripple:'water_drop'};
+const cryptoNames = {bitcoin:'Bitcoin',ethereum:'Ethereum',cardano:'Cardano',dogecoin:'Dogecoin',solana:'Solana',ripple:'Ripple'};
+const cryptoSymbols = {bitcoin:'BTC',ethereum:'ETH',cardano:'ADA',dogecoin:'DOGE',solana:'SOL',ripple:'XRP'};
+
+function formatPrice(p) { return p>=1 ? '$'+p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '$'+p.toFixed(6); }
+function timeAgo(dateStr) {
+    const now=new Date(), then=new Date(dateStr), diff=Math.floor((now-then)/60000);
+    if(diff<1) return 'just now'; if(diff<60) return diff+'m ago';
+    const h=Math.floor(diff/60); if(h<24) return h+'h ago';
+    return Math.floor(h/24)+'d ago';
+}
+
+let allAlerts = [];
+let currentFilter = 'all';
+let currentSearch = '';
+
+async function fetchAlertHistory() {
+    try {
+        let url = '/api/alerts';
+        if (currentFilter !== 'all') url += '?status=' + currentFilter;
+        if (currentSearch) url += (url.includes('?') ? '&' : '?') + 'q=' + encodeURIComponent(currentSearch);
+        const res = await api(url);
+        if (!res.ok) return;
+        allAlerts = await res.json();
+        renderTable();
+        updateStats();
+    } catch(err) { console.error(err); }
+}
+
+function updateStats() {
+    document.getElementById('stat-total').textContent = allAlerts.length;
+    document.getElementById('stat-active').textContent = allAlerts.filter(a => !a.isTriggered).length;
+    document.getElementById('stat-triggered').textContent = allAlerts.filter(a => a.isTriggered).length;
+
+    const counts = {};
+    allAlerts.forEach(a => { counts[a.cryptoId] = (counts[a.cryptoId] || 0) + 1; });
+    let most = '—';
+    let max = 0;
+    for (const [id, count] of Object.entries(counts)) {
+        if (count > max) { max = count; most = cryptoNames[id] || id; }
+    }
+    document.getElementById('stat-most-active').textContent = most;
+}
+
+function renderTable() {
+    const tbody = document.getElementById('alerts-table-body');
+    tbody.innerHTML = '';
+    if (allAlerts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="px-lg py-xl text-center text-on-surface-variant">No alerts found</td></tr>';
+        return;
+    }
+    allAlerts.forEach(a => {
+        const icon = cryptoIcons[a.cryptoId] || 'currency_bitcoin';
+        const name = cryptoNames[a.cryptoId] || a.cryptoId;
+        const symbol = cryptoSymbols[a.cryptoId] || a.cryptoId.toUpperCase();
+        const conditionClass = a.condition === 'above' ? 'text-primary-fixed-dim' : 'text-error';
+        const statusBadge = a.isTriggered
+            ? '<span class="px-2 py-0.5 rounded text-label-md font-label-md" style="background:rgba(0,255,136,0.15);color:#00ff88">Triggered</span>'
+            : '<span class="px-2 py-0.5 rounded text-label-md font-label-md" style="background:rgba(255,193,7,0.15);color:#ffc107">Active</span>';
+
+        tbody.innerHTML += `
+        <tr class="hover:bg-surface-container-highest/30 transition-colors">
+            <td class="px-lg py-md">
+                <div class="flex items-center gap-sm">
+                    <span class="material-symbols-outlined text-primary-fixed" style="font-size:20px">${icon}</span>
+                    <div>
+                        <div class="font-bold text-body-sm font-body-sm">${name}</div>
+                        <div class="text-on-surface-variant text-label-md font-label-md">${symbol}</div>
+                    </div>
+                </div>
+            </td>
+            <td class="px-lg py-md"><span class="${conditionClass} font-mono-data text-mono-data">${a.condition === 'above' ? 'Above' : 'Below'}</span></td>
+            <td class="px-lg py-md font-mono-data text-mono-data">$${a.thresholdUsd.toLocaleString()}</td>
+            <td class="px-lg py-md text-body-sm font-body-sm text-on-surface-variant">${timeAgo(a.createdAt)}</td>
+            <td class="px-lg py-md text-body-sm font-body-sm text-on-surface-variant">${a.triggeredAt ? timeAgo(a.triggeredAt) : '—'}</td>
+            <td class="px-lg py-md">${statusBadge}</td>
+            <td class="px-lg py-md">
+                <button onclick="deleteAlert(${a.id})" class="p-2 hover:bg-error-container/20 rounded-full text-error transition-colors">
+                    <span class="material-symbols-outlined text-sm">delete</span>
+                </button>
+            </td>
+        </tr>`;
+    });
+}
+
+async function deleteAlert(id) {
+    await api('/api/alerts/' + id, { method: 'DELETE' });
+    fetchAlertHistory();
+}
+
+async function clearAllTriggered() {
+    const triggered = allAlerts.filter(a => a.isTriggered);
+    for (const a of triggered) {
+        await api('/api/alerts/' + a.id, { method: 'DELETE' });
+    }
+    fetchAlertHistory();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initLayout('alerts');
+
+    document.getElementById('filter-all').addEventListener('click', function() {
+        currentFilter = 'all';
+        document.querySelectorAll('.tab-pill').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        fetchAlertHistory();
+    });
+
+    document.getElementById('filter-active').addEventListener('click', function() {
+        currentFilter = 'active';
+        document.querySelectorAll('.tab-pill').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        fetchAlertHistory();
+    });
+
+    document.getElementById('filter-triggered').addEventListener('click', function() {
+        currentFilter = 'triggered';
+        document.querySelectorAll('.tab-pill').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        fetchAlertHistory();
+    });
+
+    document.getElementById('search-input').addEventListener('input', function() {
+        currentSearch = this.value;
+        fetchAlertHistory();
+    });
+
+    fetchAlertHistory();
+});
+</script>
+
+</body>
+</html>

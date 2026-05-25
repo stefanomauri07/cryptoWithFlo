@@ -127,8 +127,9 @@ async function fetchPrices() {
             const arrow = crypto.change24hPercent >= 0 ? 'arrow_upward' : 'arrow_downward';
 
             const row = document.createElement('tr');
-            row.className = 'hover:bg-surface-container-highest/30 transition-colors group';
+            row.className = 'hover:bg-surface-container-highest/30 transition-colors group cursor-pointer';
             row.style.animationDelay = (i * 50) + 'ms';
+            row.onclick = () => { window.location.href = 'crypto-detail.html?id=' + crypto.id; };
             row.innerHTML = `
                 <td class="px-lg py-md">
                     <div class="flex items-center gap-md">
@@ -149,6 +150,13 @@ async function fetchPrices() {
                     </span>
                 </td>`;
             tbody.appendChild(row);
+
+            if (crypto.id === 'bitcoin' && document.getElementById('ticker-btc')) {
+                document.getElementById('ticker-btc').textContent = formatPrice(crypto.priceUsd);
+            }
+            if (crypto.id === 'ethereum' && document.getElementById('ticker-eth')) {
+                document.getElementById('ticker-eth').textContent = formatPrice(crypto.priceUsd);
+            }
         });
     } catch (err) {
         console.error('fetchPrices failed:', err);

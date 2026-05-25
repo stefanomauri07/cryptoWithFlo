@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Markets | CryptoTracker Terminal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<link href="style.css" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#ffb3b2",
+                    "on-background": "#dee1f7",
+                    "surface-container-low": "#161b2b",
+                    "primary-container": "#00ff88",
+                    "surface-container-highest": "#303445",
+                    "on-tertiary-fixed": "#261a00",
+                    "inverse-on-surface": "#2b3040",
+                    "secondary-fixed": "#ffdad9",
+                    "on-primary-container": "#007139",
+                    "on-error": "#690005",
+                    "outline-variant": "#3b4b3d",
+                    "inverse-surface": "#dee1f7",
+                    "surface": "#0e1322",
+                    "on-secondary-fixed-variant": "#920020",
+                    "on-secondary-fixed": "#410008",
+                    "on-tertiary-container": "#7d5d00",
+                    "surface-bright": "#343949",
+                    "primary-fixed-dim": "#00e479",
+                    "surface-tint": "#00e479",
+                    "surface-container-high": "#25293a",
+                    "on-primary": "#003919",
+                    "primary-fixed": "#60ff99",
+                    "tertiary-container": "#ffda8d",
+                    "surface-container": "#1a1f2f",
+                    "on-secondary-container": "#ffc2c1",
+                    "tertiary-fixed-dim": "#fabd00",
+                    "on-surface-variant": "#b9cbb9",
+                    "on-tertiary": "#3f2e00",
+                    "on-tertiary-fixed-variant": "#5b4300",
+                    "primary": "#f1ffef",
+                    "on-primary-fixed": "#00210c",
+                    "surface-container-lowest": "#090d1d",
+                    "secondary-container": "#b5032a",
+                    "surface-dim": "#0e1322",
+                    "surface-variant": "#303445",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#ffdf9e",
+                    "error-container": "#93000a",
+                    "on-primary-fixed-variant": "#005228",
+                    "on-secondary": "#680013",
+                    "secondary": "#ffb3b2",
+                    "tertiary": "#fffaf8",
+                    "outline": "#849585",
+                    "on-surface": "#dee1f7",
+                    "inverse-primary": "#006d37",
+                    "background": "#0e1322"
+                },
+                "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+                "spacing": {
+                    "unit": "4px",
+                    "sm": "8px",
+                    "xl": "40px",
+                    "margin-mobile": "16px",
+                    "md": "16px",
+                    "gutter": "20px",
+                    "lg": "24px",
+                    "margin-desktop": "32px",
+                    "xs": "4px"
+                },
+                "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "mono-data": ["Inter"]
+                },
+                "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],
+                    "headline-sm": ["20px", {"lineHeight":"28px","fontWeight":"600"}],
+                    "body-md": ["16px", {"lineHeight":"24px","fontWeight":"400"}],
+                    "headline-md": ["24px", {"lineHeight":"32px","fontWeight":"600"}],
+                    "body-lg": ["18px", {"lineHeight":"28px","fontWeight":"400"}],
+                    "label-md": ["12px", {"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"600"}],
+                    "body-sm": ["14px", {"lineHeight":"20px","fontWeight":"400"}],
+                    "display-lg": ["48px", {"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"700"}],
+                    "mono-data": ["14px", {"lineHeight":"20px","fontWeight":"500"}]
+                }
+            }
+        }
+    }
+</script>
+</head>
+<body class="bg-background text-on-surface overflow-x-hidden">
+
+<script src="layout.js"></script>
+
+<main class="lg:pl-64 pt-16 min-h-screen">
+<div class="p-margin-desktop space-y-lg">
+
+    <!-- Trending Marquee -->
+    <div class="bg-surface-container-low border border-outline-variant/20 rounded-xl overflow-hidden py-sm">
+        <div class="marquee-track flex gap-xl whitespace-nowrap" id="ticker-track">
+            <!-- Populated by JS -->
+        </div>
+    </div>
+
+    <!-- Market Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-md">
+        <div>
+            <h1 class="font-headline-lg text-headline-lg">Market Explorer</h1>
+            <p class="text-on-surface-variant text-body-md">Global Market Cap <span id="global-mcap" class="text-primary-fixed-dim font-bold">---</span> <span id="global-change" class="text-label-md font-label-md">---</span></p>
+        </div>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div class="flex gap-sm flex-wrap" id="category-filters">
+        <button class="tab-pill active" data-cat="all">All Assets</button>
+        <button class="tab-pill" data-cat="layer1">Layer 1</button>
+        <button class="tab-pill" data-cat="defi">DeFi</button>
+        <button class="tab-pill" data-cat="stablecoins">Stablecoins</button>
+        <button class="tab-pill" data-cat="meme">Meme</button>
+    </div>
+
+    <!-- Market Table -->
+    <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="text-on-surface-variant bg-surface-container/30">
+                        <th class="px-lg py-sm font-label-md text-label-md w-12">#</th>
+                        <th class="px-lg py-sm font-label-md text-label-md">Asset</th>
+                        <th class="px-lg py-sm font-label-md text-label-md text-right">Price</th>
+                        <th class="px-lg py-sm font-label-md text-label-md text-right">24h Change</th>
+                        <th class="px-lg py-sm font-label-md text-label-md text-right">24h Volume</th>
+                        <th class="px-lg py-sm font-label-md text-label-md text-right">Market Cap</th>
+                    </tr>
+                </thead>
+                <tbody id="market-table-body" class="divide-y divide-outline-variant/10">
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination -->
+        <div class="px-lg py-md border-t border-outline-variant/10 flex justify-between items-center">
+            <span class="text-body-sm font-body-sm text-on-surface-variant" id="pagination-info">Showing 6 of 6 assets</span>
+        </div>
+    </div>
+
+</div>
+
+<!-- Footer -->
+<footer class="w-full py-md px-margin-desktop flex items-center justify-between bg-surface-dim border-t border-outline-variant/10">
+    <span class="font-label-md text-label-md font-bold text-on-surface">CryptoTracker</span>
+    <span class="text-on-surface-variant text-body-sm font-body-sm">Real-time cryptocurrency monitoring</span>
+</footer>
+</main>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script>
+if (!isAuthenticated()) window.location.href = 'login.html';
+
+const cryptoIcons = {bitcoin:'currency_bitcoin',ethereum:'eco',cardano:'token',dogecoin:'pets',solana:'circle',ripple:'water_drop'};
+const cryptoNames = {bitcoin:'Bitcoin',ethereum:'Ethereum',cardano:'Cardano',dogecoin:'Dogecoin',solana:'Solana',ripple:'Ripple'};
+const cryptoSymbols = {bitcoin:'BTC',ethereum:'ETH',cardano:'ADA',dogecoin:'DOGE',solana:'SOL',ripple:'XRP'};
+
+function formatPrice(p) { return p>=1 ? '$'+p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '$'+p.toFixed(6); }
+function formatPercent(pct) { return (pct>=0?'+':'')+pct.toFixed(2)+'%'; }
+function formatCompact(n) {
+    if (!n) return '---';
+    if (n >= 1e12) return '$'+(n/1e12).toFixed(2)+'T';
+    if (n >= 1e9) return '$'+(n/1e9).toFixed(2)+'B';
+    if (n >= 1e6) return '$'+(n/1e6).toFixed(2)+'M';
+    return '$'+(n/1e3).toFixed(2)+'K';
+}
+
+let allPrices = [];
+
+async function fetchMarketData() {
+    try {
+        const res = await api('/api/crypto/list');
+        if (!res.ok) return;
+        allPrices = await res.json();
+        renderTicker();
+        renderTable();
+        updateGlobalStats();
+    } catch(err) { console.error(err); }
+}
+
+function updateGlobalStats() {
+    if (allPrices.length === 0) return;
+    const totalMcap = allPrices.reduce((sum, c) => sum + (c.marketCap || 0), 0);
+    document.getElementById('global-mcap').textContent = formatCompact(totalMcap);
+    const avgChange = allPrices.reduce((sum, c) => sum + c.change24hPercent, 0) / allPrices.length;
+    const el = document.getElementById('global-change');
+    el.textContent = formatPercent(avgChange);
+    el.className = 'text-label-md font-label-md ' + (avgChange >= 0 ? 'text-primary-fixed-dim' : 'text-error');
+}
+
+function renderTicker() {
+    const track = document.getElementById('ticker-track');
+    const items = allPrices.map(c => {
+        const cls = c.change24hPercent >= 0 ? 'text-primary-fixed-dim' : 'text-error';
+        const arrow = c.change24hPercent >= 0 ? 'arrow_upward' : 'arrow_downward';
+        return `<div class="flex items-center gap-sm px-lg">
+            <span class="font-bold text-body-sm font-body-sm">${c.symbol}</span>
+            <span class="font-mono-data text-mono-data">${formatPrice(c.priceUsd)}</span>
+            <span class="${cls} flex items-center gap-xs font-label-md text-label-md">
+                <span class="material-symbols-outlined" style="font-size:14px">${arrow}</span>${formatPercent(c.change24hPercent)}
+            </span>
+        </div>`;
+    });
+    track.innerHTML = items.join('') + items.join('');
+}
+
+function renderTable() {
+    const tbody = document.getElementById('market-table-body');
+    tbody.innerHTML = '';
+    allPrices.forEach((c, i) => {
+        const icon = cryptoIcons[c.id] || 'currency_bitcoin';
+        const changeClass = c.change24hPercent >= 0 ? 'text-primary-fixed-dim' : 'text-error';
+        const arrow = c.change24hPercent >= 0 ? 'arrow_upward' : 'arrow_downward';
+
+        tbody.innerHTML += `
+        <tr class="hover:bg-surface-container-highest/30 transition-colors cursor-pointer table-row-click" onclick="window.location.href='crypto-detail.html?id=${c.id}'">
+            <td class="px-lg py-md text-on-surface-variant font-mono-data text-mono-data">${i+1}</td>
+            <td class="px-lg py-md">
+                <div class="flex items-center gap-md">
+                    <div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/20">
+                        <span class="material-symbols-outlined text-primary-fixed" style="font-variation-settings:'FILL'1">${icon}</span>
+                    </div>
+                    <div>
+                        <div class="font-bold text-body-md font-body-md">${c.name}</div>
+                        <div class="text-on-surface-variant text-label-md font-label-md">${c.symbol}</div>
+                    </div>
+                </div>
+            </td>
+            <td class="px-lg py-md text-right font-mono-data text-mono-data">${formatPrice(c.priceUsd)}</td>
+            <td class="px-lg py-md text-right">
+                <span class="${changeClass} flex items-center justify-end gap-xs font-mono-data text-mono-data">
+                    <span class="material-symbols-outlined text-sm">${arrow}</span>${formatPercent(c.change24hPercent)}
+                </span>
+            </td>
+            <td class="px-lg py-md text-right font-mono-data text-mono-data text-on-surface-variant">${formatCompact(c.volume24h)}</td>
+            <td class="px-lg py-md text-right font-mono-data text-mono-data text-on-surface-variant">${formatCompact(c.marketCap)}</td>
+        </tr>`;
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initLayout('markets');
+
+    document.querySelectorAll('#category-filters .tab-pill').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('#category-filters .tab-pill').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            renderTable();
+        });
+    });
+
+    fetchMarketData();
+    setInterval(fetchMarketData, 60000);
+});
+</script>
+</body>
+</html>

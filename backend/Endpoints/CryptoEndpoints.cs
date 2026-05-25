@@ -55,6 +55,30 @@ public static class CryptoEndpoints
             return Results.Ok(data);
         });
 
+        group.MapGet("/{id}/stats", async (string id, IMemoryCache cache) =>
+        {
+            if (cache.TryGetValue("prices", out PriceCacheEntry? entry) && entry is not null)
+            {
+                var crypto = entry.Prices.FirstOrDefault(p => p.Id == id);
+                if (crypto is not null)
+                {
+                    return Results.Ok(new
+                    {
+                        crypto.Id,
+                        crypto.Name,
+                        crypto.Symbol,
+                        crypto.PriceUsd,
+                        crypto.PriceEur,
+                        crypto.Change24hPercent,
+                        crypto.MarketCap,
+                        crypto.Volume24h,
+                        crypto.AllTimeHigh
+                    });
+                }
+            }
+            return Results.NotFound(new { error = "Crypto not found in cache" });
+        });
+
         return group;
     }
 }

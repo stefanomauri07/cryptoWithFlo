@@ -66,7 +66,7 @@ public class PriceFetcherService : BackgroundService
         }
 
         var ids = string.Join(",", cryptos.Select(c => c.Id));
-        var url = $"https://api.coingecko.com/api/v3/simple/price?ids={ids}&vs_currencies=usd,eur&include_24hr_change=true";
+        var url = $"https://api.coingecko.com/api/v3/simple/price?ids={ids}&vs_currencies=usd,eur&include_24hr_change=true&include_market_cap=true&include_24hr_vol=true";
 
         using var request = new HttpRequestMessage(HttpMethod.Get, url);
         var apiKey = _configuration["COINGECKO_API_KEY"];
@@ -106,7 +106,10 @@ public class PriceFetcherService : BackgroundService
                 details.TryGetProperty("usd_24h_change", out var change) ? change.GetDecimal() : 0m,
                 4);
 
-            priceDtos.Add(new CryptoPriceDto(crypto.Id, crypto.Name, crypto.Symbol, priceUsd, priceEur, change24h));
+            priceDtos.Add(new CryptoPriceDto(crypto.Id, crypto.Name, crypto.Symbol, priceUsd, priceEur, change24h,
+                details.TryGetProperty("usd_market_cap", out var mc) ? Math.Round(mc.GetDecimal(), 2) : null,
+                details.TryGetProperty("usd_24h_vol", out var vol) ? Math.Round(vol.GetDecimal(), 2) : null,
+                details.TryGetProperty("ath", out var ath) ? Math.Round(ath.GetDecimal(), 2) : null));
 
             historyEntries.Add(new PriceHistory
             {

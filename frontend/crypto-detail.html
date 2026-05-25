@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CryptoTracker Terminal | Crypto Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<link href="style.css" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#ffb3b2",
+                    "on-background": "#dee1f7",
+                    "surface-container-low": "#161b2b",
+                    "primary-container": "#00ff88",
+                    "surface-container-highest": "#303445",
+                    "on-tertiary-fixed": "#261a00",
+                    "inverse-on-surface": "#2b3040",
+                    "secondary-fixed": "#ffdad9",
+                    "on-primary-container": "#007139",
+                    "on-error": "#690005",
+                    "outline-variant": "#3b4b3d",
+                    "inverse-surface": "#dee1f7",
+                    "surface": "#0e1322",
+                    "on-secondary-fixed-variant": "#920020",
+                    "on-secondary-fixed": "#410008",
+                    "on-tertiary-container": "#7d5d00",
+                    "surface-bright": "#343949",
+                    "primary-fixed-dim": "#00e479",
+                    "surface-tint": "#00e479",
+                    "surface-container-high": "#25293a",
+                    "on-primary": "#003919",
+                    "primary-fixed": "#60ff99",
+                    "tertiary-container": "#ffda8d",
+                    "surface-container": "#1a1f2f",
+                    "on-secondary-container": "#ffc2c1",
+                    "tertiary-fixed-dim": "#fabd00",
+                    "on-surface-variant": "#b9cbb9",
+                    "on-tertiary": "#3f2e00",
+                    "on-tertiary-fixed-variant": "#5b4300",
+                    "primary": "#f1ffef",
+                    "on-primary-fixed": "#00210c",
+                    "surface-container-lowest": "#090d1d",
+                    "secondary-container": "#b5032a",
+                    "surface-dim": "#0e1322",
+                    "surface-variant": "#303445",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#ffdf9e",
+                    "error-container": "#93000a",
+                    "on-primary-fixed-variant": "#005228",
+                    "on-secondary": "#680013",
+                    "secondary": "#ffb3b2",
+                    "tertiary": "#fffaf8",
+                    "outline": "#849585",
+                    "on-surface": "#dee1f7",
+                    "inverse-primary": "#006d37",
+                    "background": "#0e1322"
+                },
+                "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+                "spacing": {
+                    "unit": "4px",
+                    "sm": "8px",
+                    "xl": "40px",
+                    "margin-mobile": "16px",
+                    "md": "16px",
+                    "gutter": "20px",
+                    "lg": "24px",
+                    "margin-desktop": "32px",
+                    "xs": "4px"
+                },
+                "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "mono-data": ["Inter"]
+                },
+                "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],
+                    "headline-sm": ["20px", {"lineHeight":"28px","fontWeight":"600"}],
+                    "body-md": ["16px", {"lineHeight":"24px","fontWeight":"400"}],
+                    "headline-md": ["24px", {"lineHeight":"32px","fontWeight":"600"}],
+                    "body-lg": ["18px", {"lineHeight":"28px","fontWeight":"400"}],
+                    "label-md": ["12px", {"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"600"}],
+                    "body-sm": ["14px", {"lineHeight":"20px","fontWeight":"400"}],
+                    "display-lg": ["48px", {"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"700"}],
+                    "mono-data": ["14px", {"lineHeight":"20px","fontWeight":"500"}]
+                }
+            }
+        }
+    }
+</script>
+<style>
+    .tab-pill {
+        padding: 6px 16px;
+        font-size: 12px;
+        line-height: 16px;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+        color: #b9cbb9;
+        border-radius: 8px;
+        transition: all 0.15s ease;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+    }
+    .tab-pill:hover {
+        color: #dee1f7;
+    }
+    .tab-pill.active {
+        background: #303445;
+        color: #00e479;
+    }
+    .gauge-bg {
+        stroke: #1a1f2f;
+    }
+    .gauge-fill {
+        stroke: #00ff88;
+        stroke-linecap: round;
+        transition: stroke-dashoffset 1s ease;
+    }
+    .gauge-needle {
+        transform-origin: 100px 88px;
+        transition: transform 1s ease;
+    }
+</style>
+</head>
+<body class="bg-background text-on-surface overflow-x-hidden">
+
+<script src="layout.js"></script>
+
+<main class="lg:pl-64 pt-16 min-h-screen">
+<div class="p-margin-desktop space-y-lg">
+
+<!-- Back button + Hero Header -->
+<div class="flex items-center gap-md mb-lg">
+    <a href="index.html" class="flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container-high hover:bg-surface-container-highest transition-colors text-on-surface-variant hover:text-on-surface">
+        <span class="material-symbols-outlined">arrow_back</span>
+    </a>
+</div>
+
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg flex flex-col md:flex-row md:items-center gap-lg">
+    <div class="flex items-center gap-lg flex-1">
+        <div class="w-16 h-16 rounded-full bg-primary-container/15 flex items-center justify-center flex-shrink-0">
+            <span id="crypto-icon" class="material-symbols-outlined text-4xl text-primary-fixed-dim">currency_bitcoin</span>
+        </div>
+        <div>
+            <div class="flex items-center gap-md flex-wrap">
+                <h1 id="crypto-name" class="font-headline-lg text-headline-lg">Bitcoin</h1>
+                <span id="crypto-symbol" class="px-2 py-0.5 rounded bg-surface-container-highest text-label-md font-label-md text-on-surface-variant">BTC</span>
+            </div>
+            <div class="flex items-baseline gap-md mt-sm">
+                <span id="crypto-price" class="text-display-lg font-display-lg text-primary-fixed">---</span>
+                <span id="crypto-change-badge" class="px-2 py-1 rounded text-label-md font-label-md bg-primary-container/20 text-primary-fixed-dim">---</span>
+            </div>
+        </div>
+    </div>
+    <div class="flex gap-md">
+        <button class="px-lg py-md bg-primary-container text-on-primary-container font-label-md text-label-md rounded-lg hover:brightness-110 transition-all font-bold flex items-center gap-sm">
+            <span class="material-symbols-outlined text-base">notifications_active</span>
+            Set Alert
+        </button>
+        <button class="px-lg py-md bg-surface-container-highest text-on-surface-variant font-label-md text-label-md rounded-lg opacity-50 cursor-not-allowed flex items-center gap-sm" disabled>
+            <span class="material-symbols-outlined text-base">show_chart</span>
+            Trade
+        </button>
+    </div>
+</div>
+
+<!-- Price Chart -->
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg flex flex-col gap-lg">
+    <div class="flex flex-wrap items-center justify-between gap-md">
+        <h2 class="font-headline-sm text-headline-sm">Price Chart</h2>
+        <div class="flex bg-surface-container-high p-1 rounded-lg" id="detail-period-buttons">
+            <button class="detail-period-btn tab-pill active" data-days="1" onclick="onDetailPeriodChange(1, this)">24H</button>
+            <button class="detail-period-btn tab-pill" data-days="7" onclick="onDetailPeriodChange(7, this)">7D</button>
+            <button class="detail-period-btn tab-pill" data-days="30" onclick="onDetailPeriodChange(30, this)">30D</button>
+            <button class="detail-period-btn tab-pill" data-days="90" onclick="onDetailPeriodChange(90, this)">90D</button>
+            <button class="detail-period-btn tab-pill" data-days="365" onclick="onDetailPeriodChange(365, this)">1Y</button>
+        </div>
+    </div>
+    <div class="chart-container flex-1 relative bg-surface-container-highest/20 rounded-lg overflow-hidden border border-outline-variant/5" style="min-height:350px">
+        <canvas id="detail-chart-canvas"></canvas>
+    </div>
+</div>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-lg">
+    <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg flex flex-col gap-sm">
+        <p class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">Market Cap</p>
+        <p id="stat-marketcap" class="text-headline-sm font-headline-sm">---</p>
+        <span id="stat-marketcap-change" class="text-label-md font-label-md text-primary-fixed-dim">---</span>
+    </div>
+    <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg flex flex-col gap-sm">
+        <p class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">24h Volume</p>
+        <p id="stat-volume" class="text-headline-sm font-headline-sm">---</p>
+        <span class="text-label-md font-label-md text-on-surface-variant/60">USD</span>
+    </div>
+    <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg flex flex-col gap-sm">
+        <p class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">All-Time High</p>
+        <p id="stat-ath" class="text-headline-sm font-headline-sm">---</p>
+        <span id="stat-ath-pct" class="text-label-md font-label-md text-primary-fixed-dim">---</span>
+    </div>
+    <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg flex flex-col gap-sm">
+        <p class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">Circulating Supply</p>
+        <p id="stat-supply" class="text-headline-sm font-headline-sm">---</p>
+        <div class="w-full bg-surface-container-high rounded-full h-2 mt-sm overflow-hidden">
+            <div id="stat-supply-bar" class="bg-primary-fixed-dim h-full rounded-full transition-all duration-500" style="width:0%"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Bottom Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-lg">
+    <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg flex flex-col gap-md">
+        <h3 class="font-headline-sm text-headline-sm">Recent Activity</h3>
+        <div class="space-y-md">
+            <div class="flex items-center gap-md p-md bg-surface-container-highest/30 rounded-lg">
+                <div class="w-10 h-10 rounded-full bg-primary-container/15 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-primary-fixed-dim">shopping_cart</span>
+                </div>
+                <div class="flex-1">
+                    <p class="font-body-md font-body-md font-medium">Buy Order</p>
+                    <p class="text-body-sm font-body-sm text-on-surface-variant">BTC @ $62,340 - Limit Filled</p>
+                </div>
+                <span class="text-body-sm font-body-sm text-on-surface-variant">2h ago</span>
+            </div>
+            <div class="flex items-center gap-md p-md bg-surface-container-highest/30 rounded-lg">
+                <div class="w-10 h-10 rounded-full bg-secondary-container/15 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-secondary-fixed-dim">sell</span>
+                </div>
+                <div class="flex-1">
+                    <p class="font-body-md font-body-md font-medium">Limit Sell</p>
+                    <p class="text-body-sm font-body-sm text-on-surface-variant">ETH @ $3,120 - Partial Fill</p>
+                </div>
+                <span class="text-body-sm font-body-sm text-on-surface-variant">5h ago</span>
+            </div>
+            <div class="flex items-center gap-md p-md bg-surface-container-highest/30 rounded-lg">
+                <div class="w-10 h-10 rounded-full bg-tertiary-fixed-dim/15 flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined" style="color:#fabd00">account_balance</span>
+                </div>
+                <div class="flex-1">
+                    <p class="font-body-md font-body-md font-medium">Whale Transfer</p>
+                    <p class="text-body-sm font-body-sm text-on-surface-variant">1,200 BTC → Unknown Wallet</p>
+                </div>
+                <span class="text-body-sm font-body-sm text-on-surface-variant">12h ago</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Sentiment Gauge -->
+    <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg flex flex-col items-center gap-lg">
+        <h3 class="font-headline-sm text-headline-sm self-start">Market Sentiment</h3>
+        <div class="relative flex flex-col items-center">
+            <svg viewBox="0 0 200 120" class="w-64">
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#1a1f2f" stroke-width="14"/>
+                <path id="gauge-fill" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#00ff88" stroke-width="14" stroke-linecap="round" stroke-dasharray="251.33" stroke-dashoffset="70"/>
+                <text x="100" y="95" text-anchor="middle" class="text-display-lg font-display-lg" fill="#00e479" font-weight="700" font-size="28">72</text>
+            </svg>
+            <span class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider mt-md">Greed</span>
+            <div class="flex justify-between w-full mt-md text-label-md font-label-md text-on-surface-variant/60 px-4">
+                <span>Fear</span>
+                <span>Neutral</span>
+                <span>Greed</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+</main>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script>
+if (!isAuthenticated()) window.location.href = 'login.html';
+
+initLayout('crypto-detail');
+
+const params = new URLSearchParams(window.location.search);
+const cryptoId = params.get('id') || 'bitcoin';
+
+const cryptoIcons = {bitcoin:'currency_bitcoin',ethereum:'eco',cardano:'token',dogecoin:'pets',solana:'circle',ripple:'water_drop'};
+const cryptoNames = {bitcoin:'Bitcoin',ethereum:'Ethereum',cardano:'Cardano',dogecoin:'Dogecoin',solana:'Solana',ripple:'Ripple'};
+const cryptoSymbols = {bitcoin:'BTC',ethereum:'ETH',cardano:'ADA',dogecoin:'DOGE',solana:'SOL',ripple:'XRP'};
+
+function formatPrice(price) {
+    if (price >= 1) return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return '$' + price.toFixed(6);
+}
+function formatPercent(pct) {
+    return (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
+}
+
+let detailChart = null;
+let currentDetailDays = 1;
+
+document.getElementById('crypto-icon').textContent = cryptoIcons[cryptoId] || 'currency_bitcoin';
+document.getElementById('crypto-name').textContent = cryptoNames[cryptoId] || cryptoId;
+document.getElementById('crypto-symbol').textContent = cryptoSymbols[cryptoId] || cryptoId.toUpperCase();
+
+async function fetchStats() {
+    try {
+        const res = await api('/api/crypto/' + cryptoId + '/stats');
+        if (!res.ok) return;
+        const data = await res.json();
+        document.getElementById('crypto-price').textContent = formatPrice(data.priceUsd);
+        const changeBadge = document.getElementById('crypto-change-badge');
+        const changeVal = data.change24hPercent;
+        changeBadge.textContent = formatPercent(changeVal);
+        changeBadge.className = 'px-2 py-1 rounded text-label-md font-label-md ' + (changeVal >= 0 ? 'bg-primary-container/20 text-primary-fixed-dim' : 'bg-error-container/20 text-error');
+        document.getElementById('stat-marketcap').textContent = data.marketCap ? '$' + (data.marketCap / 1e9).toFixed(1) + 'B' : '---';
+        document.getElementById('stat-marketcap-change').textContent = data.marketCapChange24h ? formatPercent(data.marketCapChange24h) : '---';
+        document.getElementById('stat-volume').textContent = data.volume24h ? '$' + (data.volume24h / 1e9).toFixed(1) + 'B' : '---';
+        if (data.allTimeHigh && data.priceUsd) {
+            document.getElementById('stat-ath').textContent = formatPrice(data.allTimeHigh);
+            const athPct = ((data.priceUsd - data.allTimeHigh) / data.allTimeHigh * 100).toFixed(1);
+            document.getElementById('stat-ath-pct').textContent = athPct + '%';
+            document.getElementById('stat-ath-pct').className = 'text-label-md font-label-md ' + (parseFloat(athPct) >= 0 ? 'text-primary-fixed-dim' : 'text-error');
+        }
+        if (data.circulatingSupply && data.maxSupply) {
+            const supplyRatio = data.circulatingSupply / data.maxSupply * 100;
+            document.getElementById('stat-supply').textContent = (data.circulatingSupply / 1e6).toFixed(1) + 'M';
+            document.getElementById('stat-supply-bar').style.width = supplyRatio + '%';
+        }
+    } catch(err) { console.error(err); }
+}
+
+async function fetchDetailChart(days) {
+    try {
+        const res = await api('/api/crypto/' + cryptoId + '/chart?days=' + days);
+        if (!res.ok) return [];
+        return await res.json();
+    } catch(err) { return []; }
+}
+
+async function updateDetailChart() {
+    const data = await fetchDetailChart(currentDetailDays);
+    const canvas = document.getElementById('detail-chart-canvas');
+    if (!data || data.length === 0) return;
+
+    const timestamps = data.map(d => new Date(d.timestamp).toLocaleDateString('en-US', {month:'short',day:'numeric'}));
+    const prices = data.map(d => d.price_usd);
+    const lastPrice = prices[prices.length-1];
+    const firstPrice = prices[0];
+    const changePercent = firstPrice > 0 ? ((lastPrice - firstPrice) / firstPrice * 100) : 0;
+
+    if (detailChart) { detailChart.destroy(); detailChart = null; }
+
+    const ctx = canvas.getContext('2d');
+    const lineColor = changePercent >= 0 ? '#00ff88' : '#ff4757';
+    const fillGradient = ctx.createLinearGradient(0, 0, 0, 350);
+    fillGradient.addColorStop(0, changePercent >= 0 ? 'rgba(0,255,136,0.25)' : 'rgba(255,71,87,0.2)');
+    fillGradient.addColorStop(1, 'rgba(0,255,136,0)');
+
+    detailChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: timestamps,
+            datasets: [{
+                data: prices,
+                borderColor: lineColor,
+                backgroundColor: fillGradient,
+                fill: true,
+                tension: 0.4,
+                borderWidth: 2.5,
+                pointRadius: (ctx) => ctx.dataIndex === prices.length-1 ? 4 : 0,
+                pointBackgroundColor: lineColor,
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { grid: { display: false }, ticks: { color: '#8b8fa3', maxTicksLimit: 8, font: { size: 11 } } },
+                y: { grid: { color: 'rgba(42,45,62,0.3)' }, ticks: { color: '#8b8fa3', font: { size: 11 }, callback: (v) => formatPrice(v) } }
+            }
+        }
+    });
+}
+
+function onDetailPeriodChange(days, btn) {
+    currentDetailDays = days;
+    document.querySelectorAll('.detail-period-btn').forEach(b => b.className = 'tab-pill detail-period-btn');
+    btn.className = 'tab-pill detail-period-btn active';
+    updateDetailChart();
+}
+
+fetchStats();
+updateDetailChart();
+setInterval(fetchStats, 60000);
+</script>
+</body>
+</html>

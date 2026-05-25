@@ -140,3 +140,105 @@ body {
     color: #00e479;
     border-radius: 6px;
 }
+
+/* Sidebar styles */
+.sidebar { width: 256px; }
+.sidebar-link { transition: all 0.2s ease; }
+.sidebar-link:hover { transform: translateX(4px); }
+
+/* Marquee animation */
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+.marquee-track { animation: marquee 20s linear infinite; }
+.marquee-track:hover { animation-play-state: paused; }
+
+/* Glass card hover */
+.glass-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
+    transition: all 0.2s ease;
+}
+
+/* Table row click effect */
+.table-row-click:active {
+    transform: scale(0.99);
+    transition: transform 0.1s ease;
+}
+
+/* Donut chart (for portfolio) */
+.donut-chart {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #00ff88 0% 45%,
+        #60ff99 45% 75%,
+        #ffc107 75% 88%,
+        #ff4757 88% 100%
+    );
+    position: relative;
+}
+.donut-chart::after {
+    content: '';
+    position: absolute;
+    inset: 30px;
+    background: #1a1f2f;
+    border-radius: 50%;
+}
+
+/* Progress bar animation */
+.progress-fill {
+    transition: width 0.6s ease;
+}
+
+/* Tooltip */
+.chart-tooltip {
+    background: rgba(26, 31, 47, 0.95);
+    border: 1px solid rgba(42, 45, 62, 0.8);
+    border-radius: 8px;
+    padding: 8px 12px;
+    backdrop-filter: blur(10px);
+}
+
+/* Debug console */
+.debug-console {
+    font-family: 'Courier New', monospace;
+    background: #090d1d;
+    color: #00ff88;
+}
+.debug-line {
+    border-left: 2px solid #303445;
+    padding-left: 8px;
+}
+
+/* Tab pills */
+.tab-pill {
+    padding: 6px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.tab-pill.active {
+    background: rgba(0, 255, 136, 0.15);
+    color: #00ff88;
+}
+.tab-pill:not(.active) {
+    color: #8b8fa3;
+}
+.tab-pill:not(.active):hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #dee1f7;
+}
+
+/* Sentiment gauge */
+.gauge-bg {
+    background: conic-gradient(
+        #ff4757 0deg 54deg,
+        #ffc107 54deg 108deg,
+        #00ff88 108deg 180deg
+    );
+}

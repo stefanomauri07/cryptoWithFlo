@@ -11,7 +11,7 @@ public static class AlertEndpoints
     {
         var group = app.MapGroup("/api/alerts").RequireAuthorization();
 
-        group.MapGet("/", async (AppDbContext db, HttpContext http) =>
+        group.MapGet("/", async (AppDbContext db, HttpContext http, string? status, string? q) =>
         {
             var userId = int.Parse(http.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
             var role = http.User.FindFirst(ClaimTypes.Role)?.Value;
@@ -21,6 +21,19 @@ public static class AlertEndpoints
             if (role != "admin")
             {
                 query = query.Where(a => a.UserId == userId);
+            }
+
+            if (!string.IsNullOrEmpty(status))
+            {
+                if (status == "active")
+                    query = query.Where(a => !a.IsTriggered);
+                else if (status == "triggered")
+                    query = query.Where(a => a.IsTriggered);
+            }
+
+            if (!string.IsNullOrEmpty(q))
+            {
+                query = query.Where(a => a.CryptoId.Contains(q) || a.Condition.Contains(q));
             }
 
             var alerts = await query
