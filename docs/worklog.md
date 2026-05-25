@@ -1,6 +1,32 @@
 # CryptoTracker Worklog
 
-## v3.2 (2026-05-25) — Binance API Integration + Admin Semplicato
+## v3.3 (2026-05-25) — Binance Prezzi Primari + Portfolio Reale + Bug Fix Strutturali
+
+### Fixed
+- **Prezzi sempre disponibili**: `PriceFetcherService` ora usa Binance come fonte primaria (`GET /api/v3/ticker/price`, no API key). CoinGecko resta per market cap/volume/ATH solo se API key presente. Senza CoinGecko key i prezzi funzionano comunque via Binance.
+- **Live Markets e Market Explorer ora popolati** anche senza CoinGecko API key
+- **Toast su fetchPrices fail** dopo 2 tentativi falliti
+- **Market Explorer**: messaggio "No data available" se dati vuoti
+- **Terminal sidebar rimosso** da layout.js
+- **Footer duplicato rimosso** da market-explorer.html (layout.js lo inietta)
+- **layout.js caricato una volta sola** in market-explorer.html
+- **fetchHealth doppio intervallo rimosso** da layout.js (solo main.js lo gestisce)
+- **CS1998 warning fixato** in CryptoEndpoints stats endpoint
+
+### Added — Portfolio Reale
+- **Modello `UserHolding`**: UserId (FK), CryptoId (FK), Amount, CreatedAt, UpdatedAt. Unique index (UserId, CryptoId)
+- **`GET /api/portfolio`**: holdings utente con prezzi live da cache, allocation %, total balance
+- **`POST /api/portfolio`**: add/update/remove (amount=0 → delete) holding
+- **`DELETE /api/portfolio/{cryptoId}`**: rimuove holding
+- **Nav property `Holdings`** aggiunte a User e TrackedCrypto
+- **Migration `AddUserHoldings`**: crea tabella UserHoldings, seed admin vuoto (amount=0)
+- **Portfolio.html completamente dinamico**: fetch da /api/portfolio, form Quick Add, donut chart CSS, summary stats, delete per riga, row click → crypto-detail
+
+### Changed
+- `BinanceService`: nuovo metodo `GetCurrentPricesAsync()` per prezzi real-time
+- `PriceFetcherService` riscritto: fetch Binance primario + CoinGecko opzionale con merge dati
+- `BinanceService.GetCryptoIdFromSymbol()` per reverse lookup symbol→cryptoId
+- Portfolio.html: tutto dinamico, nessun dato hardcodato, auto-refresh 60s
 
 ### Changed
 - Admin credentials: email `admin`, password `admin` (migration UpdateAdminSeed)

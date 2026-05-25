@@ -110,6 +110,7 @@ app.MapCryptoEndpoints();
 app.MapAlertEndpoints();
 app.MapHealthEndpoints();
 app.MapAuthEndpoints();
+app.MapPortfolioEndpoints();
 
 using (var scope = app.Services.CreateScope())
 {

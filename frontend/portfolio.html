@@ -9,101 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <link href="style.css" rel="stylesheet"/>
 <script id="tailwind-config">
-    tailwind.config = {
-        darkMode: "class",
-        theme: {
-            extend: {
-                "colors": {
-                    "on-error-container": "#ffdad6",
-                    "secondary-fixed-dim": "#ffb3b2",
-                    "on-background": "#dee1f7",
-                    "surface-container-low": "#161b2b",
-                    "primary-container": "#00ff88",
-                    "surface-container-highest": "#303445",
-                    "on-tertiary-fixed": "#261a00",
-                    "inverse-on-surface": "#2b3040",
-                    "secondary-fixed": "#ffdad9",
-                    "on-primary-container": "#007139",
-                    "on-error": "#690005",
-                    "outline-variant": "#3b4b3d",
-                    "inverse-surface": "#dee1f7",
-                    "surface": "#0e1322",
-                    "on-secondary-fixed-variant": "#920020",
-                    "on-secondary-fixed": "#410008",
-                    "on-tertiary-container": "#7d5d00",
-                    "surface-bright": "#343949",
-                    "primary-fixed-dim": "#00e479",
-                    "surface-tint": "#00e479",
-                    "surface-container-high": "#25293a",
-                    "on-primary": "#003919",
-                    "primary-fixed": "#60ff99",
-                    "tertiary-container": "#ffda8d",
-                    "surface-container": "#1a1f2f",
-                    "on-secondary-container": "#ffc2c1",
-                    "tertiary-fixed-dim": "#fabd00",
-                    "on-surface-variant": "#b9cbb9",
-                    "on-tertiary": "#3f2e00",
-                    "on-tertiary-fixed-variant": "#5b4300",
-                    "primary": "#f1ffef",
-                    "on-primary-fixed": "#00210c",
-                    "surface-container-lowest": "#090d1d",
-                    "secondary-container": "#b5032a",
-                    "surface-dim": "#0e1322",
-                    "surface-variant": "#303445",
-                    "error": "#ffb4ab",
-                    "tertiary-fixed": "#ffdf9e",
-                    "error-container": "#93000a",
-                    "on-primary-fixed-variant": "#005228",
-                    "on-secondary": "#680013",
-                    "secondary": "#ffb3b2",
-                    "tertiary": "#fffaf8",
-                    "outline": "#849585",
-                    "on-surface": "#dee1f7",
-                    "inverse-primary": "#006d37",
-                    "background": "#0e1322"
-                },
-                "borderRadius": {
-                    "DEFAULT": "0.25rem",
-                    "lg": "0.5rem",
-                    "xl": "0.75rem",
-                    "full": "9999px"
-                },
-                "spacing": {
-                    "unit": "4px",
-                    "sm": "8px",
-                    "xl": "40px",
-                    "margin-mobile": "16px",
-                    "md": "16px",
-                    "gutter": "20px",
-                    "lg": "24px",
-                    "margin-desktop": "32px",
-                    "xs": "4px"
-                },
-                "fontFamily": {
-                    "headline-lg": ["Inter"],
-                    "headline-sm": ["Inter"],
-                    "body-md": ["Inter"],
-                    "headline-md": ["Inter"],
-                    "body-lg": ["Inter"],
-                    "label-md": ["Inter"],
-                    "body-sm": ["Inter"],
-                    "display-lg": ["Inter"],
-                    "mono-data": ["Inter"]
-                },
-                "fontSize": {
-                    "headline-lg": ["32px", {"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],
-                    "headline-sm": ["20px", {"lineHeight":"28px","fontWeight":"600"}],
-                    "body-md": ["16px", {"lineHeight":"24px","fontWeight":"400"}],
-                    "headline-md": ["24px", {"lineHeight":"32px","fontWeight":"600"}],
-                    "body-lg": ["18px", {"lineHeight":"28px","fontWeight":"400"}],
-                    "label-md": ["12px", {"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"600"}],
-                    "body-sm": ["14px", {"lineHeight":"20px","fontWeight":"400"}],
-                    "display-lg": ["48px", {"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"700"}],
-                    "mono-data": ["14px", {"lineHeight":"20px","fontWeight":"500"}]
-                }
-            }
-        }
-    }
+    tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-error-container":"#ffdad6","secondary-fixed-dim":"#ffb3b2","on-background":"#dee1f7","surface-container-low":"#161b2b","primary-container":"#00ff88","surface-container-highest":"#303445","on-tertiary-fixed":"#261a00","inverse-on-surface":"#2b3040","secondary-fixed":"#ffdad9","on-primary-container":"#007139","on-error":"#690005","outline-variant":"#3b4b3d","inverse-surface":"#dee1f7","surface":"#0e1322","on-secondary-fixed-variant":"#920020","on-secondary-fixed":"#410008","on-tertiary-container":"#7d5d00","surface-bright":"#343949","primary-fixed-dim":"#00e479","surface-tint":"#00e479","surface-container-high":"#25293a","on-primary":"#003919","primary-fixed":"#60ff99","tertiary-container":"#ffda8d","surface-container":"#1a1f2f","on-secondary-container":"#ffc2c1","tertiary-fixed-dim":"#fabd00","on-surface-variant":"#b9cbb9","on-tertiary":"#3f2e00","on-tertiary-fixed-variant":"#5b4300","primary":"#f1ffef","on-primary-fixed":"#00210c","surface-container-lowest":"#090d1d","secondary-container":"#b5032a","surface-dim":"#0e1322","surface-variant":"#303445","error":"#ffb4ab","tertiary-fixed":"#ffdf9e","error-container":"#93000a","on-primary-fixed-variant":"#005228","on-secondary":"#680013","secondary":"#ffb3b2","tertiary":"#fffaf8","outline":"#849585","on-surface":"#dee1f7","inverse-primary":"#006d37","background":"#0e1322" }, "borderRadius": { "DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px" }, "spacing": { "unit":"4px","sm":"8px","xl":"40px","margin-mobile":"16px","md":"16px","gutter":"20px","lg":"24px","margin-desktop":"32px","xs":"4px" }, "fontFamily": { "headline-lg":["Inter"],"headline-sm":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"body-lg":["Inter"],"label-md":["Inter"],"body-sm":["Inter"],"display-lg":["Inter"],"mono-data":["Inter"] }, "fontSize": { "headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"body-md":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"600"}],"body-sm":["14px",{"lineHeight":"20px","fontWeight":"400"}],"display-lg":["48px",{"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"700"}],"mono-data":["14px",{"lineHeight":"20px","fontWeight":"500"}] } } } }
 </script>
 </head>
 <body class="bg-background text-on-surface overflow-x-hidden">
@@ -111,161 +17,68 @@
 <main class="lg:pl-64 pt-16 min-h-screen">
 <div class="p-margin-desktop space-y-lg">
 
-<!-- Hero Balance -->
-<div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-lg neon-glow-primary">
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-lg">
     <div>
         <p class="text-on-surface-variant text-body-md">Total Portfolio Balance</p>
-        <p class="text-display-lg font-display-lg text-primary-fixed" id="portfolio-balance">$1,248,392.54</p>
-        <div class="flex items-center gap-sm mt-sm">
-            <span class="material-symbols-outlined text-primary-fixed-dim text-sm">arrow_upward</span>
-            <span class="text-primary-fixed-dim font-mono-data text-mono-data">+4.28%</span>
+        <p class="text-display-lg font-display-lg text-primary-fixed" id="portfolio-balance">$0.00</p>
+        <div id="portfolio-change-row" class="flex items-center gap-sm mt-sm hidden">
+            <span class="material-symbols-outlined text-sm" id="portfolio-change-arrow">arrow_upward</span>
+            <span class="font-mono-data text-mono-data" id="portfolio-change-text">---</span>
             <span class="text-on-surface-variant text-body-sm font-body-sm">Past 24 hours</span>
         </div>
     </div>
     <div class="flex gap-md">
-        <button class="bg-primary-container text-on-primary-container font-label-md text-label-md px-lg py-sm rounded-lg hover:brightness-110 transition-all font-bold">Buy</button>
-        <button class="bg-surface-container-highest text-on-surface font-label-md text-label-md px-lg py-sm rounded-lg hover:bg-surface-container-high transition-all">Send</button>
+        <button id="btn-buy" class="bg-primary-container text-on-primary-container font-label-md text-label-md px-lg py-sm rounded-lg hover:brightness-110 transition-all font-bold" disabled>Buy</button>
+        <button id="btn-send" class="bg-surface-container-highest text-on-surface font-label-md text-label-md px-lg py-sm rounded-lg hover:bg-surface-container-high transition-all" disabled>Send</button>
     </div>
 </div>
 
-<!-- Bento Grid: 3 Cards -->
 <div class="grid grid-cols-1 md:grid-cols-3 gap-lg">
 
-<!-- Asset Allocation -->
 <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg">
     <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-lg">Asset Allocation</h3>
     <div class="flex items-center gap-lg">
-        <div class="donut-chart"></div>
-        <div class="flex-1 space-y-md">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-sm">
-                    <div class="w-3 h-3 rounded-full" style="background:#00ff88"></div>
-                    <span class="text-body-sm font-body-sm">Bitcoin</span>
-                </div>
-                <span class="font-mono-data text-mono-data">45%</span>
-            </div>
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-sm">
-                    <div class="w-3 h-3 rounded-full" style="background:#60ff99"></div>
-                    <span class="text-body-sm font-body-sm">Ethereum</span>
-                </div>
-                <span class="font-mono-data text-mono-data">30%</span>
-            </div>
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-sm">
-                    <div class="w-3 h-3 rounded-full" style="background:#ffc107"></div>
-                    <span class="text-body-sm font-body-sm">Solana</span>
-                </div>
-                <span class="font-mono-data text-mono-data">13%</span>
-            </div>
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-sm">
-                    <div class="w-3 h-3 rounded-full" style="background:#ff4757"></div>
-                    <span class="text-body-sm font-body-sm">Stablecoins</span>
-                </div>
-                <span class="font-mono-data text-mono-data">12%</span>
-            </div>
-        </div>
+        <div class="donut-chart" id="donut-chart-el"></div>
+        <div class="flex-1 space-y-md" id="allocation-legends"></div>
     </div>
 </div>
 
-<!-- Top Gainers -->
 <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg">
-    <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-lg">Top Gainers</h3>
+    <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-lg">Quick Add</h3>
     <div class="space-y-md">
-        <div class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-highest/30 transition-colors">
-            <div class="flex items-center gap-sm">
-                <div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/20">
-                    <span class="material-symbols-outlined text-primary-fixed text-sm" style="font-variation-settings:'FILL'1">circle</span>
-                </div>
-                <div>
-                    <div class="font-bold text-body-sm font-body-sm">Solana</div>
-                    <div class="text-on-surface-variant text-label-md font-label-md">SOL</div>
-                </div>
-            </div>
-            <div class="text-right">
-                <div class="font-mono-data text-mono-data">$142.84</div>
-                <div class="text-primary-fixed-dim text-label-md font-label-md">+12.4%</div>
-            </div>
+        <div class="space-y-sm">
+            <label class="block text-body-sm font-body-sm text-on-surface-variant" for="holding-crypto">Asset</label>
+            <select id="holding-crypto" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-body-md font-body-md focus:ring-1 focus:ring-primary-fixed-dim outline-none">
+                <option value="bitcoin">Bitcoin (BTC)</option>
+                <option value="ethereum">Ethereum (ETH)</option>
+                <option value="cardano">Cardano (ADA)</option>
+                <option value="dogecoin">Dogecoin (DOGE)</option>
+                <option value="solana">Solana (SOL)</option>
+                <option value="ripple">Ripple (XRP)</option>
+            </select>
         </div>
-        <div class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-highest/30 transition-colors">
-            <div class="flex items-center gap-sm">
-                <div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/20">
-                    <span class="material-symbols-outlined text-primary-fixed text-sm" style="font-variation-settings:'FILL'1">link</span>
-                </div>
-                <div>
-                    <div class="font-bold text-body-sm font-body-sm">Chainlink</div>
-                    <div class="text-on-surface-variant text-label-md font-label-md">LINK</div>
-                </div>
-            </div>
-            <div class="text-right">
-                <div class="font-mono-data text-mono-data">$18.91</div>
-                <div class="text-primary-fixed-dim text-label-md font-label-md">+8.2%</div>
-            </div>
+        <div class="space-y-sm">
+            <label class="block text-body-sm font-body-sm text-on-surface-variant" for="holding-amount">Amount</label>
+            <input id="holding-amount" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg px-3 py-2 text-body-md font-body-md focus:ring-1 focus:ring-primary-fixed-dim outline-none" placeholder="0.5" type="number" step="0.0001" min="0"/>
         </div>
-        <div class="flex items-center justify-between p-sm rounded-lg hover:bg-surface-container-highest/30 transition-colors">
-            <div class="flex items-center gap-sm">
-                <div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/20">
-                    <span class="material-symbols-outlined text-primary-fixed text-sm" style="font-variation-settings:'FILL'1">layers</span>
-                </div>
-                <div>
-                    <div class="font-bold text-body-sm font-body-sm">Avalanche</div>
-                    <div class="text-on-surface-variant text-label-md font-label-md">AVAX</div>
-                </div>
-            </div>
-            <div class="text-right">
-                <div class="font-mono-data text-mono-data">$38.44</div>
-                <div class="text-primary-fixed-dim text-label-md font-label-md">+5.7%</div>
-            </div>
-        </div>
+        <p id="holding-error" class="text-error text-body-sm font-body-sm hidden"></p>
+        <button id="btn-add-holding" class="w-full bg-primary-container text-on-primary-container font-label-md text-label-md py-3 rounded-lg hover:brightness-110 transition-all font-bold" onclick="onAddHolding()">Add / Update Holding</button>
     </div>
 </div>
 
-<!-- Recent Transactions -->
 <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg">
-    <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-lg">Recent Transactions</h3>
+    <h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider mb-lg">Summary</h3>
     <div class="space-y-md">
-        <div class="flex items-center gap-md">
-            <div class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">
-                <span class="material-symbols-outlined text-green-500 text-sm">arrow_downward</span>
-            </div>
-            <div class="flex-1">
-                <div class="text-body-sm font-body-sm font-bold">Received 0.42 BTC</div>
-                <div class="text-label-md font-label-md text-on-surface-variant">2m ago</div>
-            </div>
-            <span class="text-primary-fixed-dim font-mono-data text-mono-data">+$24,831</span>
-        </div>
-        <div class="flex items-center gap-md">
-            <div class="w-8 h-8 rounded-full bg-blue-500/20 flex items-center justify-center">
-                <span class="material-symbols-outlined text-blue-500 text-sm">swap_horiz</span>
-            </div>
-            <div class="flex-1">
-                <div class="text-body-sm font-body-sm font-bold">Swapped ETH for SOL</div>
-                <div class="text-label-md font-label-md text-on-surface-variant">1h ago</div>
-            </div>
-            <span class="text-on-surface-variant font-mono-data text-mono-data">$12,450</span>
-        </div>
-        <div class="flex items-center gap-md">
-            <div class="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">
-                <span class="material-symbols-outlined text-red-500 text-sm">arrow_upward</span>
-            </div>
-            <div class="flex-1">
-                <div class="text-body-sm font-body-sm font-bold">Sent 1,200 USDC</div>
-                <div class="text-label-md font-label-md text-on-surface-variant">4h ago</div>
-            </div>
-            <span class="text-error font-mono-data text-mono-data">-$1,200</span>
-        </div>
+        <div class="flex justify-between"><span class="text-body-sm font-body-sm text-on-surface-variant">Total Holdings</span><span class="font-mono-data text-mono-data" id="summary-count">0</span></div>
+        <div class="flex justify-between"><span class="text-body-sm font-body-sm text-on-surface-variant">Best Performer</span><span class="font-mono-data text-mono-data text-primary-fixed-dim" id="summary-best">---</span></div>
+        <div class="flex justify-between"><span class="text-body-sm font-body-sm text-on-surface-variant">Worst Performer</span><span class="font-mono-data text-mono-data text-error" id="summary-worst">---</span></div>
     </div>
 </div>
 </div>
 
-<!-- Your Assets Table -->
 <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 overflow-hidden">
     <div class="px-lg py-md border-b border-outline-variant/10 flex justify-between items-center">
         <h2 class="font-headline-sm text-headline-sm">Your Assets</h2>
-        <button class="text-primary-fixed-dim font-label-md text-label-md flex items-center gap-xs hover:underline">
-            View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
-        </button>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">
@@ -273,81 +86,13 @@
                 <tr class="text-on-surface-variant bg-surface-container/30">
                     <th class="px-lg py-sm font-label-md text-label-md">Coin</th>
                     <th class="px-lg py-sm font-label-md text-label-md text-right">Balance</th>
-                    <th class="px-lg py-sm font-label-md text-label-md text-right">Value (USD)</th>
                     <th class="px-lg py-sm font-label-md text-label-md text-right">Price</th>
-                    <th class="px-lg py-sm font-label-md text-label-md text-right">Profit/Loss</th>
+                    <th class="px-lg py-sm font-label-md text-label-md text-right">Value (USD)</th>
+                    <th class="px-lg py-sm font-label-md text-label-md text-right">24h</th>
+                    <th class="px-lg py-sm font-label-md text-label-md w-16"></th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-outline-variant/10" id="portfolio-assets">
-                <tr class="hover:bg-surface-container-highest/30 transition-colors cursor-pointer" onclick="window.location.href='crypto-detail.html?id=bitcoin'">
-                    <td class="px-lg py-md">
-                        <div class="flex items-center gap-md">
-                            <div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/20">
-                                <span class="material-symbols-outlined text-primary-fixed" style="font-variation-settings:'FILL'1">currency_bitcoin</span>
-                            </div>
-                            <div>
-                                <div class="font-bold text-body-md font-body-md">Bitcoin</div>
-                                <div class="text-on-surface-variant text-label-md font-label-md">BTC</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-lg py-md text-right font-mono-data text-mono-data">9.1245 BTC</td>
-                    <td class="px-lg py-md text-right font-mono-data text-mono-data" id="asset-btc-value">$561,776.45</td>
-                    <td class="px-lg py-md text-right font-mono-data text-mono-data" id="asset-btc-price">$61,545.00</td>
-                    <td class="px-lg py-md text-right"><span class="text-primary-fixed-dim font-mono-data text-mono-data">+8.12%</span></td>
-                </tr>
-                <tr class="hover:bg-surface-container-highest/30 transition-colors cursor-pointer" onclick="window.location.href='crypto-detail.html?id=ethereum'">
-                    <td class="px-lg py-md">
-                        <div class="flex items-center gap-md">
-                            <div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/20">
-                                <span class="material-symbols-outlined text-primary-fixed" style="font-variation-settings:'FILL'1">eco</span>
-                            </div>
-                            <div>
-                                <div class="font-bold text-body-md font-body-md">Ethereum</div>
-                                <div class="text-on-surface-variant text-label-md font-label-md">ETH</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-lg py-md text-right font-mono-data text-mono-data">108.452 ETH</td>
-                    <td class="px-lg py-md text-right font-mono-data text-mono-data" id="asset-eth-value">$374,517.82</td>
-                    <td class="px-lg py-md text-right font-mono-data text-mono-data" id="asset-eth-price">$3,452.12</td>
-                    <td class="px-lg py-md text-right"><span class="text-error font-mono-data text-mono-data">-3.20%</span></td>
-                </tr>
-                <tr class="hover:bg-surface-container-highest/30 transition-colors cursor-pointer" onclick="window.location.href='crypto-detail.html?id=solana'">
-                    <td class="px-lg py-md">
-                        <div class="flex items-center gap-md">
-                            <div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/20">
-                                <span class="material-symbols-outlined text-primary-fixed" style="font-variation-settings:'FILL'1">circle</span>
-                            </div>
-                            <div>
-                                <div class="font-bold text-body-md font-body-md">Solana</div>
-                                <div class="text-on-surface-variant text-label-md font-label-md">SOL</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-lg py-md text-right font-mono-data text-mono-data">1,452.20 SOL</td>
-                    <td class="px-lg py-md text-right font-mono-data text-mono-data" id="asset-sol-value">$207,432.88</td>
-                    <td class="px-lg py-md text-right font-mono-data text-mono-data" id="asset-sol-price">$142.84</td>
-                    <td class="px-lg py-md text-right"><span class="text-primary-fixed-dim font-mono-data text-mono-data">+48.12%</span></td>
-                </tr>
-                <tr class="hover:bg-surface-container-highest/30 transition-colors">
-                    <td class="px-lg py-md">
-                        <div class="flex items-center gap-md">
-                            <div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/20">
-                                <span class="material-symbols-outlined text-primary-fixed" style="font-variation-settings:'FILL'1">account_balance</span>
-                            </div>
-                            <div>
-                                <div class="font-bold text-body-md font-body-md">USD Coin</div>
-                                <div class="text-on-surface-variant text-label-md font-label-md">USDC</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td class="px-lg py-md text-right font-mono-data text-mono-data">104,666.74 USDC</td>
-                    <td class="px-lg py-md text-right font-mono-data text-mono-data">$104,666.74</td>
-                    <td class="px-lg py-md text-right font-mono-data text-mono-data">$1.00</td>
-                    <td class="px-lg py-md text-right"><span class="text-on-surface-variant font-mono-data text-mono-data">0.00%</span></td>
-                </tr>
-            </tbody>
+            <tbody class="divide-y divide-outline-variant/10" id="portfolio-assets"></tbody>
         </table>
     </div>
 </div>
@@ -361,24 +106,173 @@
 <script>
 if (!isAuthenticated()) window.location.href = 'login.html';
 
-document.addEventListener('DOMContentLoaded', () => {
-    initLayout('portfolio');
+const cryptoIcons = {bitcoin:'currency_bitcoin',ethereum:'eco',cardano:'token',dogecoin:'pets',solana:'circle',ripple:'water_drop'};
+const cryptoNames = {bitcoin:'Bitcoin',ethereum:'Ethereum',cardano:'Cardano',dogecoin:'Dogecoin',solana:'Solana',ripple:'Ripple'};
+const cryptoSymbols = {bitcoin:'BTC',ethereum:'ETH',cardano:'ADA',dogecoin:'DOGE',solana:'SOL',ripple:'XRP'};
+const cryptoColors = {bitcoin:'#00ff88',ethereum:'#60ff99',cardano:'#3b82f6',dogecoin:'#ffc107',solana:'#a78bfa',ripple:'#38bdf8'};
 
-    async function fetchPortfolioPrices() {
-        try {
-            const res = await api('/api/crypto/list');
-            if (!res.ok) return;
-            const data = await res.json();
-            data.forEach(crypto => {
-                const priceEl = document.getElementById('asset-' + crypto.id + '-price');
-                const valueEl = document.getElementById('asset-' + crypto.id + '-value');
-                if (priceEl) priceEl.textContent = '$' + crypto.priceUsd.toLocaleString('en-US', {minimumFractionDigits:2,maximumFractionDigits:2});
-            });
-        } catch(err) { console.error(err); }
+function formatPrice(p) { return p>=1 ? '$'+p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) : '$'+p.toFixed(6); }
+function formatPercent(pct) { return (pct>=0?'+':'')+pct.toFixed(2)+'%'; }
+
+function showToast(m, isErr) {
+    const c = document.getElementById('toast-container') || (() => { const d=document.createElement('div'); d.id='toast-container'; document.body.appendChild(d); return d; })();
+    const t = document.createElement('div');
+    t.className = 'error-toast';
+    t.textContent = m;
+    if (!isErr) t.style.background = '#007139';
+    c.appendChild(t);
+    setTimeout(() => t.remove(), 4000);
+}
+
+async function fetchPortfolio() {
+    try {
+        const res = await api('/api/portfolio');
+        if (!res.ok) throw new Error('HTTP '+res.status);
+        const data = await res.json();
+        renderPortfolio(data);
+    } catch(err) {
+        console.error('fetchPortfolio failed:', err);
+        document.getElementById('portfolio-assets').innerHTML = '<tr><td colspan="6" class="px-lg py-xl text-center text-on-surface-variant">Failed to load portfolio</td></tr>';
+    }
+}
+
+function renderPortfolio(data) {
+    const balance = data.totalValueUsd || 0;
+    document.getElementById('portfolio-balance').textContent = formatPrice(balance);
+
+    const holdings = data.holdings || [];
+    const tbody = document.getElementById('portfolio-assets');
+
+    if (holdings.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-lg py-xl text-center text-on-surface-variant">No holdings yet. Add your first asset above.</td></tr>';
+        renderDonut([]);
+        document.getElementById('summary-count').textContent = '0';
+        document.getElementById('summary-best').textContent = '---';
+        document.getElementById('summary-worst').textContent = '---';
+        document.getElementById('portfolio-change-row').classList.add('hidden');
+        return;
     }
 
-    fetchPortfolioPrices();
-    setInterval(fetchPortfolioPrices, 60000);
+    document.getElementById('summary-count').textContent = holdings.length;
+
+    let best = null, worst = null;
+    holdings.forEach(h => {
+        if (h.change24hPercent != null) {
+            if (!best || h.change24hPercent > best.change24hPercent) best = h;
+            if (!worst || h.change24hPercent < worst.change24hPercent) worst = h;
+        }
+    });
+    document.getElementById('summary-best').textContent = best ? best.symbol + ' ' + formatPercent(best.change24hPercent) : '---';
+    document.getElementById('summary-worst').textContent = worst ? worst.symbol + ' ' + formatPercent(worst.change24hPercent) : '---';
+
+    if (holdings.some(h => h.change24hPercent != null)) {
+        document.getElementById('portfolio-change-row').classList.remove('hidden');
+        const avgChange = holdings.reduce((s,h) => s + (h.change24hPercent||0), 0) / holdings.length;
+        document.getElementById('portfolio-change-text').textContent = formatPercent(avgChange);
+        document.getElementById('portfolio-change-text').className = 'font-mono-data text-mono-data ' + (avgChange >= 0 ? 'text-primary-fixed-dim' : 'text-error');
+        document.getElementById('portfolio-change-arrow').textContent = avgChange >= 0 ? 'arrow_upward' : 'arrow_downward';
+    }
+
+    tbody.innerHTML = '';
+    holdings.forEach(h => {
+        const icon = cryptoIcons[h.cryptoId] || 'currency_bitcoin';
+        const changeCls = (h.change24hPercent||0) >= 0 ? 'text-primary-fixed-dim' : 'text-error';
+        const arrow = (h.change24hPercent||0) >= 0 ? 'arrow_upward' : 'arrow_downward';
+
+        tbody.innerHTML += `
+        <tr class="hover:bg-surface-container-highest/30 transition-colors cursor-pointer" onclick="window.location.href='crypto-detail.html?id=${h.cryptoId}'">
+            <td class="px-lg py-md">
+                <div class="flex items-center gap-md">
+                    <div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center border border-outline-variant/20">
+                        <span class="material-symbols-outlined text-primary-fixed" style="font-variation-settings:'FILL'1">${icon}</span>
+                    </div>
+                    <div>
+                        <div class="font-bold text-body-md font-body-md">${h.name}</div>
+                        <div class="text-on-surface-variant text-label-md font-label-md">${h.symbol}</div>
+                    </div>
+                </div>
+            </td>
+            <td class="px-lg py-md text-right font-mono-data text-mono-data">${h.amount.toLocaleString('en-US',{maximumFractionDigits:8})} ${h.symbol}</td>
+            <td class="px-lg py-md text-right font-mono-data text-mono-data">${h.priceUsd != null ? formatPrice(h.priceUsd) : '---'}</td>
+            <td class="px-lg py-md text-right font-mono-data text-mono-data">${h.valueUsd != null ? formatPrice(h.valueUsd) : '$0.00'}</td>
+            <td class="px-lg py-md text-right">
+                <span class="${changeCls} flex items-center justify-end gap-xs font-mono-data text-mono-data">
+                    ${h.change24hPercent != null ? '<span class="material-symbols-outlined text-sm">'+arrow+'</span> '+formatPercent(h.change24hPercent) : '---'}
+                </span>
+            </td>
+            <td class="px-lg py-md">
+                <button onclick="event.stopPropagation();onDeleteHolding('${h.cryptoId}')" class="p-2 hover:bg-error-container/20 rounded-full text-error transition-colors">
+                    <span class="material-symbols-outlined text-sm">delete</span>
+                </button>
+            </td>
+        </tr>`;
+    });
+
+    renderDonut(holdings);
+}
+
+function renderDonut(holdings) {
+    const el = document.getElementById('donut-chart-el');
+    const legends = document.getElementById('allocation-legends');
+    if (holdings.length === 0) {
+        el.style.background = 'conic-gradient(#303445 0% 100%)';
+        legends.innerHTML = '<div class="text-on-surface-variant text-body-sm">No data</div>';
+        return;
+    }
+
+    let gradient = '';
+    let cumulative = 0;
+    const colorKeys = ['#00ff88','#60ff99','#a78bfa','#ffc107','#3b82f6','#ff4757'];
+    legends.innerHTML = '';
+
+    holdings.forEach((h, i) => {
+        const pct = h.allocationPercent || 0;
+        if (pct <= 0) return;
+        gradient += `${colorKeys[i%colorKeys.length]} ${cumulative}% ${cumulative+pct}%, `;
+        cumulative += pct;
+        legends.innerHTML += `<div class="flex items-center justify-between">
+            <div class="flex items-center gap-sm"><div class="w-3 h-3 rounded-full" style="background:${colorKeys[i%colorKeys.length]}"></div><span class="text-body-sm font-body-sm">${h.symbol}</span></div>
+            <span class="font-mono-data text-mono-data">${pct.toFixed(1)}%</span></div>`;
+    });
+    el.style.background = 'conic-gradient(' + gradient.slice(0,-2) + ')';
+}
+
+async function onAddHolding() {
+    const cryptoId = document.getElementById('holding-crypto').value;
+    const amount = parseFloat(document.getElementById('holding-amount').value);
+    const errEl = document.getElementById('holding-error');
+    errEl.classList.add('hidden');
+
+    if (isNaN(amount) || amount < 0) {
+        errEl.textContent = 'Enter a valid amount';
+        errEl.classList.remove('hidden');
+        return;
+    }
+
+    try {
+        const res = await api('/api/portfolio', { method:'POST', body:{cryptoId, amount} });
+        if (!res.ok) { const e=await res.json(); errEl.textContent=e.error||'Failed'; errEl.classList.remove('hidden'); return; }
+        document.getElementById('holding-amount').value = '';
+        showToast('Holding updated', false);
+        fetchPortfolio();
+    } catch(err) {
+        errEl.textContent = 'Network error';
+        errEl.classList.remove('hidden');
+    }
+}
+
+async function onDeleteHolding(cryptoId) {
+    try {
+        await api('/api/portfolio/' + cryptoId, { method:'DELETE' });
+        showToast('Holding removed', false);
+        fetchPortfolio();
+    } catch(err) { showToast('Failed to remove holding', true); }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initLayout('portfolio');
+    fetchPortfolio();
+    setInterval(fetchPortfolio, 60000);
 });
 </script>
 </body>

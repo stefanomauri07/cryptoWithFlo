@@ -12,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<Alert> Alerts => Set<Alert>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Otp> Otps => Set<Otp>();
+    public DbSet<UserHolding> UserHoldings => Set<UserHolding>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -75,6 +76,25 @@ public class AppDbContext : DbContext
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
+        modelBuilder.Entity<UserHolding>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.CryptoId).HasMaxLength(50).IsRequired();
+            entity.Property(e => e.Amount).HasPrecision(18, 8).IsRequired();
+
+            entity.HasIndex(e => new { e.UserId, e.CryptoId }).IsUnique();
+
+            entity.HasOne(e => e.User)
+                  .WithMany(u => u.Holdings)
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Crypto)
+                  .WithMany(c => c.Holdings)
+                  .HasForeignKey(e => e.CryptoId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
         modelBuilder.Entity<TrackedCrypto>().HasData(
             new TrackedCrypto { Id = "bitcoin",  Name = "Bitcoin",  Symbol = "BTC",  IsActive = true },
             new TrackedCrypto { Id = "ethereum", Name = "Ethereum", Symbol = "ETH",  IsActive = true },
@@ -94,5 +114,11 @@ public class AppDbContext : DbContext
             IsVerified = true,
             CreatedAt = new DateTime(2026, 5, 25, 0, 0, 0, DateTimeKind.Utc)
         });
+
+        modelBuilder.Entity<UserHolding>().HasData(
+            new UserHolding { Id = 1, UserId = 1, CryptoId = "bitcoin",  Amount = 0m, CreatedAt = new DateTime(2026, 5, 25, 0, 0, 0, DateTimeKind.Utc) },
+            new UserHolding { Id = 2, UserId = 1, CryptoId = "ethereum", Amount = 0m, CreatedAt = new DateTime(2026, 5, 25, 0, 0, 0, DateTimeKind.Utc) },
+            new UserHolding { Id = 3, UserId = 1, CryptoId = "solana",   Amount = 0m, CreatedAt = new DateTime(2026, 5, 25, 0, 0, 0, DateTimeKind.Utc) }
+        );
     }
 }

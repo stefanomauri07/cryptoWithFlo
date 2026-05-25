@@ -63,7 +63,7 @@ public static class CryptoEndpoints
             return Results.Ok(data);
         });
 
-        group.MapGet("/{id}/stats", async (string id, IMemoryCache cache) =>
+        group.MapGet("/{id}/stats", (string id, IMemoryCache cache) =>
         {
             if (cache.TryGetValue("prices", out PriceCacheEntry? entry) && entry is not null)
             {

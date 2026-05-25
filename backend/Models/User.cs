@@ -13,4 +13,5 @@ public class User
     public DateTime CreatedAt { get; set; }
 
     public ICollection<Alert> Alerts { get; set; } = new List<Alert>();
+    public ICollection<UserHolding> Holdings { get; set; } = new List<UserHolding>();
 }

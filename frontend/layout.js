@@ -13,8 +13,7 @@ function initLayout(activePage) {
         { label: 'Overview', href: 'index.html', icon: 'dashboard' },
         { label: 'Assets', href: 'market-explorer.html', icon: 'account_balance_wallet' },
         { label: 'History', href: 'alert-history.html', icon: 'history' },
-        { label: 'Portfolio', href: 'portfolio.html', icon: 'pie_chart' },
-        { label: 'Terminal', href: null, icon: 'terminal' }
+        { label: 'Portfolio', href: 'portfolio.html', icon: 'pie_chart' }
     ];
 
     var activeNavIdx = pageToNavIdx[activePage] !== undefined ? pageToNavIdx[activePage] : -1;
@@ -121,7 +120,6 @@ function initLayout(activePage) {
     if (typeof updateUserMenu === 'function') updateUserMenu();
     if (typeof fetchHealth === 'function') {
         fetchHealth();
-        setInterval(fetchHealth, 30000);
     }
 }
 

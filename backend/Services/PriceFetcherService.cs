@@ -41,7 +41,7 @@ public class PriceFetcherService : BackgroundService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching prices from CoinGecko");
+                _logger.LogError(ex, "Error fetching prices");
             }
 
             await Task.Delay(TimeSpan.FromSeconds(intervalSeconds), stoppingToken);
@@ -54,6 +54,7 @@ public class PriceFetcherService : BackgroundService
 
         using var scope = _scopeFactory.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var services = scope.ServiceProvider;
 
         var cryptos = await db.TrackedCryptos
             .Where(c => c.IsActive)
@@ -65,57 +66,90 @@ public class PriceFetcherService : BackgroundService
             return;
         }
 
-        var ids = string.Join(",", cryptos.Select(c => c.Id));
-        var url = $"https://api.coingecko.com/api/v3/simple/price?ids={ids}&vs_currencies=usd,eur&include_24hr_change=true&include_market_cap=true&include_24hr_vol=true";
-
-        using var request = new HttpRequestMessage(HttpMethod.Get, url);
-        var apiKey = _configuration["COINGECKO_API_KEY"];
-        if (!string.IsNullOrEmpty(apiKey))
-        {
-            request.Headers.Add("x-cg-pro-api-key", apiKey);
-        }
-
-        var httpClient = _httpClientFactory.CreateClient("CoinGecko");
-        var response = await httpClient.SendAsync(request, ct);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            _logger.LogError("CoinGecko API returned {StatusCode}: {Body}",
-                (int)response.StatusCode,
-                await response.Content.ReadAsStringAsync(ct));
-            return;
-        }
-
-        var json = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: ct);
-
         var priceDtos = new List<CryptoPriceDto>();
         var historyEntries = new List<PriceHistory>();
         var now = DateTime.UtcNow;
 
+        var binancePrices = new Dictionary<string, decimal>();
+        try
+        {
+            var binance = services.GetRequiredService<BinanceService>();
+            binancePrices = await binance.GetCurrentPricesAsync(ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Binance fetch failed, will try CoinGecko as fallback");
+        }
+
+        JsonElement? coinGeckoJson = null;
+        var apiKey = _configuration["COINGECKO_API_KEY"];
+        if (!string.IsNullOrEmpty(apiKey))
+        {
+            try
+            {
+                var ids = string.Join(",", cryptos.Select(c => c.Id));
+                var cgUrl = $"https://api.coingecko.com/api/v3/simple/price?ids={ids}&vs_currencies=usd,eur&include_24hr_change=true&include_market_cap=true&include_24hr_vol=true";
+                using var request = new HttpRequestMessage(HttpMethod.Get, cgUrl);
+                request.Headers.Add("x-cg-pro-api-key", apiKey);
+
+                var cgClient = _httpClientFactory.CreateClient("CoinGecko");
+                var cgResponse = await cgClient.SendAsync(request, ct);
+
+                if (cgResponse.IsSuccessStatusCode)
+                {
+                    coinGeckoJson = await cgResponse.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: ct);
+                    _logger.LogInformation("CoinGecko data fetched successfully");
+                }
+                else
+                {
+                    _logger.LogWarning("CoinGecko returned {StatusCode}, using Binance-only data", (int)cgResponse.StatusCode);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "CoinGecko fetch failed, using Binance-only data");
+            }
+        }
+
         foreach (var crypto in cryptos)
         {
-            if (!json.TryGetProperty(crypto.Id, out var details))
+            var binanceSymbol = BinanceService.GetBinanceSymbol(crypto.Id);
+            decimal priceUsd = 0;
+            decimal? priceEur = null;
+            decimal change24h = 0;
+            decimal? marketCap = null;
+            decimal? volume24h = null;
+            decimal? allTimeHigh = null;
+
+            if (coinGeckoJson.HasValue && coinGeckoJson.Value.TryGetProperty(crypto.Id, out var details))
             {
-                _logger.LogWarning("No data returned for crypto {Id}", crypto.Id);
+                priceUsd = Math.Round(details.GetProperty("usd").GetDecimal(), 8);
+                priceEur = Math.Round(details.GetProperty("eur").GetDecimal(), 8);
+                change24h = Math.Round(
+                    details.TryGetProperty("usd_24h_change", out var change) ? change.GetDecimal() : 0m, 4);
+                marketCap = details.TryGetProperty("usd_market_cap", out var mc) ? Math.Round(mc.GetDecimal(), 2) : null;
+                volume24h = details.TryGetProperty("usd_24h_vol", out var vol) ? Math.Round(vol.GetDecimal(), 2) : null;
+            }
+            else if (binanceSymbol is not null && binancePrices.TryGetValue(binanceSymbol, out var bPrice))
+            {
+                priceUsd = Math.Round(bPrice, 8);
+                priceEur = Math.Round(bPrice * 0.92m, 8);
+                change24h = 0;
+            }
+            else
+            {
+                _logger.LogWarning("No price data for crypto {Id}", crypto.Id);
                 continue;
             }
 
-            var priceUsd = Math.Round(details.GetProperty("usd").GetDecimal(), 8);
-            var priceEur = Math.Round(details.GetProperty("eur").GetDecimal(), 8);
-            var change24h = Math.Round(
-                details.TryGetProperty("usd_24h_change", out var change) ? change.GetDecimal() : 0m,
-                4);
-
-            priceDtos.Add(new CryptoPriceDto(crypto.Id, crypto.Name, crypto.Symbol, priceUsd, priceEur, change24h,
-                details.TryGetProperty("usd_market_cap", out var mc) ? Math.Round(mc.GetDecimal(), 2) : null,
-                details.TryGetProperty("usd_24h_vol", out var vol) ? Math.Round(vol.GetDecimal(), 2) : null,
-                details.TryGetProperty("ath", out var ath) ? Math.Round(ath.GetDecimal(), 2) : null));
+            priceDtos.Add(new CryptoPriceDto(crypto.Id, crypto.Name, crypto.Symbol, priceUsd,
+                priceEur ?? priceUsd, change24h, marketCap, volume24h, allTimeHigh));
 
             historyEntries.Add(new PriceHistory
             {
                 CryptoId = crypto.Id,
                 PriceUsd = priceUsd,
-                PriceEur = priceEur,
+                PriceEur = priceEur ?? priceUsd,
                 Change24hPercent = change24h,
                 RecordedAt = now
             });
@@ -130,7 +164,7 @@ public class PriceFetcherService : BackgroundService
         db.PriceHistories.AddRange(historyEntries);
         await db.SaveChangesAsync(ct);
 
-        _logger.LogInformation("Fetched prices for {Count} cryptos in {Elapsed}ms",
-            priceDtos.Count, sw.ElapsedMilliseconds);
+        _logger.LogInformation("Fetched prices for {Count} cryptos ({CoinGecko} CG, {Binance} Binance) in {Elapsed}ms",
+            priceDtos.Count, coinGeckoJson.HasValue ? "with" : "without", binancePrices.Count > 0 ? "with" : "without", sw.ElapsedMilliseconds);
     }
 }

@@ -107,6 +107,8 @@ function showAlertsEmpty() {
         </div>`;
 }
 
+let priceFetchFailures = 0;
+
 async function fetchPrices() {
     try {
         const res = await api('/api/crypto/list');
@@ -114,9 +116,13 @@ async function fetchPrices() {
         const data = await res.json();
 
         if (!data || data.length === 0) {
+            if (priceFetchFailures > 1) showToast('No price data available. Check CoinGecko API key or network.', true);
+            priceFetchFailures++;
             showSkeletonRows();
             return;
         }
+
+        priceFetchFailures = 0;
 
         const tbody = document.getElementById('price-table-body');
         tbody.innerHTML = '';
@@ -160,6 +166,8 @@ async function fetchPrices() {
         });
     } catch (err) {
         console.error('fetchPrices failed:', err);
+        if (priceFetchFailures > 1) showToast('Failed to load prices. Retrying...', true);
+        priceFetchFailures++;
     }
 }
 

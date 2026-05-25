@@ -12,4 +12,5 @@ public class TrackedCrypto
 
     public ICollection<PriceHistory> PriceHistories { get; set; } = new List<PriceHistory>();
     public ICollection<Alert> Alerts { get; set; } = new List<Alert>();
+    public ICollection<UserHolding> Holdings { get; set; } = new List<UserHolding>();
 }

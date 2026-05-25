@@ -1,4 +1,8 @@
+using System.Diagnostics;
 using System.Text.Json;
+using CryptoApp.Data;
+using CryptoApp.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace CryptoApp.Services;
@@ -29,6 +33,42 @@ public class BinanceService
     public static string? GetBinanceSymbol(string cryptoId)
     {
         return SymbolMap.TryGetValue(cryptoId, out var symbol) ? symbol : null;
+    }
+
+    public async Task<Dictionary<string, decimal>> GetCurrentPricesAsync(CancellationToken ct = default)
+    {
+        var symbols = string.Join("],[", SymbolMap.Values.Select(s => $"\"{s}\""));
+        var url = $"/api/v3/ticker/price?symbols=[{symbols}]";
+
+        try
+        {
+            var client = _httpClientFactory.CreateClient("Binance");
+            var response = await client.GetAsync(url, ct);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("Binance ticker returned {StatusCode}", (int)response.StatusCode);
+                return new Dictionary<string, decimal>();
+            }
+
+            var json = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: ct);
+            var result = new Dictionary<string, decimal>();
+
+            foreach (var item in json.EnumerateArray())
+            {
+                var symbol = item.GetProperty("symbol").GetString()!;
+                var price = decimal.Parse(item.GetProperty("price").GetString()!);
+                result[symbol] = price;
+            }
+
+            _logger.LogInformation("Fetched {Count} prices from Binance", result.Count);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching prices from Binance");
+            return new Dictionary<string, decimal>();
+        }
     }
 
     public async Task<List<BinanceKline>> GetKlinesAsync(string cryptoId, int days, CancellationToken ct = default)
@@ -89,6 +129,11 @@ public class BinanceService
             _logger.LogError(ex, "Error fetching klines from Binance for {Symbol}", symbol);
             return new List<BinanceKline>();
         }
+    }
+
+    public static string? GetCryptoIdFromSymbol(string symbol)
+    {
+        return SymbolMap.FirstOrDefault(kv => kv.Value == symbol).Key;
     }
 }
 

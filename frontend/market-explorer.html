@@ -109,8 +109,6 @@
 </head>
 <body class="bg-background text-on-surface overflow-x-hidden">
 
-<script src="layout.js"></script>
-
 <main class="lg:pl-64 pt-16 min-h-screen">
 <div class="p-margin-desktop space-y-lg">
 
@@ -164,12 +162,6 @@
     </div>
 
 </div>
-
-<!-- Footer -->
-<footer class="w-full py-md px-margin-desktop flex items-center justify-between bg-surface-dim border-t border-outline-variant/10">
-    <span class="font-label-md text-label-md font-bold text-on-surface">CryptoTracker</span>
-    <span class="text-on-surface-variant text-body-sm font-body-sm">Real-time cryptocurrency monitoring</span>
-</footer>
 </main>
 
 <!-- Toast container -->
@@ -205,7 +197,13 @@ async function fetchMarketData() {
         renderTicker();
         renderTable();
         updateGlobalStats();
-    } catch(err) { console.error(err); }
+    } catch(err) { console.error(err); renderTableEmpty(); }
+}
+
+function renderTableEmpty() {
+    const tbody = document.getElementById('market-table-body');
+    tbody.innerHTML = '<tr><td colspan="6" class="px-lg py-xl text-center text-on-surface-variant">No data available. Check API connection.</td></tr>';
+    document.getElementById('ticker-track').innerHTML = '<div class="px-lg text-on-surface-variant">No price data — check Binance/CoinGecko connection</div>';
 }
 
 function updateGlobalStats() {
