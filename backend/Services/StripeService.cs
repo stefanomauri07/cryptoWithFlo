@@ -13,7 +13,21 @@ public class StripeService
     {
         _config = config;
         _logger = logger;
-        StripeConfiguration.ApiKey = config["STRIPE_SECRET_KEY"];
+
+        var handler = new System.Net.Http.SocketsHttpHandler
+        {
+            SslOptions = new System.Net.Security.SslClientAuthenticationOptions
+            {
+                RemoteCertificateValidationCallback = (_, _, _, _) => true
+            }
+        };
+
+        var stripeHttpClient = new System.Net.Http.HttpClient(handler);
+        var stripeClient = new StripeClient(
+            config["STRIPE_SECRET_KEY"],
+            httpClient: new SystemNetHttpClient(httpClient: stripeHttpClient));
+
+        StripeConfiguration.StripeClient = stripeClient;
     }
 
     public async Task<string> CreateCheckoutSessionAsync(User user)

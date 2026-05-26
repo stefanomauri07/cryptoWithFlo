@@ -9,8 +9,6 @@ using Microsoft.IdentityModel.Tokens;
 var envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", ".env");
 if (File.Exists(envPath)) DotNetEnv.Env.Load(envPath);
 
-System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMemoryCache();
