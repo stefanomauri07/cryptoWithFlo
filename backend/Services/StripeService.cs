@@ -17,7 +17,7 @@ public class StripeService
 
         var handler = new HttpClientHandler();
         handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
-        StripeConfiguration.HttpClient = new HttpClient(handler);
+        StripeConfiguration.HttpMessageHandler = handler;
     }
 
     public async Task<string> CreateCheckoutSessionAsync(User user)
