@@ -1,6 +1,24 @@
 # CryptoTracker Worklog
 
-## v3.3 (2026-05-25) — Binance Prezzi Primari + Portfolio Reale + Bug Fix Strutturali
+## v3.4 (2026-05-26) — Fix prezzi reali (FortiGuard bypass + Binance only)
+
+### Fixed
+- **Firewall bypass**: `api.binance.com` bloccato da FortiGuard → usato `data-api.binance.vision` come dominio alternativo
+- **URL encoding**: richiesta batch Binance ora usa `Uri.EscapeDataString` per `[`, `]`, `"` nel query string
+- **BINANCE_API_URL**: resa configurabile via environment variable (default: `https://api.binance.com/`)
+- **SSL bypass** su HttpClient Binance (stesso handler di CoinGecko)
+
+### Removed
+- CoinGecko client e tutta la logica di merge CoinGecko/Binance
+- `IHttpClientFactory` da `PriceFetcherService` (non piu' necessario)
+- `COINGECKO_API_KEY` da `.env`
+
+### Changed
+- `PriceFetcherService`: usa solo Binance come fonte prezzi
+- `docker-compose.yml`: aggiunta `BINANCE_API_URL` nell'environment del backend
+
+### Added
+- `.env`: `BINANCE_API_URL=https://data-api.binance.vision`
 
 ### Fixed
 - **Prezzi sempre disponibili**: `PriceFetcherService` ora usa Binance come fonte primaria (`GET /api/v3/ticker/price`, no API key). CoinGecko resta per market cap/volume/ATH solo se API key presente. Senza CoinGecko key i prezzi funzionano comunque via Binance.

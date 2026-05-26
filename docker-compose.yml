@@ -34,6 +34,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       BREVO_API_KEY: ${BREVO_API_KEY}
       BREVO_SENDER: ${BREVO_SENDER}
+      BINANCE_API_URL: ${BINANCE_API_URL}
     depends_on:
       db:
         condition: service_healthy
