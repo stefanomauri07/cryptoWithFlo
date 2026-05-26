@@ -71,6 +71,43 @@ public class BinanceService
         }
     }
 
+    public async Task<Dictionary<string, (decimal ChangePercent, decimal QuoteVolume)>> Get24hrTickerAsync(CancellationToken ct = default)
+    {
+        var jsonSymbols = $"[\"{string.Join("\",\"", SymbolMap.Values)}\"]";
+        var url = $"/api/v3/ticker/24hr?symbols={Uri.EscapeDataString(jsonSymbols)}";
+
+        try
+        {
+            var client = _httpClientFactory.CreateClient("Binance");
+            var response = await client.GetAsync(url, ct);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("Binance 24hr ticker returned {StatusCode}", (int)response.StatusCode);
+                return new Dictionary<string, (decimal, decimal)>();
+            }
+
+            var json = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: ct);
+            var result = new Dictionary<string, (decimal, decimal)>();
+
+            foreach (var item in json.EnumerateArray())
+            {
+                var symbol = item.GetProperty("symbol").GetString()!;
+                var changePercent = decimal.Parse(item.GetProperty("priceChangePercent").GetString()!);
+                var quoteVolume = decimal.Parse(item.GetProperty("quoteVolume").GetString()!);
+                result[symbol] = (changePercent, quoteVolume);
+            }
+
+            _logger.LogInformation("Fetched 24hr ticker for {Count} symbols", result.Count);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching 24hr ticker from Binance");
+            return new Dictionary<string, (decimal, decimal)>();
+        }
+    }
+
     public async Task<List<BinanceKline>> GetKlinesAsync(string cryptoId, int days, CancellationToken ct = default)
     {
         var symbol = GetBinanceSymbol(cryptoId);
