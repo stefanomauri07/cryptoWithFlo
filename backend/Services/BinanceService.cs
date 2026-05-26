@@ -37,8 +37,8 @@ public class BinanceService
 
     public async Task<Dictionary<string, decimal>> GetCurrentPricesAsync(CancellationToken ct = default)
     {
-        var symbols = string.Join("],[", SymbolMap.Values.Select(s => $"\"{s}\""));
-        var url = $"/api/v3/ticker/price?symbols=[{symbols}]";
+        var jsonSymbols = $"[\"{string.Join("\",\"", SymbolMap.Values)}\"]";
+        var url = $"/api/v3/ticker/price?symbols={Uri.EscapeDataString(jsonSymbols)}";
 
         try
         {

@@ -13,18 +13,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMemoryCache();
 
-builder.Services.AddHttpClient("CoinGecko", client =>
-{
-    client.BaseAddress = new Uri("https://api.coingecko.com/");
-    client.DefaultRequestHeaders.Add("User-Agent", "CryptoApp/1.0");
-}).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
-{
-    SslOptions = new System.Net.Security.SslClientAuthenticationOptions
-    {
-        RemoteCertificateValidationCallback = (_, _, _, _) => true
-    }
-});
-
 var connStr = $"Server={builder.Configuration["DATABASE_HOST"]};"
             + $"Port={builder.Configuration["DATABASE_PORT"]};"
             + $"Database={builder.Configuration["DATABASE_NAME"]};"
@@ -34,10 +22,17 @@ var connStr = $"Server={builder.Configuration["DATABASE_HOST"]};"
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connStr, ServerVersion.AutoDetect(connStr)));
 
+var binanceUrl = builder.Configuration["BINANCE_API_URL"] ?? "https://api.binance.com/";
 builder.Services.AddHttpClient("Binance", client =>
 {
-    client.BaseAddress = new Uri("https://api.binance.com/");
+    client.BaseAddress = new Uri(binanceUrl);
     client.DefaultRequestHeaders.Add("User-Agent", "CryptoApp/1.0");
+}).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
+{
+    SslOptions = new System.Net.Security.SslClientAuthenticationOptions
+    {
+        RemoteCertificateValidationCallback = (_, _, _, _) => true
+    }
 });
 
 builder.Services.AddSingleton<BinanceService>();
