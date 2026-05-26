@@ -14,6 +14,10 @@ public class StripeService
         _config = config;
         _logger = logger;
         StripeConfiguration.ApiKey = config["STRIPE_SECRET_KEY"];
+
+        var handler = new HttpClientHandler();
+        handler.ServerCertificateCustomValidationCallback = (_, _, _, _) => true;
+        StripeConfiguration.HttpClient = new HttpClient(handler);
     }
 
     public async Task<string> CreateCheckoutSessionAsync(User user)
