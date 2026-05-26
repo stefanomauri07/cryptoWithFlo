@@ -67,14 +67,26 @@ public class PriceFetcherService : BackgroundService
         var now = DateTime.UtcNow;
 
         var binancePrices = new Dictionary<string, decimal>();
+        var ticker24hr = new Dictionary<string, (decimal ChangePercent, decimal QuoteVolume)>();
+        BinanceService? binanceSvc = null;
         try
         {
-            var binance = services.GetRequiredService<BinanceService>();
-            binancePrices = await binance.GetCurrentPricesAsync(ct);
+            binanceSvc = services.GetRequiredService<BinanceService>();
+            binancePrices = await binanceSvc.GetCurrentPricesAsync(ct);
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Binance fetch failed, will try CoinGecko as fallback");
+            _logger.LogWarning(ex, "Binance fetch failed");
+        }
+
+        try
+        {
+            if (binanceSvc is not null)
+                ticker24hr = await binanceSvc.Get24hrTickerAsync(ct);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "24hr ticker fetch failed");
         }
 
         foreach (var crypto in cryptos)
@@ -89,8 +101,17 @@ public class PriceFetcherService : BackgroundService
             var priceUsd = Math.Round(bPrice, 8);
             var priceEur = Math.Round(bPrice * 0.92m, 8);
 
+            var change24h = 0m;
+            var volume24h = (decimal?)null;
+
+            if (binanceSymbol is not null && ticker24hr.TryGetValue(binanceSymbol, out var tickerData))
+            {
+                change24h = Math.Round(tickerData.ChangePercent, 4);
+                volume24h = Math.Round(tickerData.QuoteVolume, 2);
+            }
+
             priceDtos.Add(new CryptoPriceDto(crypto.Id, crypto.Name, crypto.Symbol, priceUsd,
-                priceEur, 0, null, null, null));
+                priceEur, change24h, null, volume24h, null));
 
             historyEntries.Add(new PriceHistory
             {
