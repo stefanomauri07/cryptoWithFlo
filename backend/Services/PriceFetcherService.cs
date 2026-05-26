@@ -118,7 +118,7 @@ public class PriceFetcherService : BackgroundService
                 CryptoId = crypto.Id,
                 PriceUsd = priceUsd,
                 PriceEur = priceEur,
-                Change24hPercent = 0,
+                Change24hPercent = change24h,
                 RecordedAt = now
             });
         }
