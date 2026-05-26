@@ -69,6 +69,7 @@ function initLayout(activePage) {
         '<span id="user-name" class="text-body-sm font-body-sm text-on-surface"></span>' +
         '<span id="user-role" class="text-label-md font-label-md px-2 py-0.5 rounded" style="background:rgba(0,255,136,0.15);color:#00ff88"></span>' +
         '<button onclick="logout()" class="text-on-surface-variant hover:text-error transition-colors font-label-md text-label-md">Logout</button>' +
+        '<a href="upgrade.html" id="navbar-upgrade-btn" class="hidden text-primary-fixed-dim font-label-md text-label-md px-3 py-1 border border-primary-container/30 rounded-lg hover:bg-primary-container/10 transition-colors">Upgrade</a>' +
         '</div>' +
         '</div>' +
         '</nav>';
@@ -85,7 +86,7 @@ function initLayout(activePage) {
         sidebarLinksHtml +
         '</div>' +
         '<div class="p-lg border-t border-outline-variant/10 space-y-md">' +
-        '<button class="w-full bg-secondary-container/10 text-secondary-fixed-dim hover:bg-secondary-container/20 transition-colors font-label-md text-label-md py-3 rounded-lg border border-secondary-container/20">Upgrade to Pro</button>' +
+        '<a href="upgrade.html" id="sidebar-upgrade-btn" class="hidden w-full bg-primary-container/10 text-primary-fixed-dim hover:bg-primary-container/20 transition-colors font-label-md text-label-md py-3 rounded-lg border border-primary-container/20 text-center block">Upgrade to Pro</a>' +
         '<a href="#" class="block text-center text-on-surface-variant text-body-sm font-body-sm hover:text-on-surface transition-colors">Support</a>' +
         '<button onclick="logout()" class="w-full text-on-surface-variant hover:text-error transition-colors font-label-md text-label-md py-2 rounded-lg hover:bg-error-container/10">Sign Out</button>' +
         '</div>' +
@@ -118,8 +119,25 @@ function initLayout(activePage) {
     document.body.appendChild(footer);
 
     if (typeof updateUserMenu === 'function') updateUserMenu();
+    updateUpgradeButtons();
     if (typeof fetchHealth === 'function') {
         fetchHealth();
+    }
+}
+
+function updateUpgradeButtons() {
+    var navUpgrade = document.getElementById('navbar-upgrade-btn');
+    var sidebarUpgrade = document.getElementById('sidebar-upgrade-btn');
+
+    if (typeof getCurrentUser === 'function') {
+        var user = getCurrentUser();
+        if (user && user.role === 'user') {
+            if (navUpgrade) navUpgrade.classList.remove('hidden');
+            if (sidebarUpgrade) sidebarUpgrade.classList.remove('hidden');
+        } else {
+            if (navUpgrade) navUpgrade.classList.add('hidden');
+            if (sidebarUpgrade) sidebarUpgrade.classList.add('hidden');
+        }
     }
 }
 

@@ -11,6 +11,9 @@ public class User
     public string Name { get; set; } = string.Empty;
     public bool IsVerified { get; set; }
     public DateTime CreatedAt { get; set; }
+    public string? StripeCustomerId { get; set; }
+    public string? SubscriptionStatus { get; set; }
+    public DateTime? SubscriptionEndDate { get; set; }
 
     public ICollection<Alert> Alerts { get; set; } = new List<Alert>();
     public ICollection<UserHolding> Holdings { get; set; } = new List<UserHolding>();

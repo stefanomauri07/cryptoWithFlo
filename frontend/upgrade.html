@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Upgrade to Pro | CryptoTracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "surface-container-lowest":"#090d1d","surface-container":"#1a1f2f","primary-container":"#00ff88","on-background":"#dee1f7","on-surface-variant":"#b9cbb9","inverse-primary":"#006d37","surface-container-low":"#161b2b","surface-dim":"#0e1322","surface":"#0e1322","surface-container-highest":"#303445","error-container":"#93000a","primary-fixed":"#60ff99","on-primary-container":"#007139","surface-container-high":"#25293a","on-surface":"#dee1f7","outline-variant":"#3b4b3d","outline":"#849585","on-primary":"#003919","error":"#ffb4ab","primary-fixed-dim":"#00e479","background":"#0e1322","surface-tint":"#00e479"
+                },
+                "borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},
+                "spacing":{"gutter":"20px","sm":"8px","xl":"40px","lg":"24px","md":"16px","xs":"4px","margin-desktop":"32px","unit":"4px","margin-mobile":"16px"},
+                "fontFamily":{"display-lg":["Inter"],"headline-sm":["Inter"],"headline-lg":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"body-lg":["Inter"],"body-sm":["Inter"],"label-md":["Inter"]},
+                "fontSize":{"display-lg":["48px",{"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-sm":["20px",{"lineHeight":"28px","fontWeight":"600"}],"headline-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-md":["16px",{"lineHeight":"24px","fontWeight":"400"}],"headline-md":["24px",{"lineHeight":"32px","fontWeight":"600"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"body-sm":["14px",{"lineHeight":"20px","fontWeight":"400"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"600"}]}
+            }
+        }
+    }
+</script>
+<style>.bg-gradient-main{background:radial-gradient(circle at 0% 0%,#161b2b 0%,#0e1322 100%);}</style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-hidden">
+<main class="min-h-screen flex flex-col md:flex-row bg-gradient-main">
+
+<!-- Left Side: Benefits -->
+<section class="hidden md:flex md:w-1/2 relative flex-col justify-center p-xl overflow-hidden bg-surface-container-lowest">
+    <div class="absolute top-[-20%] left-[-20%] w-[80%] h-[80%] bg-primary-container/10 rounded-full blur-[120px]"></div>
+    <div class="relative z-10 max-w-md mx-auto">
+        <div class="flex items-center gap-sm mb-xl">
+            <span class="material-symbols-outlined text-primary-fixed-dim text-[40px]" style="font-variation-settings:'FILL'1">currency_bitcoin</span>
+            <h1 class="font-headline-md text-headline-md font-bold text-primary-fixed">CryptoTracker</h1>
+        </div>
+        <h2 class="font-headline-lg text-headline-lg text-on-surface mb-lg">Upgrade to Pro</h2>
+        <div class="space-y-md">
+            <div class="flex items-start gap-md">
+                <span class="material-symbols-outlined text-primary-fixed-dim mt-1">smart_toy</span>
+                <div>
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface">AI Trading Assistant</h3>
+                    <p class="text-on-surface-variant text-body-sm">Get personalized trading insights and recommendations from our AI chatbot.</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-md">
+                <span class="material-symbols-outlined text-primary-fixed-dim mt-1">notifications_active</span>
+                <div>
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface">Priority Alerts</h3>
+                    <p class="text-on-surface-variant text-body-sm">Instant email notifications when prices hit your targets. Never miss a move.</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-md">
+                <span class="material-symbols-outlined text-primary-fixed-dim mt-1">analytics</span>
+                <div>
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface">Advanced Analytics</h3>
+                    <p class="text-on-surface-variant text-body-sm">Deep market insights, historical patterns, and portfolio optimization.</p>
+                </div>
+            </div>
+            <div class="flex items-start gap-md">
+                <span class="material-symbols-outlined text-primary-fixed-dim mt-1">block</span>
+                <div>
+                    <h3 class="font-headline-sm text-headline-sm text-on-surface">Ad-Free Experience</h3>
+                    <p class="text-on-surface-variant text-body-sm">Clean, uninterrupted dashboard with zero distractions.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Right Side: Pricing + Action -->
+<section class="w-full md:w-1/2 flex items-center justify-center p-gutter relative">
+    <div class="md:hidden absolute top-0 left-0 w-full h-full bg-surface-container-lowest z-0"></div>
+    <div class="w-full max-w-[440px] z-10">
+
+        <div class="mb-lg">
+            <a href="index.html" class="flex items-center gap-sm text-on-surface-variant hover:text-on-surface transition-colors font-label-md text-label-md">
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span> Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Already Pro -->
+        <div id="already-pro" class="hidden space-y-lg">
+            <div class="text-center mb-xl">
+                <span class="material-symbols-outlined text-primary-fixed-dim text-[64px]" style="font-variation-settings:'FILL'1">verified</span>
+                <h2 class="font-headline-lg text-headline-lg text-on-surface mt-md">You're Already a Pro</h2>
+                <p class="font-body-md text-body-md text-on-surface-variant mt-sm">You have full access to all Pro features.</p>
+            </div>
+            <div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="font-headline-sm text-headline-sm text-on-surface">Pro Plan</p>
+                        <p class="text-on-surface-variant text-body-sm" id="sub-status">Active</p>
+                    </div>
+                    <button onclick="handleCancel()" id="cancel-btn" class="text-error font-label-md text-label-md px-lg py-md border border-error/30 rounded-lg hover:bg-error-container/20 transition-colors">
+                        Cancel Subscription
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upgrade CTA -->
+        <div id="upgrade-cta" class="hidden space-y-lg">
+            <div class="text-center mb-xl">
+                <div class="text-primary-fixed-dim text-display-lg font-display-lg">$9.99</div>
+                <p class="text-on-surface-variant text-body-md">per month</p>
+            </div>
+            <div id="upgrade-error" class="hidden bg-error-container/30 text-error font-body-sm text-body-sm px-lg py-md rounded-lg"></div>
+            <div id="upgrade-success" class="hidden bg-primary-container/10 text-primary-fixed-dim font-body-sm text-body-sm px-lg py-md rounded-lg text-center"></div>
+            <button onclick="handleUpgrade()" id="upgrade-btn" class="w-full bg-primary-container text-on-primary font-headline-sm text-headline-sm py-md rounded-lg shadow-[0_0_20px_rgba(0,255,136,0.2)] hover:brightness-110 active:scale-[0.98] transition-all">
+                Subscribe Now
+            </button>
+            <p class="text-center text-on-surface-variant text-body-sm">
+                Cancel anytime. Secured by <span class="font-bold">Stripe</span>.
+            </p>
+        </div>
+    </div>
+</section>
+</main>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script>
+if (!isAuthenticated()) window.location.href = 'login.html';
+
+const urlParams = new URLSearchParams(window.location.search);
+const status = urlParams.get('status');
+
+async function init() {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    try {
+        const res = await api('/api/subscription/status');
+        const data = await res.json();
+
+        if (data.isPro) {
+            document.getElementById('already-pro').classList.remove('hidden');
+            document.getElementById('sub-status').textContent = data.status === 'cancelled' ? 'Cancels at period end' : 'Active';
+            if (data.status === 'cancelled') {
+                document.getElementById('cancel-btn').classList.add('hidden');
+            }
+        } else {
+            document.getElementById('upgrade-cta').classList.remove('hidden');
+        }
+    } catch (err) {
+        console.error('Status check failed:', err);
+        document.getElementById('upgrade-cta').classList.remove('hidden');
+    }
+
+    if (status === 'success') {
+        document.getElementById('upgrade-success').textContent = 'Payment successful! Your Pro features are now active. Redirecting...';
+        document.getElementById('upgrade-success').classList.remove('hidden');
+        document.getElementById('upgrade-cta').classList.add('hidden');
+        document.getElementById('already-pro').classList.remove('hidden');
+        document.getElementById('cancel-btn').classList.remove('hidden');
+        window.history.replaceState({}, '', 'upgrade.html');
+    } else if (status === 'cancelled') {
+        document.getElementById('upgrade-error').textContent = 'Payment was cancelled. You can try again anytime.';
+        document.getElementById('upgrade-error').classList.remove('hidden');
+    }
+}
+
+async function handleUpgrade() {
+    const btn = document.getElementById('upgrade-btn');
+    const errorEl = document.getElementById('upgrade-error');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span>';
+    errorEl.classList.add('hidden');
+
+    try {
+        const res = await api('/api/subscription/create-checkout', { method: 'POST' });
+        const data = await res.json();
+        if (data.url) {
+            window.location.href = data.url;
+        } else {
+            throw new Error(data.error || 'Failed to create checkout');
+        }
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Subscribe Now';
+    }
+}
+
+async function handleCancel() {
+    if (!confirm('Cancel your Pro subscription? You will lose access at the end of the billing period.')) return;
+    try {
+        await api('/api/subscription/cancel', { method: 'POST' });
+        document.getElementById('sub-status').textContent = 'Cancels at period end';
+        document.getElementById('cancel-btn').classList.add('hidden');
+    } catch (err) {
+        alert('Failed to cancel: ' + err.message);
+    }
+}
+
+init();
+</script>
+</body>
+</html>

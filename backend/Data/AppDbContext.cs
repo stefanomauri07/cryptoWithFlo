@@ -48,6 +48,8 @@ public class AppDbContext : DbContext
             entity.Property(e => e.PasswordHash).IsRequired();
             entity.Property(e => e.Role).HasMaxLength(20).IsRequired();
             entity.Property(e => e.Name).HasMaxLength(100);
+            entity.Property(e => e.StripeCustomerId).HasMaxLength(255);
+            entity.Property(e => e.SubscriptionStatus).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Otp>(entity =>

@@ -507,6 +507,17 @@ function updateUserMenu() {
     if (!user) return;
     document.getElementById('user-name').textContent = user.name || user.email;
     document.getElementById('user-role').textContent = user.role.toUpperCase();
+
+    var navUpgrade = document.getElementById('navbar-upgrade-btn');
+    var sidebarUpgrade = document.getElementById('sidebar-upgrade-btn');
+
+    if (user.role === 'user') {
+        if (navUpgrade) navUpgrade.classList.remove('hidden');
+        if (sidebarUpgrade) sidebarUpgrade.classList.remove('hidden');
+    } else {
+        if (navUpgrade) navUpgrade.classList.add('hidden');
+        if (sidebarUpgrade) sidebarUpgrade.classList.add('hidden');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', init);

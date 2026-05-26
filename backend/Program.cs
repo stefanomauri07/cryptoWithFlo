@@ -68,6 +68,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddSingleton<BrevoEmailService>();
+builder.Services.AddSingleton<StripeService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -98,6 +99,9 @@ app.UseExceptionHandler(errorApp =>
 });
 
 app.UseCors();
+
+app.MapStripeWebhook();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -114,6 +118,7 @@ app.MapAlertEndpoints();
 app.MapHealthEndpoints();
 app.MapAuthEndpoints();
 app.MapPortfolioEndpoints();
+app.MapSubscriptionEndpoints();
 
 using (var scope = app.Services.CreateScope())
 {
