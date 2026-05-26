@@ -123,7 +123,7 @@
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-md">
         <div>
             <h1 class="font-headline-lg text-headline-lg">Market Explorer</h1>
-            <p class="text-on-surface-variant text-body-md">Global Market Cap <span id="global-mcap" class="text-primary-fixed-dim font-bold">---</span> <span id="global-change" class="text-label-md font-label-md">---</span></p>
+            <p class="text-on-surface-variant text-body-md">Total 24h Volume <span id="global-mcap" class="text-primary-fixed-dim font-bold">---</span> <span id="global-change" class="text-label-md font-label-md">---</span></p>
         </div>
     </div>
 
@@ -147,7 +147,6 @@
                         <th class="px-lg py-sm font-label-md text-label-md text-right">Price</th>
                         <th class="px-lg py-sm font-label-md text-label-md text-right">24h Change</th>
                         <th class="px-lg py-sm font-label-md text-label-md text-right">24h Volume</th>
-                        <th class="px-lg py-sm font-label-md text-label-md text-right">Market Cap</th>
                     </tr>
                 </thead>
                 <tbody id="market-table-body" class="divide-y divide-outline-variant/10">
@@ -202,14 +201,14 @@ async function fetchMarketData() {
 
 function renderTableEmpty() {
     const tbody = document.getElementById('market-table-body');
-    tbody.innerHTML = '<tr><td colspan="6" class="px-lg py-xl text-center text-on-surface-variant">No data available. Check API connection.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="px-lg py-xl text-center text-on-surface-variant">No data available. Check API connection.</td></tr>';
     document.getElementById('ticker-track').innerHTML = '<div class="px-lg text-on-surface-variant">No price data — check Binance/CoinGecko connection</div>';
 }
 
 function updateGlobalStats() {
     if (allPrices.length === 0) return;
-    const totalMcap = allPrices.reduce((sum, c) => sum + (c.marketCap || 0), 0);
-    document.getElementById('global-mcap').textContent = formatCompact(totalMcap);
+    const totalVolume = allPrices.reduce((sum, c) => sum + (c.volume24h || 0), 0);
+    document.getElementById('global-mcap').textContent = formatCompact(totalVolume);
     const avgChange = allPrices.reduce((sum, c) => sum + c.change24hPercent, 0) / allPrices.length;
     const el = document.getElementById('global-change');
     el.textContent = formatPercent(avgChange);
@@ -261,7 +260,6 @@ function renderTable() {
                 </span>
             </td>
             <td class="px-lg py-md text-right font-mono-data text-mono-data text-on-surface-variant">${formatCompact(c.volume24h)}</td>
-            <td class="px-lg py-md text-right font-mono-data text-mono-data text-on-surface-variant">${formatCompact(c.marketCap)}</td>
         </tr>`;
     });
 }
