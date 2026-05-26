@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
+var envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", ".env");
+if (File.Exists(envPath)) DotNetEnv.Env.Load(envPath);
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMemoryCache();

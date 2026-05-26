@@ -25,8 +25,15 @@ services:
     container_name: crypto-backend
     ports:
       - "5000:5000"
-    env_file:
-      - .env
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: "3306"
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      BREVO_API_KEY: ${BREVO_API_KEY}
+      BREVO_SENDER: ${BREVO_SENDER}
     depends_on:
       db:
         condition: service_healthy
