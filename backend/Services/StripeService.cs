@@ -24,7 +24,7 @@ public class StripeService
 
         var stripeHttpClient = new System.Net.Http.HttpClient(handler);
         var stripeClient = new StripeClient(
-            config["STRIPE_SECRET_KEY"],
+            config["Stripe:SecretKey"],
             httpClient: new SystemNetHttpClient(httpClient: stripeHttpClient));
 
         StripeConfiguration.StripeClient = stripeClient;
@@ -45,7 +45,7 @@ public class StripeService
             user.StripeCustomerId = customerId;
         }
 
-        var priceId = _config["STRIPE_PRO_PRICE_ID"]!;
+        var priceId = _config["Stripe:ProPriceId"]!;
         var options = new SessionCreateOptions
         {
             Customer = customerId,

@@ -14,19 +14,30 @@ public static class StripeEndpoints
     {
         var group = app.MapGroup("/api/subscription");
 
-        group.MapPost("/create-checkout", async (HttpContext http, AppDbContext db, StripeService stripe) =>
+        group.MapPost("/create-checkout", async (HttpContext http, AppDbContext db, StripeService stripe, ILogger<Program> logger) =>
         {
-            var userId = int.Parse(http.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-            var user = await db.Users.FindAsync(userId);
-            if (user is null) return Results.NotFound();
+            try
+            {
+                var userId = int.Parse(http.User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                var user = await db.Users.FindAsync(userId);
+                if (user is null) return Results.NotFound(new { error = "User not found" });
 
-            if (user.Role == "vip" || user.Role == "admin")
-                return Results.BadRequest(new { error = "Already subscribed" });
+                if (user.Role == "vip" || user.Role == "admin")
+                    return Results.BadRequest(new { error = "Already subscribed" });
 
-            var checkoutUrl = await stripe.CreateCheckoutSessionAsync(user);
-            await db.SaveChangesAsync();
+                var checkoutUrl = await stripe.CreateCheckoutSessionAsync(user);
+                await db.SaveChangesAsync();
 
-            return Results.Ok(new { url = checkoutUrl });
+                return Results.Ok(new { url = checkoutUrl });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Stripe checkout failed for user {UserId}", http.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+                return Results.Problem(
+                    title: "Stripe checkout failed",
+                    detail: ex.Message,
+                    statusCode: 500);
+            }
         }).RequireAuthorization();
 
         group.MapGet("/status", async (HttpContext http, AppDbContext db) =>
@@ -62,10 +73,10 @@ public static class StripeEndpoints
 
     public static void MapStripeWebhook(this IEndpointRouteBuilder app)
     {
-        app.MapPost("/api/stripe/webhook", async (HttpContext context, AppDbContext db) =>
+        app.MapPost("/api/stripe/webhook", async (HttpContext context, AppDbContext db, IConfiguration config) =>
         {
             var json = await new StreamReader(context.Request.Body).ReadToEndAsync();
-            var webhookSecret = context.RequestServices.GetRequiredService<IConfiguration>()["STRIPE_WEBHOOK_SECRET"]!;
+            var webhookSecret = config["Stripe:WebhookSecret"]!;
 
             try
             {

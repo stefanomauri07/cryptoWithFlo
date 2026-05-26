@@ -28,8 +28,8 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.CryptoId).HasMaxLength(50).IsRequired();
-            entity.Property(e => e.PriceUsd).HasPrecision(18, 8);
-            entity.Property(e => e.PriceEur).HasPrecision(18, 8);
+            entity.Property(e => e.PriceUsd).HasPrecision(28, 8);
+            entity.Property(e => e.PriceEur).HasPrecision(28, 8);
             entity.Property(e => e.Change24hPercent).HasPrecision(10, 4);
 
             entity.HasIndex(e => new { e.CryptoId, e.RecordedAt });
@@ -65,7 +65,7 @@ public class AppDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.CryptoId).HasMaxLength(50).IsRequired();
             entity.Property(e => e.Condition).HasMaxLength(10).IsRequired();
-            entity.Property(e => e.ThresholdUsd).HasPrecision(18, 8);
+            entity.Property(e => e.ThresholdUsd).HasPrecision(28, 8);
 
             entity.HasOne(e => e.Crypto)
                   .WithMany(c => c.Alerts)

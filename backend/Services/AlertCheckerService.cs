@@ -29,7 +29,7 @@ public class AlertCheckerService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var intervalSeconds = _configuration.GetValue("ALERT_CHECK_INTERVAL_SECONDS", 120);
+        var intervalSeconds = _configuration.GetValue("Alerts:CheckIntervalSeconds", 120);
 
         while (!stoppingToken.IsCancellationRequested)
         {

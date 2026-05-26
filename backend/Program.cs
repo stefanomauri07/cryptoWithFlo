@@ -6,23 +6,21 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-var envPath = Path.Combine(Directory.GetCurrentDirectory(), "..", ".env");
-if (File.Exists(envPath)) DotNetEnv.Env.Load(envPath);
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMemoryCache();
 
-var connStr = $"Server={builder.Configuration["DATABASE_HOST"]};"
-            + $"Port={builder.Configuration["DATABASE_PORT"]};"
-            + $"Database={builder.Configuration["DATABASE_NAME"]};"
-            + $"User={builder.Configuration["DATABASE_USER"]};"
-            + $"Password={builder.Configuration["DATABASE_PASSWORD"]};";
+var dbConfig = builder.Configuration.GetSection("Database");
+var connStr = $"Server={dbConfig["Host"]};"
+            + $"Port={dbConfig["Port"]};"
+            + $"Database={dbConfig["Name"]};"
+            + $"User={dbConfig["User"]};"
+            + $"Password={dbConfig["Password"]};";
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connStr, ServerVersion.AutoDetect(connStr)));
 
-var binanceUrl = builder.Configuration["BINANCE_API_URL"] ?? "https://api.binance.com/";
+var binanceUrl = builder.Configuration["Binance:BaseUrl"] ?? "https://api.binance.com/";
 builder.Services.AddHttpClient("Binance", client =>
 {
     client.BaseAddress = new Uri(binanceUrl);
@@ -39,7 +37,8 @@ builder.Services.AddSingleton<BinanceService>();
 builder.Services.AddHostedService<PriceFetcherService>();
 builder.Services.AddHostedService<AlertCheckerService>();
 
-var jwtSecret = builder.Configuration["JWT_SECRET"] ?? throw new InvalidOperationException("JWT_SECRET not set");
+var jwtConfig = builder.Configuration.GetSection("Jwt");
+var jwtSecret = jwtConfig["Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
 var jwtKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -51,8 +50,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "CryptoTracker",
-            ValidAudience = "CryptoTracker",
+            ValidIssuer = jwtConfig["Issuer"],
+            ValidAudience = jwtConfig["Audience"],
             IssuerSigningKey = jwtKey
         };
     });

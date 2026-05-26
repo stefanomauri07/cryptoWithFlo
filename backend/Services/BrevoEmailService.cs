@@ -88,12 +88,12 @@ public class BrevoEmailService
 
     private async Task SendEmailAsync(string toEmail, string subject, string htmlContent)
     {
-        var apiKey = _configuration["BREVO_API_KEY"];
-        var sender = _configuration["BREVO_SENDER"] ?? "mauristefano1@gmail.com";
+        var apiKey = _configuration["Brevo:ApiKey"];
+        var sender = _configuration["Brevo:Sender"] ?? "mauristefano1@gmail.com";
 
         if (string.IsNullOrEmpty(apiKey))
         {
-            _logger.LogError("BREVO_API_KEY not configured");
+            _logger.LogError("Brevo:ApiKey not configured");
             return;
         }
 

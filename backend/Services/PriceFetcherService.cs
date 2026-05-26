@@ -27,7 +27,7 @@ public class PriceFetcherService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var intervalSeconds = _configuration.GetValue("FETCH_INTERVAL_SECONDS", 120);
+        var intervalSeconds = _configuration.GetValue("Fetching:IntervalSeconds", 120);
 
         while (!stoppingToken.IsCancellationRequested)
         {
