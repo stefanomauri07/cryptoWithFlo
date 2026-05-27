@@ -156,7 +156,7 @@ public static class AuthEndpoints
             issuer: "CryptoTracker",
             audience: "CryptoTracker",
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(config.GetValue("JWT_EXPIRY_HOURS", 24)),
+            expires: DateTime.UtcNow.AddHours(config.GetValue("Jwt:ExpiryHours", 24)),
             signingCredentials: creds
         );
 

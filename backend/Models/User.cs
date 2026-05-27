@@ -13,6 +13,7 @@ public class User
     public DateTime CreatedAt { get; set; }
     public string? StripeCustomerId { get; set; }
     public string? SubscriptionStatus { get; set; }
+    public string? SubscriptionPlan { get; set; }
     public DateTime? SubscriptionEndDate { get; set; }
 
     public ICollection<Alert> Alerts { get; set; } = new List<Alert>();

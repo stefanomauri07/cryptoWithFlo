@@ -30,21 +30,21 @@ const cryptoSymbols = {
 };
 
 function formatPrice(price) {
-    if (price >= 1) return '$' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    return '$' + price.toFixed(6);
+    if (price >= 1) return '$' + price.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return '$' + price.toLocaleString('it-IT', { minimumFractionDigits: 6, maximumFractionDigits: 6 });
 }
 
 function formatPriceShort(price) {
-    if (price >= 1000) return '$' + (price / 1000).toFixed(1) + 'K';
-    return '$' + price.toFixed(2);
+    if (price >= 1000) return '$' + (price / 1000).toLocaleString('it-IT', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + 'K';
+    return price.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function formatEur(price) {
-    return '\u20AC' + price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return '€' + price.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function formatPercent(pct) {
-    return (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
+    return (pct >= 0 ? '+' : '') + pct.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
 }
 
 function timeAgo(dateStr) {
@@ -216,7 +216,7 @@ async function updateChart() {
 
     const statsLow = Math.min(...prices);
     const statsHigh = Math.max(...prices);
-    const statsRange = ((statsHigh - statsLow) / statsLow * 100).toFixed(2);
+    const statsRange = ((statsHigh - statsLow) / statsLow * 100).toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     document.getElementById('stat-low').textContent = formatPriceShort(statsLow);
     document.getElementById('stat-high').textContent = formatPriceShort(statsHigh);
@@ -336,7 +336,7 @@ async function fetchAlerts() {
                         <span class="material-symbols-outlined text-primary-fixed-dim text-sm" style="font-variation-settings:'FILL'1">notifications_active</span>
                     </div>
                     <div>
-                        <div class="text-body-md font-body-md font-bold">${symbol} ${conditionText} $${alert.thresholdUsd.toLocaleString()}</div>
+                        <div class="text-body-md font-body-md font-bold">${symbol} ${conditionText} $${alert.thresholdUsd.toLocaleString('it-IT')}</div>
                         <div class="text-label-md font-label-md text-on-surface-variant">
                             Created ${timeAgo(alert.createdAt)} &middot; ${badgeText}
                             ${triggeredInfo}

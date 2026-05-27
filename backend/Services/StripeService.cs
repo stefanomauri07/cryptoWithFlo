@@ -83,8 +83,8 @@ public class StripeService
                     Quantity = 1
                 }
             },
-            SuccessUrl = "http://localhost:3000/upgrade.html?session_id={CHECKOUT_SESSION_ID}&status=success",
-            CancelUrl = "http://localhost:3000/upgrade.html?status=cancelled",
+            SuccessUrl = "http://localhost:3000/upgrade?session_id={CHECKOUT_SESSION_ID}&status=success",
+            CancelUrl = "http://localhost:3000/upgrade?status=cancelled",
             Metadata = new Dictionary<string, string> { { "userId", user.Id.ToString() }, { "plan", plan } }
         };
 

@@ -46,11 +46,17 @@ public static class StripeEndpoints
             var user = await db.Users.FindAsync(userId);
             if (user is null) return Results.NotFound();
 
+            var daysRemaining = user.SubscriptionEndDate.HasValue
+                ? (int)(user.SubscriptionEndDate.Value - DateTime.UtcNow).TotalDays
+                : (int?)null;
+
             return Results.Ok(new
             {
                 isPro = user.Role == "vip" || user.Role == "admin",
                 status = user.SubscriptionStatus,
-                endDate = user.SubscriptionEndDate
+                plan = user.SubscriptionPlan,
+                endDate = user.SubscriptionEndDate,
+                daysRemaining
             });
         }).RequireAuthorization();
 
@@ -67,6 +73,68 @@ public static class StripeEndpoints
 
             return Results.Ok();
         }).RequireAuthorization();
+
+        group.MapPost("/finalize", async (FinalizeRequest req, AppDbContext db, ILogger<Program> logger) =>
+        {
+            try
+            {
+                var sessionService = new SessionService();
+                var session = await sessionService.GetAsync(req.SessionId);
+
+                if (session.PaymentStatus != "paid")
+                    return Results.BadRequest(new { error = "Payment not completed" });
+
+                if (!session.Metadata.TryGetValue("userId", out var userIdStr))
+                    return Results.BadRequest(new { error = "Missing user metadata" });
+
+                var userId = int.Parse(userIdStr);
+                var user = await db.Users.FindAsync(userId);
+                if (user is null) return Results.NotFound(new { error = "User not found" });
+
+                if (user.Role == "vip" || user.Role == "admin")
+                    return Results.Ok(new
+                    {
+                        isPro = true,
+                        plan = user.SubscriptionPlan,
+                        endDate = user.SubscriptionEndDate,
+                        daysRemaining = user.SubscriptionEndDate.HasValue
+                            ? (int)(user.SubscriptionEndDate.Value - DateTime.UtcNow).TotalDays
+                            : (int?)null
+                    });
+
+                var plan = session.Metadata.TryGetValue("plan", out var planVal) ? planVal : "monthly";
+                user.Role = "vip";
+                user.StripeCustomerId = session.CustomerId;
+                user.SubscriptionStatus = "active";
+                user.SubscriptionPlan = plan;
+                user.SubscriptionEndDate = plan switch
+                {
+                    "monthly"     => DateTime.UtcNow.AddMonths(1),
+                    "semiannual"  => DateTime.UtcNow.AddMonths(6),
+                    "annual"      => DateTime.UtcNow.AddMonths(12),
+                    _             => DateTime.UtcNow.AddMonths(1)
+                };
+                await db.SaveChangesAsync();
+
+                var daysRemaining = (int)(user.SubscriptionEndDate.Value - DateTime.UtcNow).TotalDays;
+
+                return Results.Ok(new
+                {
+                    isPro = true,
+                    plan = user.SubscriptionPlan,
+                    endDate = user.SubscriptionEndDate,
+                    daysRemaining
+                });
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to finalize subscription for session {SessionId}", req.SessionId);
+                return Results.Problem(
+                    title: "Finalize failed",
+                    detail: ex.Message,
+                    statusCode: 500);
+            }
+        });
 
         return group;
     }
@@ -95,10 +163,18 @@ public static class StripeEndpoints
                         var user = await db.Users.FindAsync(userId);
                         if (user != null)
                         {
+                            var plan = session.Metadata.TryGetValue("plan", out var planVal) ? planVal : "monthly";
                             user.Role = "vip";
                             user.StripeCustomerId = session.CustomerId;
                             user.SubscriptionStatus = "active";
-                            user.SubscriptionEndDate = DateTime.UtcNow.AddMonths(1);
+                            user.SubscriptionPlan = plan;
+                            user.SubscriptionEndDate = plan switch
+                            {
+                                "monthly"     => DateTime.UtcNow.AddMonths(1),
+                                "semiannual"  => DateTime.UtcNow.AddMonths(6),
+                                "annual"      => DateTime.UtcNow.AddMonths(12),
+                                _             => DateTime.UtcNow.AddMonths(1)
+                            };
                             await db.SaveChangesAsync();
                         }
                     }
@@ -128,3 +204,4 @@ public static class StripeEndpoints
 }
 
 public record CheckoutRequest(string Plan);
+public record FinalizeRequest(string SessionId);

@@ -73,7 +73,7 @@ function initLayout(activePage) {
         '<span class="text-on-surface-variant/40">|</span>' +
         '<div id="user-menu" class="flex items-center gap-md">' +
         '<span id="user-name" class="text-body-sm font-body-sm text-on-surface"></span>' +
-        '<span id="user-role" class="text-label-md font-label-md px-2 py-0.5 rounded" style="background:rgba(0,255,136,0.15);color:#00ff88"></span>' +
+        '<span id="user-role" class="text-label-md font-label-md px-2 py-0.5 rounded"></span>' +
         '<button onclick="logout()" class="text-on-surface-variant hover:text-error transition-colors font-label-md text-label-md">Logout</button>' +
         '<a href="upgrade.html" id="navbar-upgrade-btn" class="hidden text-primary-fixed-dim font-label-md text-label-md px-3 py-1 border border-primary-container/30 rounded-lg hover:bg-primary-container/10 transition-colors">Upgrade</a>' +
         '</div>' +
@@ -134,15 +134,48 @@ function initLayout(activePage) {
 function updateUpgradeButtons() {
     var navUpgrade = document.getElementById('navbar-upgrade-btn');
     var sidebarUpgrade = document.getElementById('sidebar-upgrade-btn');
+    var userRole = document.getElementById('user-role');
 
     if (typeof getCurrentUser === 'function') {
         var user = getCurrentUser();
-        if (user && user.role === 'user') {
-            if (navUpgrade) navUpgrade.classList.remove('hidden');
-            if (sidebarUpgrade) sidebarUpgrade.classList.remove('hidden');
+        if (!user) return;
+
+        var isPro = user.role === 'vip' || user.role === 'admin';
+
+        if (userRole) {
+            if (isPro) {
+                userRole.textContent = 'PRO';
+                userRole.style.background = 'rgba(255,215,0,0.15)';
+                userRole.style.color = '#FFD700';
+            } else {
+                userRole.textContent = 'USER';
+                userRole.style.background = 'rgba(0,255,136,0.15)';
+                userRole.style.color = '#00ff88';
+            }
+        }
+
+        if (isPro) {
+            if (navUpgrade) {
+                navUpgrade.classList.remove('hidden');
+                navUpgrade.innerHTML = '<span class="material-symbols-outlined text-sm" style="font-variation-settings:\'FILL\'1">check_circle</span> Pro Active';
+                navUpgrade.className = 'flex items-center gap-1 text-[#FFD700] font-label-md text-label-md px-3 py-1 border border-[#FFD700]/40 rounded-lg hover:bg-[#FFD700]/10 transition-colors';
+            }
+            if (sidebarUpgrade) {
+                sidebarUpgrade.classList.remove('hidden');
+                sidebarUpgrade.innerHTML = '<span class="material-symbols-outlined text-sm" style="font-variation-settings:\'FILL\'1">verified</span> Pro Active';
+                sidebarUpgrade.className = 'w-full bg-[#FFD700]/10 text-[#FFD700] hover:bg-[#FFD700]/20 transition-colors font-label-md text-label-md py-3 rounded-lg border border-[#FFD700]/30 text-center block flex items-center justify-center gap-1';
+            }
         } else {
-            if (navUpgrade) navUpgrade.classList.add('hidden');
-            if (sidebarUpgrade) sidebarUpgrade.classList.add('hidden');
+            if (navUpgrade) {
+                navUpgrade.classList.remove('hidden');
+                navUpgrade.innerHTML = 'Upgrade';
+                navUpgrade.className = 'text-primary-fixed-dim font-label-md text-label-md px-3 py-1 border border-primary-container/30 rounded-lg hover:bg-primary-container/10 transition-colors';
+            }
+            if (sidebarUpgrade) {
+                sidebarUpgrade.classList.remove('hidden');
+                sidebarUpgrade.innerHTML = 'Upgrade to Pro';
+                sidebarUpgrade.className = 'w-full bg-primary-container/10 text-primary-fixed-dim hover:bg-primary-container/20 transition-colors font-label-md text-label-md py-3 rounded-lg border border-primary-container/20 text-center block';
+            }
         }
     }
 }

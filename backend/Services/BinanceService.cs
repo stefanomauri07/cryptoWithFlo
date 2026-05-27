@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Text.Json;
 using CryptoApp.Data;
 using CryptoApp.Models;
@@ -57,7 +58,7 @@ public class BinanceService
             foreach (var item in json.EnumerateArray())
             {
                 var symbol = item.GetProperty("symbol").GetString()!;
-                var price = decimal.Parse(item.GetProperty("price").GetString()!);
+                var price = decimal.Parse(item.GetProperty("price").GetString()!, CultureInfo.InvariantCulture);
                 result[symbol] = price;
             }
 
@@ -93,8 +94,8 @@ public class BinanceService
             foreach (var item in json.EnumerateArray())
             {
                 var symbol = item.GetProperty("symbol").GetString()!;
-                var changePercent = decimal.Parse(item.GetProperty("priceChangePercent").GetString()!);
-                var quoteVolume = decimal.Parse(item.GetProperty("quoteVolume").GetString()!);
+                var changePercent = decimal.Parse(item.GetProperty("priceChangePercent").GetString()!, CultureInfo.InvariantCulture);
+                var quoteVolume = decimal.Parse(item.GetProperty("quoteVolume").GetString()!, CultureInfo.InvariantCulture);
                 result[symbol] = (changePercent, quoteVolume);
             }
 
@@ -145,11 +146,11 @@ public class BinanceService
             {
                 klines.Add(new BinanceKline(
                     DateTimeOffset.FromUnixTimeMilliseconds(candle[0].GetInt64()).UtcDateTime,
-                    decimal.Parse(candle[1].GetString()!),
-                    decimal.Parse(candle[2].GetString()!),
-                    decimal.Parse(candle[3].GetString()!),
-                    decimal.Parse(candle[4].GetString()!),
-                    decimal.Parse(candle[5].GetString()!)
+                    decimal.Parse(candle[1].GetString()!, CultureInfo.InvariantCulture),
+                    decimal.Parse(candle[2].GetString()!, CultureInfo.InvariantCulture),
+                    decimal.Parse(candle[3].GetString()!, CultureInfo.InvariantCulture),
+                    decimal.Parse(candle[4].GetString()!, CultureInfo.InvariantCulture),
+                    decimal.Parse(candle[5].GetString()!, CultureInfo.InvariantCulture)
                 ));
             }
 
