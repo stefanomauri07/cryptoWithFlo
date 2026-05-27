@@ -29,6 +29,11 @@ builder.Services.AddHttpClient("Binance", client =>
     client.DefaultRequestHeaders.Add("User-Agent", "CryptoApp/1.0");
 }).ConfigurePrimaryHttpMessageHandler(() => new SocketsHttpHandler
 {
+    // NOTE FOR SCHOOL PRESENTATION:
+    // The school firewall (FortiGuard) intercepts HTTPS connections.
+    // SSL certificate validation is bypassed ONLY for trusted API endpoints
+    // (Binance, Stripe, Brevo) so the app works on the school network.
+    // In production, remove this handler and use proper SSL validation.
     SslOptions = new System.Net.Security.SslClientAuthenticationOptions
     {
         RemoteCertificateValidationCallback = (_, _, _, _) => true

@@ -14,6 +14,11 @@ public class StripeService
         _config = config;
         _logger = logger;
 
+        // NOTE FOR SCHOOL PRESENTATION:
+        // The school firewall (FortiGuard) intercepts HTTPS connections.
+        // SSL certificate validation is bypassed ONLY for trusted API endpoints
+        // (Binance, Stripe, Brevo) so the app works on the school network.
+        // In production, remove this handler and use proper SSL validation.
         var handler = new System.Net.Http.SocketsHttpHandler
         {
             SslOptions = new System.Net.Security.SslClientAuthenticationOptions
