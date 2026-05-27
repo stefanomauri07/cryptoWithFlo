@@ -19,6 +19,9 @@ Commit `d39433a` ha creato `advisor.html` come pagina full-viewport con layout c
 - `.env` ha `API_URL` ma solo per backend/docker-compose, non iniettato nel frontend
 - `default.conf` nginx non aveva reverse proxy `/api/` → le chiamate andavano direttamente al browser
 
+### Bug 3: Tailwind config incompleto su advisor (root cause layout)
+L'advisor aveva un tailwind config minimale (solo 20 colori). Mancavano `spacing`, `fontFamily`, `fontSize`, `borderRadius` → tutte le classi usate da `layout.js` (`font-headline-md`, `text-label-md`, `rounded-lg`, `p-margin-desktop`, ecc.) non funzionavano. Anche con l'HTML corretto, il layout appariva rotto perche' Tailwind non generava il CSS per quelle classi.
+
 ## Fix
 
 ### advisor.html
@@ -27,6 +30,8 @@ Commit `d39433a` ha creato `advisor.html` come pagina full-viewport con layout c
 - CSS `#chat-container`: `height:calc(100vh - 64px);margin-top:64px` → `min-height:calc(100vh - 260px)`
 - `#chat-input-area` background: `#0a0f1a` → `#161b2b`
 - Error message: generico invece del riferimento locale a Ollama
+- **Tailwind config**: sostituito config minimale con quello completo (colors, spacing, fontFamily, fontSize, borderRadius — uguale a news.html/compare.html)
+- Aggiunto `<div id="toast-container"></div>`
 
 ### default.conf
 - Aggiunto `location /api/ { proxy_pass http://backend:5000; }` con header standard

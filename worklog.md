@@ -11,6 +11,8 @@
 ### Changed
 - `advisor.html`: CSS `#chat-container` da `height:calc(100vh - 64px)` a `min-height:calc(100vh - 260px)`, rimosso `margin-top:64px`
 - `advisor.html`: background `#chat-input-area` da `#0a0f1a` a `#161b2b` per consistenza col tema
+- `advisor.html`: **Tailwind config completo** (spacing, fontFamily, fontSize, borderRadius) — prima aveva solo 20 colori. Senza spacing/font mancavano `p-margin-desktop`, `space-y-lg`, `rounded-lg`, `font-headline-md` e tutte le classi usate da layout.js.
+- `advisor.html`: aggiunto `<div id="toast-container"></div>`
 
 ## v3.5 (2026-05-27) — School Presentation Improvements
 
