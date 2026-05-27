@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Compare | CryptoTracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<link href="style.css" rel="stylesheet"/>
+<script id="tailwind-config">
+tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-error-container":"#ffdad6","secondary-fixed-dim":"#ffb3b2","on-background":"#dee1f7","surface-container-low":"#161b2b","primary-container":"#00ff88","surface-container-highest":"#303445","on-tertiary-fixed":"#261a00","inverse-on-surface":"#2b3040","secondary-fixed":"#ffdad9","on-primary-container":"#007139","on-error":"#690005","outline-variant":"#3b4b3d","inverse-surface":"#dee1f7",surface:"#0e1322","on-secondary-fixed-variant":"#920020","on-secondary-fixed":"#410008","on-tertiary-container":"#7d5d00","surface-bright":"#343949","primary-fixed-dim":"#00e479","surface-tint":"#00e479","surface-container-high":"#25293a","on-primary":"#003919","primary-fixed":"#60ff99","tertiary-container":"#ffda8d","surface-container":"#1a1f2f","on-secondary-container":"#ffc2c1","tertiary-fixed-dim":"#fabd00","on-surface-variant":"#b9cbb9","on-tertiary":"#3f2e00","on-tertiary-fixed-variant":"#5b4300",primary:"#f1ffef","on-primary-fixed":"#00210c","surface-container-lowest":"#090d1d","secondary-container":"#b5032a","surface-dim":"#0e1322","surface-variant":"#303445",error:"#ffb4ab","tertiary-fixed":"#ffdf9e","error-container":"#93000a","on-primary-fixed-variant":"#005228","on-secondary":"#680013",secondary:"#ffb3b2",tertiary:"#fffaf8",outline:"#849585","on-surface":"#dee1f7","inverse-primary":"#006d37",background:"#0e1322"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{unit:"4px",sm:"8px",xl:"40px","margin-mobile":"16px",md:"16px",gutter:"20px",lg:"24px","margin-desktop":"32px",xs:"4px"},fontFamily:{"headline-lg":["Inter"],"headline-sm":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"body-lg":["Inter"],"label-md":["Inter"],"body-sm":["Inter"],"display-lg":["Inter"],"mono-data":["Inter"]},fontSize:{"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-sm":["20px",{lineHeight:"28px",fontWeight:"600"}],"body-md":["16px",{lineHeight:"24px",fontWeight:"400"}],"headline-md":["24px",{lineHeight:"32px",fontWeight:"600"}],"body-lg":["18px",{lineHeight:"28px",fontWeight:"400"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.05em",fontWeight:"600"}],"body-sm":["14px",{lineHeight:"20px",fontWeight:"400"}],"display-lg":["48px",{lineHeight:"56px",letterSpacing:"-0.02em",fontWeight:"700"}],"mono-data":["14px",{lineHeight:"20px",fontWeight:"500"}]}}}}
+</script>
+<style>
+.period-pill{padding:6px 14px;font-size:12px;line-height:16px;letter-spacing:0.05em;font-weight:600;color:#b9cbb9;border-radius:8px;transition:all 0.15s ease;cursor:pointer;background:transparent;border:none}
+.period-pill:hover{color:#dee1f7}
+.period-pill.active{background:#303445;color:#00e479}
+.skeleton{background:linear-gradient(90deg,#1a1f2f 25%,#25293a 50%,#1a1f2f 75%);background-size:200% 100%;animation:shimmer 1.5s infinite}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+</style>
+</head>
+<body class="bg-background text-on-surface overflow-x-hidden">
+<main class="lg:pl-64 pt-16 min-h-screen">
+<div class="p-margin-desktop space-y-lg">
+<div class="flex items-center gap-md mb-lg">
+<a href="index.html" class="flex items-center justify-center w-10 h-10 rounded-lg bg-surface-container-high hover:bg-surface-container-highest transition-colors text-on-surface-variant hover:text-on-surface"><span class="material-symbols-outlined">arrow_back</span></a>
+<h1 class="font-headline-lg text-headline-lg">Compare Cryptocurrencies</h1>
+</div>
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg">
+<div class="flex flex-col md:flex-row gap-lg items-end">
+<div class="flex-1 space-y-sm">
+<label class="block text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">Crypto 1</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-base" style="color:#00ff88">circle</span>
+<select id="crypto1-select" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg pl-10 pr-3 py-3 text-body-md font-body-md focus:ring-1 focus:ring-[#00ff88] outline-none" onchange="onSelectionChange()">
+<option value="bitcoin">Bitcoin (BTC)</option>
+<option value="ethereum">Ethereum (ETH)</option>
+<option value="cardano">Cardano (ADA)</option>
+<option value="dogecoin">Dogecoin (DOGE)</option>
+<option value="solana">Solana (SOL)</option>
+<option value="ripple">Ripple (XRP)</option>
+</select>
+</div>
+</div>
+<div class="flex-1 space-y-sm">
+<label class="block text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">Crypto 2</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-base" style="color:#8884d8">circle</span>
+<select id="crypto2-select" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg pl-10 pr-3 py-3 text-body-md font-body-md focus:ring-1 focus:ring-[#8884d8] outline-none" onchange="onSelectionChange()">
+<option value="bitcoin">Bitcoin (BTC)</option>
+<option value="ethereum" selected>Ethereum (ETH)</option>
+<option value="cardano">Cardano (ADA)</option>
+<option value="dogecoin">Dogecoin (DOGE)</option>
+<option value="solana">Solana (SOL)</option>
+<option value="ripple">Ripple (XRP)</option>
+</select>
+</div>
+</div>
+<div class="flex bg-surface-container-high p-1 rounded-lg" id="period-buttons">
+<button class="period-pill active" data-days="1" onclick="onPeriodChange(1,this)">24H</button>
+<button class="period-pill" data-days="7" onclick="onPeriodChange(7,this)">7D</button>
+<button class="period-pill" data-days="30" onclick="onPeriodChange(30,this)">30D</button>
+<button class="period-pill" data-days="90" onclick="onPeriodChange(90,this)">90D</button>
+<button class="period-pill" data-days="365" onclick="onPeriodChange(365,this)">1Y</button>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg flex flex-col gap-lg">
+<h2 class="font-headline-sm text-headline-sm">Price Comparison</h2>
+<div class="chart-container relative bg-surface-container-highest/20 rounded-lg overflow-hidden border border-outline-variant/5" style="min-height:400px">
+<canvas id="compare-chart-canvas"></canvas>
+<div id="chart-loading" class="absolute inset-0 flex items-center justify-center hidden">
+<div class="flex flex-col items-center gap-md">
+<div class="w-12 h-12 border-4 border-t-primary-fixed-dim border-surface-container-high rounded-full animate-spin"></div>
+<span class="text-body-md font-body-md text-on-surface-variant">Loading data...</span>
+</div>
+</div>
+<div id="chart-error" class="absolute inset-0 flex items-center justify-center hidden">
+<div class="flex flex-col items-center gap-md text-center">
+<span class="material-symbols-outlined text-4xl text-error">error</span>
+<span class="text-body-md font-body-md text-on-surface-variant">Failed to load chart data</span>
+<button class="px-lg py-sm bg-primary-container text-on-primary-container font-label-md text-label-md rounded-lg hover:brightness-110 transition-all" onclick="fetchCompareData()">Retry</button>
+</div>
+</div>
+<div id="chart-placeholder" class="absolute inset-0 flex items-center justify-center text-on-surface-variant text-body-md">Select two cryptocurrencies to compare</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg space-y-md">
+<div class="flex items-center gap-md">
+<div class="w-3 h-3 rounded-full" style="background:#00ff88"></div>
+<h3 class="font-headline-sm text-headline-sm" id="crypto1-name">Bitcoin</h3>
+</div>
+<div id="crypto1-stats-loading" class="space-y-md">
+<div class="skeleton h-6 w-32 rounded"></div>
+<div class="skeleton h-4 w-20 rounded"></div>
+<div class="skeleton h-4 w-28 rounded"></div>
+<div class="skeleton h-4 w-24 rounded"></div>
+</div>
+<div id="crypto1-stats" class="space-y-md hidden">
+<div id="crypto1-price" class="text-display-lg font-display-lg text-primary-fixed">---</div>
+<div id="crypto1-change" class="text-body-lg font-body-lg"></div>
+<div class="grid grid-cols-2 gap-md">
+<div class="p-md bg-surface-container-highest/40 rounded-lg">
+<p class="text-label-md font-label-md text-on-surface-variant">High</p>
+<p id="crypto1-high" class="text-body-md font-body-md font-bold">---</p>
+</div>
+<div class="p-md bg-surface-container-highest/40 rounded-lg">
+<p class="text-label-md font-label-md text-on-surface-variant">Low</p>
+<p id="crypto1-low" class="text-body-md font-body-md font-bold">---</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/20 p-lg space-y-md">
+<div class="flex items-center gap-md">
+<div class="w-3 h-3 rounded-full" style="background:#8884d8"></div>
+<h3 class="font-headline-sm text-headline-sm" id="crypto2-name">Ethereum</h3>
+</div>
+<div id="crypto2-stats-loading" class="space-y-md">
+<div class="skeleton h-6 w-32 rounded"></div>
+<div class="skeleton h-4 w-20 rounded"></div>
+<div class="skeleton h-4 w-28 rounded"></div>
+<div class="skeleton h-4 w-24 rounded"></div>
+</div>
+<div id="crypto2-stats" class="space-y-md hidden">
+<div id="crypto2-price" class="text-display-lg font-display-lg text-on-surface" style="color:#8884d8">---</div>
+<div id="crypto2-change" class="text-body-lg font-body-lg"></div>
+<div class="grid grid-cols-2 gap-md">
+<div class="p-md bg-surface-container-highest/40 rounded-lg">
+<p class="text-label-md font-label-md text-on-surface-variant">High</p>
+<p id="crypto2-high" class="text-body-md font-body-md font-bold">---</p>
+</div>
+<div class="p-md bg-surface-container-highest/40 rounded-lg">
+<p class="text-label-md font-label-md text-on-surface-variant">Low</p>
+<p id="crypto2-low" class="text-body-md font-body-md font-bold">---</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<div id="toast-container"></div>
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script>
+if(!isAuthenticated())window.location.href='login.html';initLayout('markets');
+const cryptoIcons={bitcoin:'currency_bitcoin',ethereum:'eco',cardano:'token',dogecoin:'pets',solana:'circle',ripple:'water_drop'};
+const cryptoNames={bitcoin:'Bitcoin',ethereum:'Ethereum',cardano:'Cardano',dogecoin:'Dogecoin',solana:'Solana',ripple:'Ripple'};
+function formatPrice(p){return p>=1?'$'+p.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):'$'+p.toFixed(6)}
+function formatPercent(p){return(p>=0?'+':'')+p.toFixed(2)+'%'}
+let compareChart=null,currentDays=1,currentCrypto1='bitcoin',currentCrypto2='ethereum';
+
+function getCrypto1(){return document.getElementById('crypto1-select').value}
+function getCrypto2(){return document.getElementById('crypto2-select').value}
+
+function onSelectionChange(){
+    var c1=getCrypto1(),c2=getCrypto2();
+    if(c1===c2){
+        showToast('Please select two different cryptocurrencies','error');
+        return
+    }
+    currentCrypto1=c1;currentCrypto2=c2;
+    document.getElementById('crypto1-name').textContent=cryptoNames[c1]||c1;
+    document.getElementById('crypto2-name').textContent=cryptoNames[c2]||c2;
+    fetchCompareData()
+}
+
+function onPeriodChange(days,btn){
+    currentDays=days;
+    document.querySelectorAll('.period-pill').forEach(function(b){b.className='period-pill'});
+    btn.className='period-pill active';
+    fetchCompareData()
+}
+
+function showLoading(){
+    document.getElementById('chart-loading').classList.remove('hidden');
+    document.getElementById('chart-error').classList.add('hidden');
+    document.getElementById('chart-placeholder').classList.add('hidden');
+    document.getElementById('crypto1-stats').classList.add('hidden');
+    document.getElementById('crypto1-stats-loading').classList.remove('hidden');
+    document.getElementById('crypto2-stats').classList.add('hidden');
+    document.getElementById('crypto2-stats-loading').classList.remove('hidden')
+}
+
+function showError(){
+    document.getElementById('chart-loading').classList.add('hidden');
+    document.getElementById('chart-error').classList.remove('hidden');
+    document.getElementById('chart-placeholder').classList.add('hidden')
+}
+
+function showContent(){
+    document.getElementById('chart-loading').classList.add('hidden');
+    document.getElementById('chart-error').classList.add('hidden');
+    document.getElementById('chart-placeholder').classList.add('hidden');
+    document.getElementById('crypto1-stats-loading').classList.add('hidden');
+    document.getElementById('crypto1-stats').classList.remove('hidden');
+    document.getElementById('crypto2-stats-loading').classList.add('hidden');
+    document.getElementById('crypto2-stats').classList.remove('hidden')
+}
+
+async function fetchCompareData(){
+    showLoading();
+    try{
+        var res=await api('/api/crypto/compare/'+currentCrypto1+'/'+currentCrypto2+'?days='+currentDays);
+        if(!res.ok)throw new Error('API error');
+        var data=await res.json();
+        if(!data.crypto1||!data.crypto2||!data.crypto1.data||!data.crypto2.data)throw new Error('Invalid data');
+        updateChart(data);
+        updateStats(data)
+    }catch(err){
+        console.error(err);
+        showError()
+    }
+}
+
+function updateChart(data){
+    var d1=data.crypto1.data,d2=data.crypto2.data;
+    if(!d1.length&&!d2.length){showError();return}
+    var timestamps1=d1.map(function(d){return new Date(d.timestamp).toLocaleDateString('en-US',{month:'short',day:'numeric'})});
+    var prices1=d1.map(function(d){return d.price_usd});
+    var timestamps2=d2.map(function(d){return new Date(d.timestamp).toLocaleDateString('en-US',{month:'short',day:'numeric'})});
+    var prices2=d2.map(function(d){return d.price_usd});
+    var labels=timestamps1.length>=timestamps2.length?timestamps1:timestamps2;
+    var canvas=document.getElementById('compare-chart-canvas'),ctx=canvas.getContext('2d');
+    if(compareChart){compareChart.destroy();compareChart=null}
+    var fillGrad1=ctx.createLinearGradient(0,0,0,400);
+    fillGrad1.addColorStop(0,'rgba(0,255,136,0.2)');fillGrad1.addColorStop(1,'rgba(0,255,136,0)');
+    var fillGrad2=ctx.createLinearGradient(0,0,0,400);
+    fillGrad2.addColorStop(0,'rgba(136,132,216,0.2)');fillGrad2.addColorStop(1,'rgba(136,132,216,0)');
+    compareChart=new Chart(ctx,{type:'line',data:{labels:labels,datasets:[
+        {label:cryptoNames[currentCrypto1]||currentCrypto1,data:prices1,borderColor:'#00ff88',backgroundColor:fillGrad1,fill:true,tension:0.4,borderWidth:2.5,pointRadius:0,pointHoverRadius:5},
+        {label:cryptoNames[currentCrypto2]||currentCrypto2,data:prices2,borderColor:'#8884d8',backgroundColor:fillGrad2,fill:true,tension:0.4,borderWidth:2.5,pointRadius:0,pointHoverRadius:5}
+    ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#b9cbb9',usePointStyle:true,padding:20,font:{size:12}}},tooltip:{mode:'index',intersect:false}},scales:{x:{grid:{display:false},ticks:{color:'#8b8fa3',maxTicksLimit:10,font:{size:11}}},y:{grid:{color:'rgba(42,45,62,0.3)'},ticks:{color:'#8b8fa3',font:{size:11},callback:function(v){return formatPrice(v)}}}}}});
+    showContent()
+}
+
+function updateStats(data){
+    var d1=data.crypto1.data,d2=data.crypto2.data;
+    if(d1.length){
+        var p1=d1.map(function(d){return d.price_usd});
+        var last1=p1[p1.length-1],first1=p1[0];
+        var change1=first1>0?((last1-first1)/first1*100):0;
+        document.getElementById('crypto1-price').textContent=formatPrice(last1);
+        var el1=document.getElementById('crypto1-change');
+        el1.textContent=formatPercent(change1);
+        el1.className='text-body-lg font-body-lg '+(change1>=0?'text-primary-fixed-dim':'text-error');
+        document.getElementById('crypto1-high').textContent=formatPrice(Math.max.apply(null,p1));
+        document.getElementById('crypto1-low').textContent=formatPrice(Math.min.apply(null,p1))
+    }
+    if(d2.length){
+        var p2=d2.map(function(d){return d.price_usd});
+        var last2=p2[p2.length-1],first2=p2[0];
+        var change2=first2>0?((last2-first2)/first2*100):0;
+        document.getElementById('crypto2-price').textContent=formatPrice(last2);
+        var el2=document.getElementById('crypto2-change');
+        el2.textContent=formatPercent(change2);
+        el2.className='text-body-lg font-body-lg '+(change2>=0?'text-primary-fixed-dim':'text-error');
+        document.getElementById('crypto2-high').textContent=formatPrice(Math.max.apply(null,p2));
+        document.getElementById('crypto2-low').textContent=formatPrice(Math.min.apply(null,p2))
+    }
+    document.getElementById('crypto1-stats').classList.remove('hidden');
+    document.getElementById('crypto1-stats-loading').classList.add('hidden');
+    document.getElementById('crypto2-stats').classList.remove('hidden');
+    document.getElementById('crypto2-stats-loading').classList.add('hidden')
+}
+
+function showToast(msg,type){
+    var container=document.getElementById('toast-container');
+    var toast=document.createElement('div');
+    var bg=type==='error'?'bg-error-container text-error':'bg-primary-container text-on-primary-container';
+    toast.className='px-lg py-md rounded-lg font-label-md text-label-md shadow-lg transition-all duration-300 '+bg;
+    toast.textContent=msg;container.appendChild(toast);
+    setTimeout(function(){toast.style.opacity='0';setTimeout(function(){toast.remove()},300)},3000)
+}
+
+fetchCompareData();
+</script>
+</body>
+</html>
