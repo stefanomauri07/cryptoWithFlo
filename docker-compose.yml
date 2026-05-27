@@ -26,15 +26,20 @@ services:
     ports:
       - "5000:5000"
     environment:
-      DATABASE_HOST: db
-      DATABASE_PORT: "3306"
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      JWT_SECRET: ${JWT_SECRET}
-      BREVO_API_KEY: ${BREVO_API_KEY}
-      BREVO_SENDER: ${BREVO_SENDER}
-      BINANCE_API_URL: ${BINANCE_API_URL}
+      Database__Host: db
+      Database__Port: "3306"
+      Database__Name: ${DATABASE_NAME}
+      Database__User: ${DATABASE_USER}
+      Database__Password: ${DATABASE_PASSWORD}
+      Jwt__Secret: ${JWT_SECRET}
+      Jwt__ExpiryHours: ${JWT_EXPIRY_HOURS}
+      Brevo__ApiKey: ${BREVO_API_KEY}
+      Brevo__Sender: ${BREVO_SENDER}
+      Binance__BaseUrl: ${BINANCE_API_URL}
+      Stripe__SecretKey: ${Stripe__SecretKey}
+      Stripe__PublishableKey: ${Stripe__PublishableKey}
+      Stripe__WebhookSecret: ${Stripe__WebhookSecret}
+      COINGECKO_API_KEY: ${COINGECKO_API_KEY}
     depends_on:
       db:
         condition: service_healthy
