@@ -1,5 +1,22 @@
 # CryptoTracker Worklog
 
+## v3.5 (2026-05-27) — School Presentation Improvements
+
+### Fixed
+- **Toast message**: aggiornato da "Check CoinGecko API key" a "Check Binance connection" (CoinGecko non piu' usato dalla v3.4)
+- **SSL bypass documentato**: aggiunti commenti esplicativi in Program.cs, StripeService.cs sul perche' il firewall scolastico (FortiGuard) richiede il bypass SSL
+
+### Added
+- **News page**: `frontend/news.html` — pagina news crypto con feed da CryptoCompare API (free tier), fallback a dati demo
+- **News endpoint**: `GET /api/news` in `backend/Endpoints/NewsEndpoints.cs` — fetch da CryptoCompare, fallback a 8 notizie demo
+- **Compare page**: `frontend/compare.html` — confronto tra due crypto con grafici sovrapposti (Chart.js), statistiche comparative
+- **Compare endpoint**: `GET /api/crypto/compare/{crypto1}/{crypto2}?days=N` in `backend/Endpoints/CryptoEndpoints.cs` — dati grafico paralleli per due asset
+
+### Changed
+- `CryptoEndpoints.cs`: estratto helper `GetChartDataAsync` per evitare duplicazione, usato sia da `/chart` che da `/compare`
+- `layout.js`: aggiunti link News e Compare a sidebar e navbar
+- `Program.cs`: registrato `MapNewsEndpoints()`
+
 ## v3.4 (2026-05-26) — Fix prezzi reali (FortiGuard bypass + Binance only)
 
 ### Fixed
