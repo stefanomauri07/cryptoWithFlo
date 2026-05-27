@@ -129,6 +129,7 @@ app.MapHealthEndpoints();
 app.MapAuthEndpoints();
 app.MapPortfolioEndpoints();
 app.MapSubscriptionEndpoints();
+app.MapNewsEndpoints();
 
 using (var scope = app.Services.CreateScope())
 {
