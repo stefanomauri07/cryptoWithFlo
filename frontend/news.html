@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>News | CryptoTracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                "colors": {
+                    "on-error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#ffb3b2",
+                    "on-background": "#dee1f7",
+                    "surface-container-low": "#161b2b",
+                    "primary-container": "#00ff88",
+                    "surface-container-highest": "#303445",
+                    "on-tertiary-fixed": "#261a00",
+                    "inverse-on-surface": "#2b3040",
+                    "secondary-fixed": "#ffdad9",
+                    "on-primary-container": "#007139",
+                    "on-error": "#690005",
+                    "outline-variant": "#3b4b3d",
+                    "inverse-surface": "#dee1f7",
+                    "surface": "#0e1322",
+                    "on-secondary-fixed-variant": "#920020",
+                    "on-secondary-fixed": "#410008",
+                    "on-tertiary-container": "#7d5d00",
+                    "surface-bright": "#343949",
+                    "primary-fixed-dim": "#00e479",
+                    "surface-tint": "#00e479",
+                    "surface-container-high": "#25293a",
+                    "on-primary": "#003919",
+                    "primary-fixed": "#60ff99",
+                    "tertiary-container": "#ffda8d",
+                    "surface-container": "#1a1f2f",
+                    "on-secondary-container": "#ffc2c1",
+                    "tertiary-fixed-dim": "#fabd00",
+                    "on-surface-variant": "#b9cbb9",
+                    "on-tertiary": "#3f2e00",
+                    "on-tertiary-fixed-variant": "#5b4300",
+                    "primary": "#f1ffef",
+                    "on-primary-fixed": "#00210c",
+                    "surface-container-lowest": "#090d1d",
+                    "secondary-container": "#b5032a",
+                    "surface-dim": "#0e1322",
+                    "surface-variant": "#303445",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#ffdf9e",
+                    "error-container": "#93000a",
+                    "on-primary-fixed-variant": "#005228",
+                    "on-secondary": "#680013",
+                    "secondary": "#ffb3b2",
+                    "tertiary": "#fffaf8",
+                    "outline": "#849585",
+                    "on-surface": "#dee1f7",
+                    "inverse-primary": "#006d37",
+                    "background": "#0e1322"
+                },
+                "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+                "spacing": {
+                    "unit": "4px",
+                    "sm": "8px",
+                    "xl": "40px",
+                    "margin-mobile": "16px",
+                    "md": "16px",
+                    "gutter": "20px",
+                    "lg": "24px",
+                    "margin-desktop": "32px",
+                    "xs": "4px"
+                },
+                "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "mono-data": ["Inter"]
+                },
+                "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight":"40px","letterSpacing":"-0.01em","fontWeight":"600"}],
+                    "headline-sm": ["20px", {"lineHeight":"28px","fontWeight":"600"}],
+                    "body-md": ["16px", {"lineHeight":"24px","fontWeight":"400"}],
+                    "headline-md": ["24px", {"lineHeight":"32px","fontWeight":"600"}],
+                    "body-lg": ["18px", {"lineHeight":"28px","fontWeight":"400"}],
+                    "label-md": ["12px", {"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"600"}],
+                    "body-sm": ["14px", {"lineHeight":"20px","fontWeight":"400"}],
+                    "display-lg": ["48px", {"lineHeight":"56px","letterSpacing":"-0.02em","fontWeight":"700"}],
+                    "mono-data": ["14px", {"lineHeight":"20px","fontWeight":"500"}]
+                }
+            }
+        }
+    }
+</script>
+</head>
+<body class="bg-background text-on-surface overflow-x-hidden">
+
+<main class="lg:pl-64 pt-16 min-h-screen">
+<div class="p-margin-desktop space-y-lg">
+
+    <!-- News Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-md">
+        <div class="flex items-center gap-md">
+            <span class="material-symbols-outlined text-primary-fixed-dim" style="font-size:32px;font-variation-settings:'FILL'1">newspaper</span>
+            <div>
+                <h1 class="font-headline-lg text-headline-lg">Crypto News</h1>
+                <p class="text-on-surface-variant text-body-md">Latest headlines from the crypto world</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div id="news-loading" class="flex flex-col items-center justify-center py-xl gap-md">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-primary-container/30 border-t-primary-fixed-dim"></div>
+        <p class="text-on-surface-variant text-body-md">Loading news...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="news-error" class="hidden bg-surface-container-low border border-error/30 rounded-xl p-lg text-center">
+        <span class="material-symbols-outlined text-error mb-sm" style="font-size:48px">error_outline</span>
+        <p class="text-error text-body-lg font-bold">Failed to load news</p>
+        <p class="text-on-surface-variant text-body-sm mt-sm">Check your connection and try again.</p>
+        <button onclick="fetchNews()" class="mt-md px-lg py-sm bg-primary-container/10 text-primary-fixed-dim border border-primary-container/20 rounded-lg hover:bg-primary-container/20 transition-colors font-label-md text-label-md">
+            Retry
+        </button>
+    </div>
+
+    <!-- Empty State -->
+    <div id="news-empty" class="hidden bg-surface-container-low border border-outline-variant/20 rounded-xl p-lg text-center">
+        <span class="material-symbols-outlined text-on-surface-variant mb-sm" style="font-size:48px">article</span>
+        <p class="text-on-surface text-body-lg font-bold">No news available</p>
+        <p class="text-on-surface-variant text-body-sm mt-sm">Check back later for the latest crypto headlines.</p>
+    </div>
+
+    <!-- News Cards Grid -->
+    <div id="news-grid" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+        <!-- Populated by JS -->
+    </div>
+
+</div>
+</main>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script>
+if (!isAuthenticated()) window.location.href = 'login.html';
+
+function timeAgo(dateStr) {
+    const now = new Date();
+    const then = new Date(dateStr);
+    const diffMs = now - then;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    if (diffMins < 1) return 'just now';
+    if (diffMins < 60) return diffMins + 'm ago';
+    if (diffHours < 24) return diffHours + 'h ago';
+    return diffDays + 'd ago';
+}
+
+function showLoading(visible) {
+    document.getElementById('news-loading').classList.toggle('hidden', !visible);
+}
+
+function showError(visible) {
+    document.getElementById('news-error').classList.toggle('hidden', !visible);
+}
+
+function showEmpty(visible) {
+    document.getElementById('news-empty').classList.toggle('hidden', !visible);
+}
+
+function showGrid(visible) {
+    document.getElementById('news-grid').classList.toggle('hidden', !visible);
+}
+
+async function fetchNews() {
+    showLoading(true);
+    showError(false);
+    showEmpty(false);
+    showGrid(false);
+
+    try {
+        const res = await api('/api/news');
+        if (!res.ok) {
+            throw new Error('Failed to fetch news');
+        }
+        const news = await res.json();
+
+        showLoading(false);
+
+        if (!news || news.length === 0) {
+            showEmpty(true);
+            return;
+        }
+
+        renderNews(news);
+        showGrid(true);
+    } catch (err) {
+        console.error(err);
+        showLoading(false);
+        showError(true);
+    }
+}
+
+function renderNews(articles) {
+    const grid = document.getElementById('news-grid');
+    grid.innerHTML = '';
+
+    articles.forEach(article => {
+        const card = document.createElement('div');
+        card.className = 'bg-surface-container-low border border-outline-variant/20 rounded-xl overflow-hidden hover:border-primary-container/20 transition-all hover:shadow-lg hover:shadow-primary-container/5 flex flex-col';
+
+        const ago = article.publishedAt || article.date || article.createdAt;
+
+        card.innerHTML =
+            '<div class="p-lg flex-1 flex flex-col">' +
+                '<div class="flex items-center gap-sm mb-sm">' +
+                    '<span class="text-label-md font-label-md px-2 py-0.5 rounded" style="background:rgba(0,255,136,0.1);color:#00e479">' + (article.source || 'Crypto') + '</span>' +
+                    (ago ? '<span class="text-label-md font-label-md text-on-surface-variant">' + timeAgo(ago) + '</span>' : '') +
+                '</div>' +
+                '<h3 class="font-headline-sm text-headline-sm mb-sm line-clamp-2">' + (article.title || 'Untitled') + '</h3>' +
+                (article.description || article.summary
+                    ? '<p class="text-body-sm font-body-sm text-on-surface-variant flex-1 line-clamp-3">' + (article.description || article.summary) + '</p>'
+                    : '<div class="flex-1"></div>') +
+                (article.url
+                    ? '<a href="' + article.url + '" target="_blank" rel="noopener" class="mt-md inline-flex items-center gap-xs text-primary-fixed-dim hover:text-primary-fixed font-label-md text-label-md transition-colors">' +
+                        'Read more <span class="material-symbols-outlined" style="font-size:16px">open_in_new</span>' +
+                      '</a>'
+                    : '') +
+            '</div>';
+
+        grid.appendChild(card);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initLayout('news');
+    fetchNews();
+});
+</script>
+</body>
+</html>

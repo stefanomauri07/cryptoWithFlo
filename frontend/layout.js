@@ -1,19 +1,23 @@
 function initLayout(activePage) {
-    var pageToNavIdx = { dashboard: 0, markets: 1, portfolio: 2, alerts: 3 };
-    var pageToSideIdx = { dashboard: 0, markets: 1, alerts: 2, portfolio: 3 };
+    var pageToNavIdx = { dashboard: 0, markets: 1, portfolio: 2, alerts: 3, news: 4, compare: 5 };
+    var pageToSideIdx = { dashboard: 0, markets: 1, alerts: 2, portfolio: 3, news: 4, compare: 5 };
 
     var navLinks = [
         { label: 'Dashboard', href: 'index.html' },
         { label: 'Markets', href: 'market-explorer.html' },
         { label: 'Portfolio', href: 'portfolio.html' },
-        { label: 'Alerts', href: 'alert-history.html' }
+        { label: 'Alerts', href: 'alert-history.html' },
+        { label: 'News', href: 'news.html' },
+        { label: 'Compare', href: 'compare.html' }
     ];
 
     var sidebarItems = [
         { label: 'Overview', href: 'index.html', icon: 'dashboard' },
         { label: 'Assets', href: 'market-explorer.html', icon: 'account_balance_wallet' },
         { label: 'History', href: 'alert-history.html', icon: 'history' },
-        { label: 'Portfolio', href: 'portfolio.html', icon: 'pie_chart' }
+        { label: 'Portfolio', href: 'portfolio.html', icon: 'pie_chart' },
+        { label: 'News', href: 'news.html', icon: 'newspaper' },
+        { label: 'Compare', href: 'compare.html', icon: 'compare_arrows' }
     ];
 
     var activeNavIdx = pageToNavIdx[activePage] !== undefined ? pageToNavIdx[activePage] : -1;
