@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Advisor | CryptoTracker</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = { darkMode:"class", theme:{ extend:{ colors:{
+        "surface":"#0e1322","surface-dim":"#0e1322","surface-container-lowest":"#090d1d","surface-container-low":"#161b2b","surface-container":"#1a1f2f","surface-container-high":"#25293a","surface-container-highest":"#303445",
+        "background":"#0e1322","on-background":"#dee1f7","on-surface":"#dee1f7","on-surface-variant":"#b9cbb9",
+        "primary-container":"#00ff88","primary-fixed-dim":"#00e479","primary-fixed":"#60ff99","on-primary-container":"#007139","on-primary":"#003919",
+        "outline-variant":"#3b4b3d","outline":"#849585","error":"#ffb4ab","error-container":"#93000a"
+    },fontFamily:{ body:["Inter"] } } } }
+</script>
+<style>
+.bg-gradient-main{background:radial-gradient(circle at 0% 0%,#161b2b 0%,#0e1322 100%)}
+#chat-container{display:flex;flex-direction:column;height:calc(100vh - 64px);margin-top:64px}
+#chat-messages{flex:1;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:16px}
+.msg{max-width:80%;padding:14px 18px;border-radius:16px;font-size:15px;line-height:1.6;word-wrap:break-word;white-space:pre-wrap}
+.msg.user{align-self:flex-end;background:linear-gradient(135deg,#0d3320,#1a3a2a);color:#dee1f7;border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:#1a1f2f;color:#dee1f7;border:1px solid #25293a;border-bottom-left-radius:4px}
+.msg.greeting{align-self:flex-start;background:transparent;border:none;padding:20px 0;max-width:100%}
+.msg.greeting .title{font-size:24px;font-weight:700;color:#00ff88}
+.msg.greeting .subtitle{font-size:15px;color:#8b8fa3;margin-top:8px}
+#chat-input-area{padding:16px 24px;border-top:1px solid #1f2a1f;display:flex;gap:12px;background:#0a0f1a}
+#chat-input{flex:1;background:#161b2b;border:1px solid #303445;border-radius:12px;padding:14px 18px;color:#dee1f7;font-size:15px;outline:none;transition:border-color 0.2s}
+#chat-input:focus{border-color:#00ff88}
+#chat-input::placeholder{color:#5a5f72}
+#chat-send{background:linear-gradient(135deg,#00ff88,#00e479);border:none;border-radius:12px;padding:14px 24px;cursor:pointer;color:#003919;font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;transition:opacity 0.2s}
+#chat-send:hover{opacity:0.9}
+#chat-send:disabled{opacity:0.5;cursor:not-allowed}
+.typing-indicator{display:flex;gap:4px;padding:14px 18px;align-self:flex-start}
+.typing-indicator span{width:8px;height:8px;background:#00ff88;border-radius:50%;animation:typingBounce 1.4s infinite ease-in-out}
+.typing-indicator span:nth-child(2){animation-delay:0.2s}
+.typing-indicator span:nth-child(3){animation-delay:0.4s}
+@keyframes typingBounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}}
+@media(max-width:768px){.msg{max-width:90%}#chat-input-area{padding:12px 16px}}
+</style>
+</head>
+<body class="bg-background text-on-surface overflow-hidden">
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="layout.js"></script>
+<script>
+if(!isAuthenticated())window.location.href='login.html';
+initLayout('advisor');
+
+let isLoading=false;
+const STORAGE_KEY='advisor_chat_history';
+let history=[];
+
+try{
+    const raw=sessionStorage.getItem(STORAGE_KEY);
+    if(raw)history=JSON.parse(raw);
+}catch(e){history=[]}
+
+function saveHistory(){
+    try{sessionStorage.setItem(STORAGE_KEY,JSON.stringify(history))}catch(e){}
+}
+
+function escapeHtml(str){
+    const div=document.createElement('div');
+    div.textContent=str;
+    return div.innerHTML;
+}
+
+function scrollBottom(){
+    const msgs=document.getElementById('chat-messages');
+    msgs.scrollTop=msgs.scrollHeight;
+}
+
+function renderMessages(){
+    const msgs=document.getElementById('chat-messages');
+    let html='';
+    for(let i=0;i<history.length;i++){
+        const m=history[i];
+        if(m.role==='greeting'){
+            html+='<div class="msg greeting">'+
+                '<div class="title">'+escapeHtml(m.title)+'</div>'+
+                '<div class="subtitle">'+escapeHtml(m.subtitle)+'</div>'+
+            '</div>';
+        }else{
+            html+='<div class="msg '+m.role+'">'+escapeHtml(m.text)+'</div>';
+        }
+    }
+    msgs.innerHTML=html;
+    scrollBottom();
+}
+
+function addTyping(){
+    const msgs=document.getElementById('chat-messages');
+    const typing=document.createElement('div');
+    typing.className='typing-indicator';
+    typing.id='typing-indicator';
+    typing.innerHTML='<span></span><span></span><span></span>';
+    msgs.appendChild(typing);
+    scrollBottom();
+}
+
+function removeTyping(){
+    const typing=document.getElementById('typing-indicator');
+    if(typing)typing.remove();
+}
+
+async function sendMessage(){
+    const input=document.getElementById('chat-input');
+    const text=input.value.trim();
+    if(!text||isLoading)return;
+    input.value='';
+
+    history.push({role:'user',text:text});
+    saveHistory();
+    renderMessages();
+
+    isLoading=true;
+    document.getElementById('chat-send').disabled=true;
+    addTyping();
+
+    try{
+        const res=await api('/api/advisor/chat',{method:'POST',body:{message:text}});
+        const data=await res.json();
+        removeTyping();
+        isLoading=false;
+        document.getElementById('chat-send').disabled=false;
+        const reply=data&&data.reply?data.reply:'Sorry, I could not process that.';
+        history.push({role:'bot',text:reply});
+        saveHistory();
+        renderMessages();
+    }catch(err){
+        removeTyping();
+        isLoading=false;
+        document.getElementById('chat-send').disabled=false;
+        history.push({role:'bot',text:'\u26a0\ufe0f Unable to reach the advisor. Make sure Ollama is running on your PC.'});
+        saveHistory();
+        renderMessages();
+    }
+}
+
+function init(){
+    if(history.length===0){
+        history.push({
+            role:'greeting',
+            title:'\ud83e\udd16 AI Financial Advisor',
+            subtitle:'Powered by Nemotron-3 Super. I analyze your portfolio, market trends, and news to give you a clear market direction. Ask me anything!'
+        });
+        history.push({role:'bot',text:'Hi! I\'m your AI Financial Advisor. I can help you with:\n\n\u2022 Portfolio analysis \u2014 how your holdings are performing\n\u2022 Market direction \u2014 bullish/bearish/neutral percentages\n\u2022 Recommendations \u2014 what to watch or consider\n\u2022 News impact \u2014 how recent events affect the market\n\nWhat would you like to know?'});
+        saveHistory();
+    }
+    renderMessages();
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+    init();
+    document.getElementById('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter')sendMessage()});
+    document.getElementById('chat-send').addEventListener('click',sendMessage);
+});
+</script>
+
+<main class="lg:pl-64 bg-gradient-main">
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+        <div id="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Ask about your portfolio, market trends, or what to do..." autocomplete="off"/>
+            <button id="chat-send">
+                <span class="material-symbols-outlined" style="font-size:20px">send</span>
+                Send
+            </button>
+        </div>
+    </div>
+</main>
+</body>
+</html>

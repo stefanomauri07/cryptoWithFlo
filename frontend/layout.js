@@ -1,6 +1,6 @@
 function initLayout(activePage) {
-    var pageToNavIdx = { dashboard: 0, markets: 1, portfolio: 2, alerts: 3, news: 4, compare: 5 };
-    var pageToSideIdx = { dashboard: 0, markets: 1, alerts: 2, portfolio: 3, news: 4, compare: 5 };
+    var pageToNavIdx = { dashboard: 0, markets: 1, portfolio: 2, alerts: 3, news: 4, compare: 5, advisor: 6 };
+    var pageToSideIdx = { dashboard: 0, markets: 1, alerts: 2, portfolio: 3, news: 4, compare: 5, advisor: 6 };
 
     var navLinks = [
         { label: 'Dashboard', href: 'index.html' },
@@ -8,7 +8,8 @@ function initLayout(activePage) {
         { label: 'Portfolio', href: 'portfolio.html' },
         { label: 'Alerts', href: 'alert-history.html' },
         { label: 'News', href: 'news.html' },
-        { label: 'Compare', href: 'compare.html' }
+        { label: 'Compare', href: 'compare.html' },
+        { label: 'Advisor', href: 'advisor.html' }
     ];
 
     var sidebarItems = [
@@ -17,7 +18,8 @@ function initLayout(activePage) {
         { label: 'History', href: 'alert-history.html', icon: 'history' },
         { label: 'Portfolio', href: 'portfolio.html', icon: 'pie_chart' },
         { label: 'News', href: 'news.html', icon: 'newspaper' },
-        { label: 'Compare', href: 'compare.html', icon: 'compare_arrows' }
+        { label: 'Compare', href: 'compare.html', icon: 'compare_arrows' },
+        { label: 'Advisor', href: 'advisor.html', icon: 'psychology' }
     ];
 
     var activeNavIdx = pageToNavIdx[activePage] !== undefined ? pageToNavIdx[activePage] : -1;
@@ -146,199 +148,3 @@ function updateUpgradeButtons() {
 }
 
 window.initLayout = initLayout;
-
-// ── AI Financial Advisor Chat Widget ──────────────────────────────────
-(function () {
-    // Only inject once (layout.js may be loaded on every page nav in SPA-like setups)
-    if (document.getElementById('ai-chat-widget')) return;
-
-    /* ── CSS ── */
-    var style = document.createElement('style');
-    style.textContent = [
-        '#ai-chat-widget * { box-sizing: border-box; }',
-        '#ai-chat-widget { position: fixed; bottom: 24px; right: 24px; z-index: 9999; font-family: Inter, sans-serif; }',
-        '#ai-chat-button { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #00ff88, #00e479); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,255,136,0.3); transition: transform 0.2s; }',
-        '#ai-chat-button:hover { transform: scale(1.1); }',
-        '#ai-chat-panel { display: none; position: absolute; bottom: 72px; right: 0; width: 380px; height: 520px; background: #0e1322; border: 1px solid #3b4b3d; border-radius: 16px; overflow: hidden; flex-direction: column; box-shadow: 0 8px 40px rgba(0,0,0,0.5); }',
-        '#ai-chat-panel.open { display: flex; }',
-        '#ai-chat-header { background: #161b2b; padding: 16px; border-bottom: 1px solid #3b4b3d; display: flex; align-items: center; justify-content: space-between; }',
-        '#ai-chat-messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }',
-        '.ai-msg { max-width: 85%; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.5; }',
-        '.ai-msg.user { align-self: flex-end; background: #1a3a2a; color: #dee1f7; }',
-        '.ai-msg.bot { align-self: flex-start; background: #25293a; color: #dee1f7; }',
-        '#ai-chat-input-area { padding: 12px; border-top: 1px solid #3b4b3d; display: flex; gap: 8px; }',
-        '#ai-chat-input { flex: 1; background: #161b2b; border: 1px solid #3b4b3d; border-radius: 8px; padding: 10px 14px; color: #dee1f7; font-size: 14px; outline: none; }',
-        '#ai-chat-input:focus { border-color: #00ff88; }',
-        '#ai-chat-send { background: #00e479; border: none; border-radius: 8px; padding: 10px 16px; cursor: pointer; color: #003919; font-weight: 600; }',
-        '.ai-typing { display: flex; gap: 4px; padding: 12px 16px; }',
-        '.ai-typing span { width: 8px; height: 8px; background: #00ff88; border-radius: 50%; animation: bounce 1.4s infinite ease-in-out; }',
-        '.ai-typing span:nth-child(2) { animation-delay: 0.2s; }',
-        '.ai-typing span:nth-child(3) { animation-delay: 0.4s; }',
-        '@keyframes bounce { 0%,80%,100% { transform: translateY(0); } 40% { transform: translateY(-8px); } }',
-        '@media (max-width: 480px) { #ai-chat-panel { width: calc(100vw - 48px); height: 60vh; } }'
-    ].join('\n');
-    document.head.appendChild(style);
-
-    /* ── HTML ── */
-    var widget = document.createElement('div');
-    widget.id = 'ai-chat-widget';
-    widget.innerHTML =
-        '<button id="ai-chat-button" title="AI Financial Advisor" aria-label="Open AI chat">' +
-            '<span class="material-symbols-outlined" style="color:#003919; font-size:28px;">smart_toy</span>' +
-        '</button>' +
-        '<div id="ai-chat-panel">' +
-            '<div id="ai-chat-header">' +
-                '<div style="display:flex;align-items:center;gap:8px;">' +
-                    '<span class="material-symbols-outlined" style="color:#00ff88;">smart_toy</span>' +
-                    '<span style="color:#dee1f7;font-weight:600;font-size:16px;">AI Financial Advisor</span>' +
-                '</div>' +
-                '<button id="ai-chat-close" style="background:none;border:none;color:#8b92ad;cursor:pointer;font-size:20px;line-height:1;">&times;</button>' +
-            '</div>' +
-            '<div id="ai-chat-messages"></div>' +
-            '<div id="ai-chat-input-area">' +
-                '<input type="text" id="ai-chat-input" placeholder="Ask about your portfolio..." autocomplete="off" />' +
-                '<button id="ai-chat-send">' +
-                    '<span class="material-symbols-outlined" style="font-size:20px;">send</span>' +
-                '</button>' +
-            '</div>' +
-        '</div>';
-    document.body.appendChild(widget);
-
-    /* ── DOM refs ── */
-    var btn    = document.getElementById('ai-chat-button');
-    var panel  = document.getElementById('ai-chat-panel');
-    var close  = document.getElementById('ai-chat-close');
-    var msgs   = document.getElementById('ai-chat-messages');
-    var input  = document.getElementById('ai-chat-input');
-    var send   = document.getElementById('ai-chat-send');
-
-    /* ── State ── */
-    var STORAGE_KEY = 'ai_chat_history';
-    var isOpen = false;
-    var isLoading = false;
-
-    /* ── Load history ── */
-    var history = [];
-    try {
-        var raw = sessionStorage.getItem(STORAGE_KEY);
-        if (raw) history = JSON.parse(raw);
-        else {
-            // Seed with welcome message
-            history = [{ role: 'bot', text: '👋 Hi! I\'m your AI Financial Advisor. Ask me about your portfolio, market trends, or what to do next.' }];
-            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(history));
-        }
-    } catch (e) {
-        history = [];
-    }
-
-    function saveHistory() {
-        try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(history)); } catch (e) {}
-    }
-
-    function scrollBottom() {
-        msgs.scrollTop = msgs.scrollHeight;
-    }
-
-    /* ── Render ── */
-    function renderMessages() {
-        var html = '';
-        for (var i = 0; i < history.length; i++) {
-            var m = history[i];
-            html += '<div class="ai-msg ' + (m.role === 'user' ? 'user' : 'bot') + '">' + escapeHtml(m.text) + '</div>';
-        }
-        msgs.innerHTML = html;
-        scrollBottom();
-    }
-
-    function escapeHtml(str) {
-        var div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-    }
-
-    function showTyping() {
-        msgs.innerHTML += '<div class="ai-msg bot ai-typing"><span></span><span></span><span></span></div>';
-        scrollBottom();
-    }
-
-    function hideTyping() {
-        var typing = msgs.querySelector('.ai-typing');
-        if (typing) typing.remove();
-    }
-
-    /* ── Open / Close ── */
-    function openPanel() {
-        isOpen = true;
-        panel.classList.add('open');
-        renderMessages();
-        input.focus();
-    }
-
-    function closePanel() {
-        isOpen = false;
-        panel.classList.remove('open');
-    }
-
-    btn.addEventListener('click', function () {
-        if (isOpen) closePanel(); else openPanel();
-    });
-
-    close.addEventListener('click', function (e) {
-        e.stopPropagation();
-        closePanel();
-    });
-
-    /* ── Send ── */
-    function sendMessage() {
-        var text = input.value.trim();
-        if (!text || isLoading) return;
-        input.value = '';
-
-        // Add user message
-        history.push({ role: 'user', text: text });
-        saveHistory();
-        renderMessages();
-
-        // Show typing
-        isLoading = true;
-        showTyping();
-
-        // Call backend
-        var apiFn = (typeof api === 'function') ? api : function (url, opts) {
-            return fetch(url, opts).then(function (r) { return r.json(); });
-        };
-
-        apiFn('/api/advisor/chat', {
-            method: 'POST',
-            body: { message: text }
-        }).then(function (data) {
-            hideTyping();
-            isLoading = false;
-            var reply = (data && data.reply) ? data.reply : 'Sorry, I could not process that.';
-            history.push({ role: 'bot', text: reply });
-            saveHistory();
-            renderMessages();
-        }).catch(function () {
-            hideTyping();
-            isLoading = false;
-            history.push({ role: 'bot', text: '⚠️ Unable to reach the advisor. Please try again later.' });
-            saveHistory();
-            renderMessages();
-        });
-    }
-
-    send.addEventListener('click', sendMessage);
-    input.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') sendMessage();
-    });
-
-    /* ── Click outside to close (optional but nice) ── */
-    document.addEventListener('click', function (e) {
-        if (isOpen && !widget.contains(e.target)) {
-            closePanel();
-        }
-    });
-
-    /* ── Render initial state ── */
-    renderMessages();
-})();
