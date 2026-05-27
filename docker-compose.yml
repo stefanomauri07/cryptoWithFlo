@@ -40,6 +40,8 @@ services:
       Stripe__PublishableKey: ${Stripe__PublishableKey}
       Stripe__WebhookSecret: ${Stripe__WebhookSecret}
       COINGECKO_API_KEY: ${COINGECKO_API_KEY}
+      Ollama__BaseUrl: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      Ollama__Model: ${OLLAMA_MODEL:-nemotron-3-super:cloud}
     depends_on:
       db:
         condition: service_healthy

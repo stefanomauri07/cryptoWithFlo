@@ -71,6 +71,13 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddSingleton<BrevoEmailService>();
 builder.Services.AddSingleton<StripeService>();
 
+var ollamaUrl = builder.Configuration["Ollama:BaseUrl"] ?? "http://host.docker.internal:11434";
+builder.Services.AddHttpClient<OllamaService>(client =>
+{
+    client.BaseAddress = new Uri(ollamaUrl);
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -129,6 +136,7 @@ app.MapHealthEndpoints();
 app.MapAuthEndpoints();
 app.MapPortfolioEndpoints();
 app.MapSubscriptionEndpoints();
+app.MapAdvisorEndpoints();
 app.MapNewsEndpoints();
 
 using (var scope = app.Services.CreateScope())
