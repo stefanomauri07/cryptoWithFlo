@@ -25,22 +25,24 @@ public static class CryptoEndpoints
         group.MapGet("/{id}/chart", async (string id, int? days, BinanceService binance, AppDbContext db, CancellationToken ct) =>
         {
             var lookback = days ?? 7;
-
-            var klines = await binance.GetKlinesAsync(id, lookback, ct);
-            if (klines.Count > 0)
-            {
-                var chartData = klines.Select(k => new { timestamp = k.Timestamp, price_usd = k.Close }).ToList();
-                return Results.Ok(chartData);
-            }
-
-            var since = DateTime.UtcNow.AddDays(-lookback);
-            var data = await db.PriceHistories
-                .Where(p => p.CryptoId == id && p.RecordedAt >= since)
-                .OrderBy(p => p.RecordedAt)
-                .Select(p => new { timestamp = p.RecordedAt, price_usd = p.PriceUsd })
-                .ToListAsync(ct);
-
+            var data = await GetChartDataAsync(id, lookback, db, binance, ct);
             return Results.Ok(data);
+        });
+
+        group.MapGet("/compare/{crypto1}/{crypto2}", async (
+            string crypto1, string crypto2, int? days,
+            AppDbContext db, BinanceService binance, IMemoryCache cache,
+            CancellationToken ct) =>
+        {
+            var d = days ?? 7;
+            var data1 = await GetChartDataAsync(crypto1, d, db, binance, ct);
+            var data2 = await GetChartDataAsync(crypto2, d, db, binance, ct);
+
+            return Results.Ok(new
+            {
+                crypto1 = new { id = crypto1, data = data1 },
+                crypto2 = new { id = crypto2, data = data2 }
+            });
         });
 
         group.MapGet("/{id}/history", async (string id, DateTime? from, DateTime? to, AppDbContext db) =>
@@ -88,5 +90,26 @@ public static class CryptoEndpoints
         });
 
         return group;
+    }
+
+    private static async Task<List<object>> GetChartDataAsync(
+        string cryptoId, int days,
+        AppDbContext db, BinanceService binance,
+        CancellationToken ct)
+    {
+        var klines = await binance.GetKlinesAsync(cryptoId, days, ct);
+        if (klines.Count > 0)
+        {
+            return klines.Select(k => (object)new { timestamp = k.Timestamp, price_usd = k.Close }).ToList();
+        }
+
+        var since = DateTime.UtcNow.AddDays(-days);
+        var data = await db.PriceHistories
+            .Where(p => p.CryptoId == cryptoId && p.RecordedAt >= since)
+            .OrderBy(p => p.RecordedAt)
+            .Select(p => new { timestamp = p.RecordedAt, price_usd = p.PriceUsd })
+            .ToListAsync(ct);
+
+        return data.Cast<object>().ToList();
     }
 }
