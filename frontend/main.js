@@ -116,7 +116,7 @@ async function fetchPrices() {
         const data = await res.json();
 
         if (!data || data.length === 0) {
-            if (priceFetchFailures > 1) showToast('No price data available. Check CoinGecko API key or network.', true);
+            if (priceFetchFailures > 1) showToast('No price data available. Check Binance connection or network.', true);
             priceFetchFailures++;
             showSkeletonRows();
             return;
