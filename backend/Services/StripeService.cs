@@ -30,7 +30,7 @@ public class StripeService
         StripeConfiguration.StripeClient = stripeClient;
     }
 
-    public async Task<string> CreateCheckoutSessionAsync(User user)
+    public async Task<string> CreateCheckoutSessionAsync(User user, string plan)
     {
         var customerId = user.StripeCustomerId;
         if (string.IsNullOrEmpty(customerId))
@@ -45,18 +45,42 @@ public class StripeService
             user.StripeCustomerId = customerId;
         }
 
-        var priceId = _config["Stripe:ProPriceId"]!;
+        var (unitAmount, interval, intervalCount) = plan switch
+        {
+            "monthly"     => (999,    "month", 1),
+            "semiannual"  => (4999,   "month", 6),
+            "annual"      => (8999,   "year",  1),
+            _ => throw new ArgumentException($"Invalid plan: {plan}")
+        };
+
         var options = new SessionCreateOptions
         {
             Customer = customerId,
             Mode = "subscription",
             LineItems = new List<SessionLineItemOptions>
             {
-                new SessionLineItemOptions { Price = priceId, Quantity = 1 }
+                new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        UnitAmount = unitAmount,
+                        Currency = "usd",
+                        Recurring = new SessionLineItemPriceDataRecurringOptions
+                        {
+                            Interval = interval,
+                            IntervalCount = intervalCount
+                        },
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = $"Pro Plan ({plan})"
+                        }
+                    },
+                    Quantity = 1
+                }
             },
             SuccessUrl = "http://localhost:3000/upgrade.html?session_id={CHECKOUT_SESSION_ID}&status=success",
             CancelUrl = "http://localhost:3000/upgrade.html?status=cancelled",
-            Metadata = new Dictionary<string, string> { { "userId", user.Id.ToString() } }
+            Metadata = new Dictionary<string, string> { { "userId", user.Id.ToString() }, { "plan", plan } }
         };
 
         var service = new SessionService();

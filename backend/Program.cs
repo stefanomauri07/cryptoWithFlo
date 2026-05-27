@@ -8,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddEnvironmentVariables();
+
 builder.Services.AddMemoryCache();
 
 var dbConfig = builder.Configuration.GetSection("Database");
@@ -71,9 +73,18 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        if (builder.Environment.IsDevelopment())
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        }
+        else
+        {
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        }
     });
 });
 

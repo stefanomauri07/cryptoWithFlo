@@ -104,10 +104,48 @@
 
         <!-- Upgrade CTA -->
         <div id="upgrade-cta" class="hidden space-y-lg">
-            <div class="text-center mb-xl">
-                <div class="text-primary-fixed-dim text-display-lg font-display-lg">$9.99</div>
-                <p class="text-on-surface-variant text-body-md">per month</p>
+            <h3 class="text-center font-headline-sm text-headline-sm text-on-surface">Choose Your Plan</h3>
+
+            <div class="space-y-md">
+                <!-- Monthly -->
+                <div onclick="selectPlan('monthly')" id="plan-monthly" class="plan-card cursor-pointer bg-surface-container-low rounded-xl border-2 border-primary-container p-lg flex justify-between items-center transition-all hover:border-primary-fixed-dim">
+                    <div>
+                        <p class="font-headline-sm text-headline-sm text-on-surface">Monthly</p>
+                        <p class="text-on-surface-variant text-body-sm">Billed monthly</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-headline-sm text-headline-sm text-primary-fixed-dim">$9.99</p>
+                        <p class="text-on-surface-variant text-body-sm">/month</p>
+                    </div>
+                </div>
+
+                <!-- Semiannual -->
+                <div onclick="selectPlan('semiannual')" id="plan-semiannual" class="plan-card cursor-pointer bg-surface-container-low rounded-xl border-2 border-outline-variant/20 p-lg flex justify-between items-center transition-all hover:border-primary-container relative">
+                    <span class="absolute -top-3 right-4 bg-primary-container text-on-primary font-label-md text-label-md px-md py-xs rounded-full">Save 17%</span>
+                    <div>
+                        <p class="font-headline-sm text-headline-sm text-on-surface">Semiannual</p>
+                        <p class="text-on-surface-variant text-body-sm">Billed every 6 months</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-headline-sm text-headline-sm text-primary-fixed-dim">$49.99</p>
+                        <p class="text-on-surface-variant text-body-sm">/6 months</p>
+                    </div>
+                </div>
+
+                <!-- Annual -->
+                <div onclick="selectPlan('annual')" id="plan-annual" class="plan-card cursor-pointer bg-surface-container-low rounded-xl border-2 border-outline-variant/20 p-lg flex justify-between items-center transition-all hover:border-primary-container relative">
+                    <span class="absolute -top-3 right-4 bg-primary-container text-on-primary font-label-md text-label-md px-md py-xs rounded-full">Save 25%</span>
+                    <div>
+                        <p class="font-headline-sm text-headline-sm text-on-surface">Annual</p>
+                        <p class="text-on-surface-variant text-body-sm">Billed yearly</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-headline-sm text-headline-sm text-primary-fixed-dim">$89.99</p>
+                        <p class="text-on-surface-variant text-body-sm">/year</p>
+                    </div>
+                </div>
             </div>
+
             <div id="upgrade-error" class="hidden bg-error-container/30 text-error font-body-sm text-body-sm px-lg py-md rounded-lg"></div>
             <div id="upgrade-success" class="hidden bg-primary-container/10 text-primary-fixed-dim font-body-sm text-body-sm px-lg py-md rounded-lg text-center"></div>
             <button onclick="handleUpgrade()" id="upgrade-btn" class="w-full bg-primary-container text-on-primary font-headline-sm text-headline-sm py-md rounded-lg shadow-[0_0_20px_rgba(0,255,136,0.2)] hover:brightness-110 active:scale-[0.98] transition-all">
@@ -128,6 +166,19 @@ if (!isAuthenticated()) window.location.href = 'login.html';
 
 const urlParams = new URLSearchParams(window.location.search);
 const status = urlParams.get('status');
+
+let selectedPlan = 'monthly';
+
+function selectPlan(plan) {
+    selectedPlan = plan;
+    document.querySelectorAll('.plan-card').forEach(card => {
+        card.classList.remove('border-primary-container');
+        card.classList.add('border-outline-variant/20');
+    });
+    const selected = document.getElementById('plan-' + plan);
+    selected.classList.remove('border-outline-variant/20');
+    selected.classList.add('border-primary-container');
+}
 
 async function init() {
     const user = getCurrentUser();
@@ -172,7 +223,10 @@ async function handleUpgrade() {
     errorEl.classList.add('hidden');
 
     try {
-        const res = await api('/api/subscription/create-checkout', { method: 'POST' });
+        const res = await api('/api/subscription/create-checkout', {
+            method: 'POST',
+            body: JSON.stringify({ plan: selectedPlan })
+        });
         const data = await res.json();
         if (data.url) {
             window.location.href = data.url;
@@ -198,6 +252,7 @@ async function handleCancel() {
     }
 }
 
+selectPlan('monthly');
 init();
 </script>
 </body>

@@ -14,7 +14,7 @@ public static class StripeEndpoints
     {
         var group = app.MapGroup("/api/subscription");
 
-        group.MapPost("/create-checkout", async (HttpContext http, AppDbContext db, StripeService stripe, ILogger<Program> logger) =>
+        group.MapPost("/create-checkout", async (CheckoutRequest req, HttpContext http, AppDbContext db, StripeService stripe, ILogger<Program> logger) =>
         {
             try
             {
@@ -25,7 +25,7 @@ public static class StripeEndpoints
                 if (user.Role == "vip" || user.Role == "admin")
                     return Results.BadRequest(new { error = "Already subscribed" });
 
-                var checkoutUrl = await stripe.CreateCheckoutSessionAsync(user);
+                var checkoutUrl = await stripe.CreateCheckoutSessionAsync(user, req.Plan);
                 await db.SaveChangesAsync();
 
                 return Results.Ok(new { url = checkoutUrl });
@@ -126,3 +126,5 @@ public static class StripeEndpoints
         });
     }
 }
+
+public record CheckoutRequest(string Plan);
