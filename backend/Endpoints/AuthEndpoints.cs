@@ -141,7 +141,9 @@ public static class AuthEndpoints
 
     private static string GenerateJwt(User user, IConfiguration config)
     {
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT_SECRET"]!));
+        var jwtSection = config.GetSection("Jwt");
+        var secret = jwtSection["Secret"] ?? throw new InvalidOperationException("JWT Secret not configured");
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var claims = new[]
         {
