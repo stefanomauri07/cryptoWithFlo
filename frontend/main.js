@@ -506,7 +506,27 @@ function updateUserMenu() {
     const user = getCurrentUser();
     if (!user) return;
     document.getElementById('user-name').textContent = user.name || user.email;
-    document.getElementById('user-role').textContent = user.role.toUpperCase();
+    var roleLabel = '';
+    var roleColor = '';
+    var roleBg = '';
+
+    if (user.role === 'vip') {
+        roleLabel = 'VIP';
+        roleColor = '#FFD700';
+        roleBg = 'rgba(255,215,0,0.15)';
+    } else if (user.role === 'admin') {
+        roleLabel = 'PRO';
+        roleColor = '#FFD700';
+        roleBg = 'rgba(255,215,0,0.15)';
+    } else {
+        roleLabel = 'USER';
+        roleColor = '#00ff88';
+        roleBg = 'rgba(0,255,136,0.15)';
+    }
+
+    document.getElementById('user-role').textContent = roleLabel;
+    document.getElementById('user-role').style.color = roleColor;
+    document.getElementById('user-role').style.background = roleBg;
 
     var navUpgrade = document.getElementById('navbar-upgrade-btn');
     var sidebarUpgrade = document.getElementById('sidebar-upgrade-btn');

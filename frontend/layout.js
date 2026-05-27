@@ -142,9 +142,18 @@ function updateUpgradeButtons() {
 
         var isPro = user.role === 'vip' || user.role === 'admin';
 
+        var roleLabel = '';
+        if (user.role === 'vip') {
+            roleLabel = 'VIP';
+        } else if (user.role === 'admin') {
+            roleLabel = 'PRO';
+        } else {
+            roleLabel = 'USER';
+        }
+
         if (userRole) {
-            if (isPro) {
-                userRole.textContent = 'PRO';
+            if (user.role === 'vip' || user.role === 'admin') {
+                userRole.textContent = roleLabel;
                 userRole.style.background = 'rgba(255,215,0,0.15)';
                 userRole.style.color = '#FFD700';
             } else {

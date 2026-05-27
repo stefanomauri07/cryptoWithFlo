@@ -95,9 +95,6 @@
                         <p class="font-headline-sm text-headline-sm text-on-surface">Pro Plan</p>
                         <p class="text-on-surface-variant text-body-sm" id="sub-status">Active</p>
                     </div>
-                    <button onclick="handleCancel()" id="cancel-btn" class="text-error font-label-md text-label-md px-lg py-md border border-error/30 rounded-lg hover:bg-error-container/20 transition-colors">
-                        Cancel Subscription
-                    </button>
                 </div>
             </div>
         </div>
@@ -265,9 +262,6 @@ async function init() {
         if (data.isPro) {
             document.getElementById('already-pro').classList.remove('hidden');
             document.getElementById('sub-status').textContent = data.status === 'cancelled' ? 'Cancels at period end' : 'Active';
-            if (data.status === 'cancelled') {
-                document.getElementById('cancel-btn').classList.add('hidden');
-            }
         } else {
             document.getElementById('upgrade-cta').classList.remove('hidden');
         }
@@ -308,16 +302,6 @@ async function handleUpgrade() {
     }
 }
 
-async function handleCancel() {
-    if (!confirm('Cancel your Pro subscription? You will lose access at the end of the billing period.')) return;
-    try {
-        await api('/api/subscription/cancel', { method: 'POST' });
-        document.getElementById('sub-status').textContent = 'Cancels at period end';
-        document.getElementById('cancel-btn').classList.add('hidden');
-    } catch (err) {
-        alert('Failed to cancel: ' + err.message);
-    }
-}
 
 selectPlan('monthly');
 init();
