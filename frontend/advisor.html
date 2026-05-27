@@ -211,6 +211,10 @@ async function sendMessage(){
 
     try{
         const res=await api('/api/advisor/chat',{method:'POST',body:{message:text}});
+        if(!res.ok){
+            const errData=await res.json().catch(()=>null);
+            throw new Error(errData?.error||errData?.title||'Server error '+res.status);
+        }
         const data=await res.json();
         removeTyping();
         isLoading=false;
@@ -223,7 +227,8 @@ async function sendMessage(){
         removeTyping();
         isLoading=false;
         document.getElementById('chat-send').disabled=false;
-        history.push({role:'bot',text:'\u26a0\ufe0f Unable to reach the AI advisor. Please try again later.'});
+        const errorText=err.message||'Unable to reach the AI advisor.';
+        history.push({role:'bot',text:'\u26a0\ufe0f '+errorText});
         saveHistory();
         renderMessages();
     }
